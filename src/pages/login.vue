@@ -5,7 +5,7 @@
         <!-- page content -->
         <q-toolbar class="glossy">
           <q-toolbar-title class="text-center">
-            Informáticos Sistemas - Eventos
+            Protocolo - AJG/Correios
           </q-toolbar-title>
         </q-toolbar>
 
