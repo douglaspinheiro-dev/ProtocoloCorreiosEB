@@ -1,0 +1,70 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It is a breeze. Simply tell Lumen the URIs it should respond to
+| and give it the Closure to call when that URI is requested.
+|
+*/
+
+$app->get('/', function () use ($app) { return $app->version(); });
+// $app->get('/grupousuarios', 'GrupoUsuarioController@lista');
+
+
+$app->post('auth/login', 'AuthController@authenticate');
+
+
+$app->group(
+  ['middleware' => 'jwt.auth'],
+  function() use ($app) {
+    $app->group(
+      ['middleware' => 'usuario'],
+      function() use ($app) {
+        $app->delete('/usuarios/usuario/{id}', 'UsuarioController@apaga');
+        $app->get('/usuarios', 'UsuarioController@lista');
+        $app->get('/usuarios/options', 'UsuarioController@options');
+        $app->get('/usuarios/buscalogin', 'UsuarioController@confereLogin');
+        $app->get('/usuarios/usuario/{id}', 'UsuarioController@seleciona');
+        $app->post('/usuarios/usuario', 'UsuarioController@salva');
+        $app->put('/usuarios/senha', 'UsuarioController@alteraSenha');
+        $app->put('/usuarios/trocasenha', 'UsuarioController@alteraSenhaOutroUsuario');
+        $app->put('/usuarios/usuario/{id}', 'UsuarioController@altera');
+      }
+    );
+
+    $app->group(
+      ['middleware' => 'grupoUsuario'],
+      function() use ($app) {
+        $app->delete('/grupousuarios/grupousuario/{id}', 'GrupoUsuarioController@apaga');
+        $app->get('/grupousuarios', 'GrupoUsuarioController@lista');
+        $app->get('/grupousuarios/options', 'GrupoUsuarioController@options');
+        $app->get('/grupousuarios/grupousuario/{id}', 'GrupoUsuarioController@seleciona');
+        $app->post('/grupousuarios/grupousuario', 'GrupoUsuarioController@salva');
+        $app->put('/grupousuarios/grupousuario/{id}', 'GrupoUsuarioController@altera');
+
+      }
+    );
+
+    $app->group(
+      ['middleware' => 'tipoDocumento'],
+      function() use ($app) {
+        $app->delete('/tipodocumentos/tipodocumento/{id}', 'TipoDocumentoController@apaga');
+        $app->get('/tipodocumentos', 'TipoDocumentoController@lista');
+        $app->get('/tipodocumentos/options', 'TipoDocumentoController@options');
+        $app->get('/tipodocumentos/tipodocumento/{id}', 'TipoDocumentoController@seleciona');
+        $app->post('/tipodocumentos/tipodocumento', 'TipoDocumentoController@salva');
+        $app->put('/tipodocumentos/tipodocumento/{id}', 'TipoDocumentoController@altera');
+
+      }
+    );
+
+
+
+    $app->get('/registros/confere', 'RegistroController@confere');
+
+  }
+);
