@@ -70,6 +70,7 @@ $app->routeMiddleware([
     'usuario' => App\Http\Middleware\UsuarioMiddleware::class,
     'grupoUsuario' => App\Http\Middleware\GrupoUsuarioMiddleware::class,
     'tipoDocumento' => App\Http\Middleware\TipoDocumentoMiddleware::class,
+    'tipoCorrespondencia' => App\Http\Middleware\TipoCorrespondenciaMiddleware::class,
 ]);
 
 /*

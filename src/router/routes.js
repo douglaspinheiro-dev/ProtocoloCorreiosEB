@@ -14,7 +14,9 @@ export default [
       { path: '/usuarios', name: 'usuario', component: () => import('pages/sistema/Usuario'), meta: { requerAutenticacao: true } },
       { path: '/usuarios/usuario/:id', name: 'alterarUsuario', component: () => import('pages/sistema/Usuario'), meta: { requerAutenticacao: true }, props: true },
       { path: '/tipodocumentos', name: 'tipoDocumento', component: () => import('pages/cadastro/TipoDocumento'), meta: { requerAutenticacao: true } },
-      { path: '/tipodocumentos/tipodocumento/:id', name: 'alterarTipoDocumento', component: () => import('pages/cadastro/TipoDocumento'), meta: { requerAutenticacao: true }, props: true }
+      { path: '/tipodocumentos/tipodocumento/:id', name: 'alterarTipoDocumento', component: () => import('pages/cadastro/TipoDocumento'), meta: { requerAutenticacao: true }, props: true },
+      { path: '/tipocorrespondencias', name: 'tipoCorrespondencia', component: () => import('pages/cadastro/TipoCorrespondencia'), meta: { requerAutenticacao: true } },
+      { path: '/tipocorrespondencias/tipocorrespondencia/:id', name: 'alterarTipoCorrespondencia', component: () => import('pages/cadastro/TipoCorrespondencia'), meta: { requerAutenticacao: true }, props: true }
 
     ]
   },
