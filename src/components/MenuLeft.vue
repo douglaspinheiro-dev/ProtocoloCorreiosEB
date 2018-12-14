@@ -48,8 +48,13 @@
       <q-collapsible group="menuLinks" icon="folder shared" label="Cadastro">
 
         <q-item link :to="{name: 'tipoDocumento'}" v-if="getPermissoes.tipoDocumento.abrir">
-          <q-item-side icon="business center" />
+          <q-item-side icon="fas fa-file-contract" />
           <q-item-main label="Tipos de Documentos" />
+        </q-item>
+
+        <q-item link :to="{name: 'tipoCorrespondencia'}" v-if="getPermissoes.tipoCorrespondencia.abrir">
+          <q-item-side icon="fas fa-envelope" />
+          <q-item-main label="Tipos de Correspondencias" />
         </q-item>
 
       </q-collapsible>

@@ -62,6 +62,19 @@ $app->group(
       }
     );
 
+    $app->group(
+      ['middleware' => 'tipoCorrespondencia'],
+      function() use ($app) {
+        $app->delete('/tipocorrespondencias/tipocorrespondencia/{id}', 'TipoCorrespondenciaController@apaga');
+        $app->get('/tipocorrespondencias', 'TipoCorrespondenciaController@lista');
+        $app->get('/tipocorrespondencias/options', 'TipoCorrespondenciaController@options');
+        $app->get('/tipocorrespondencias/tipocorrespondencia/{id}', 'TipoCorrespondenciaController@seleciona');
+        $app->post('/tipocorrespondencias/tipocorrespondencia', 'TipoCorrespondenciaController@salva');
+        $app->put('/tipocorrespondencias/tipocorrespondencia/{id}', 'TipoCorrespondenciaController@altera');
+
+      }
+    );
+
 
 
     $app->get('/registros/confere', 'RegistroController@confere');

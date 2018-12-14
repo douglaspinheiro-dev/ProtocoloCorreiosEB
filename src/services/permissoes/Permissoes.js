@@ -26,5 +26,14 @@ export default class Permissoes {
       'excluir',
       'relatorios'
     ]
+
+    // TIPOS DE CORRESPONDENCIAS
+    this.tipoCorrespondencia = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
   }
 }
