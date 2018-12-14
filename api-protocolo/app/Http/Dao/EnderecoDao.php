@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Dao;
+use App\Http\Dao\Dao;
+use Illuminate\Support\Facades\DB;
+
+class EnderecoDao extends Dao
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+
+    }
+
+    public static function lista($obj) {
+      return DB::select("SELECT endereco, descricao, usuarioCriador FROM enderecos WHERE
+      (
+        descricao LIKE '%{$obj['busca']}%' OR
+        bairro LIKE '%{$obj['busca']}%' OR
+        cidade LIKE '%{$obj['busca']}%' OR
+        uf LIKE '%{$obj['busca']}%'
+      )
+      AND ativo = 1 ORDER BY descricao LIMIT {$obj['inicio']}, {$obj['fim']}");
+    }
+
+    public static function seleciona($id) {
+      return DB::select("SELECT * FROM enderecos WHERE endereco = {$id} AND ativo = 1");
+    }
+
+    public static function apaga($dados) {
+      return DB::update("UPDATE enderecos SET ativo = 0, usuarioAlterador = {$dados['usuarioAlterador']} WHERE endereco = {$dados['id']}");
+    }
+
+    public static function salva($dados) {
+      return DB::insert("INSERT INTO enderecos
+      (
+        descricao,
+        logradouro,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        uf,
+        cep,
+        referencia,
+        status,
+        usuarioCriador
+      ) values
+      (
+        '{$dados['descricao']}'),
+        '{$dados['logradouro']}'),
+        '{$dados['numero']}'),
+        '{$dados['complemento']}'),
+        '{$dados['bairro']}'),
+        '{$dados['cidade']}'),
+        '{$dados['uf']}'),
+        '{$dados['cep']}'),
+        '{$dados['referencia']}'),
+        '{$dados['status']}'),
+        '{$dados['usuarioCriador']}'
+      )");
+    }
+
+    public static function altera($dados) {
+      return DB::update("UPDATE enderecos SET
+      descricao = '{$dados['descricao']}',
+      logradouro = '{$dados['logradouro']}',
+      numero = '{$dados['numero']}',
+      complemento = '{$dados['complemento']}',
+      bairro = '{$dados['bairro']}',
+      cidade = '{$dados['cidade']}',
+      uf = '{$dados['uf']}',
+      cep = '{$dados['cep']}',
+      referencia = '{$dados['referencia']}',
+      status = '{$dados['status']}',
+      usuarioCriador = '{$dados['usuarioCriador']}'
+      where endereco = {$dados['endereco']}");
+    }
+
+    //
+}

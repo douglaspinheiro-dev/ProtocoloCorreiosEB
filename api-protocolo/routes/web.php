@@ -75,6 +75,19 @@ $app->group(
       }
     );
 
+    $app->group(
+      ['middleware' => 'endereco'],
+      function() use ($app) {
+        $app->delete('/enderecos/endereco/{id}', 'EnderecoController@apaga');
+        $app->get('/enderecos', 'EnderecoController@lista');
+        $app->get('/enderecos/options', 'EnderecoController@options');
+        $app->get('/enderecos/endereco/{id}', 'EnderecoController@seleciona');
+        $app->post('/enderecos/endereco', 'EnderecoController@salva');
+        $app->put('/enderecos/endereco/{id}', 'EnderecoController@altera');
+
+      }
+    );
+
 
 
     $app->get('/registros/confere', 'RegistroController@confere');

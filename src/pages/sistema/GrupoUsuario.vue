@@ -137,6 +137,23 @@
                 </div>
               </q-collapsible>
 
+              <q-collapsible icon="fas fa-map-marked-alt" label="Endereços">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.endereco" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.endereco" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.endereco" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.endereco" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
             </q-collapsible>
 
             <!-- <q-collapsible icon="folder shared" label="Cadastros">

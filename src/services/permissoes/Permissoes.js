@@ -35,5 +35,14 @@ export default class Permissoes {
       'excluir',
       'relatorios'
     ]
+
+    // ENDEREÇOS
+    this.endereco = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
   }
 }

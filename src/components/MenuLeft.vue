@@ -57,6 +57,11 @@
           <q-item-main label="Tipos de Correspondencias" />
         </q-item>
 
+        <q-item link :to="{name: 'endereco'}" v-if="getPermissoes.endereco.abrir">
+          <q-item-side icon="fas fa-map-marked-alt" />
+          <q-item-main label="Endereços" />
+        </q-item>
+
       </q-collapsible>
 
     </q-list>

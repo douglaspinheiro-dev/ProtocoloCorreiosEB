@@ -16,7 +16,9 @@ export default [
       { path: '/tipodocumentos', name: 'tipoDocumento', component: () => import('pages/cadastro/TipoDocumento'), meta: { requerAutenticacao: true } },
       { path: '/tipodocumentos/tipodocumento/:id', name: 'alterarTipoDocumento', component: () => import('pages/cadastro/TipoDocumento'), meta: { requerAutenticacao: true }, props: true },
       { path: '/tipocorrespondencias', name: 'tipoCorrespondencia', component: () => import('pages/cadastro/TipoCorrespondencia'), meta: { requerAutenticacao: true } },
-      { path: '/tipocorrespondencias/tipocorrespondencia/:id', name: 'alterarTipoCorrespondencia', component: () => import('pages/cadastro/TipoCorrespondencia'), meta: { requerAutenticacao: true }, props: true }
+      { path: '/tipocorrespondencias/tipocorrespondencia/:id', name: 'alterarTipoCorrespondencia', component: () => import('pages/cadastro/TipoCorrespondencia'), meta: { requerAutenticacao: true }, props: true },
+      { path: '/enderecos', name: 'endereco', component: () => import('pages/cadastro/Endereco'), meta: { requerAutenticacao: true } },
+      { path: '/enderecos/endereco/:id', name: 'alterarEndereco', component: () => import('pages/cadastro/Endereco'), meta: { requerAutenticacao: true }, props: true }
 
     ]
   },
