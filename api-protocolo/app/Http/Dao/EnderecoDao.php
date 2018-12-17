@@ -39,6 +39,7 @@ class EnderecoDao extends Dao
       (
         descricao,
         codigo,
+        codigoReduzido,
         logradouro,
         numero,
         complemento,
@@ -51,17 +52,18 @@ class EnderecoDao extends Dao
         usuarioCriador
       ) values
       (
-        '{$dados['descricao']}'),
-        '{$dados['codigo']}'),
-        '{$dados['logradouro']}'),
-        '{$dados['numero']}'),
-        '{$dados['complemento']}'),
-        '{$dados['bairro']}'),
-        '{$dados['cidade']}'),
-        '{$dados['uf']}'),
-        '{$dados['cep']}'),
-        '{$dados['referencia']}'),
-        '{$dados['status']}'),
+        '{$dados['descricao']}',
+        '{$dados['codigo']}',
+        '{$dados['codigoReduzido']}',
+        '{$dados['logradouro']}',
+        '{$dados['numero']}',
+        '{$dados['complemento']}',
+        '{$dados['bairro']}',
+        '{$dados['cidade']}',
+        '{$dados['uf']}',
+        '{$dados['cep']}',
+        '{$dados['referencia']}',
+        '{$dados['status']}',
         '{$dados['usuarioCriador']}'
       )");
     }
@@ -70,6 +72,7 @@ class EnderecoDao extends Dao
       return DB::update("UPDATE enderecos SET
       descricao = '{$dados['descricao']}',
       codigo = '{$dados['codigo']}',
+      codigoReduzido = '{$dados['codigoReduzido']}',
       logradouro = '{$dados['logradouro']}',
       numero = '{$dados['numero']}',
       complemento = '{$dados['complemento']}',

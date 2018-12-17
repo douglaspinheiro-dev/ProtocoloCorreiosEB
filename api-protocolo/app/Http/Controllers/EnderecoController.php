@@ -60,6 +60,11 @@ class EnderecoController extends Controller
 
     $endereco = $this->request->all();
     $endereco['usuarioCriador'] = $this->getUsuario();
+    $endereco['codigoReduzido'] = $endereco['codigo'];
+    $endereco['codigoReduzido'] = str_replace(" ", '', $endereco['codigoReduzido']);
+    $endereco['codigoReduzido'] = str_replace("ª", '', $endereco['codigoReduzido']);
+    $endereco['codigoReduzido'] = str_replace("º", '', $endereco['codigoReduzido']);
+    $endereco['codigoReduzido'] = str_replace("°", '', $endereco['codigoReduzido']);
     $results = EnderecoDao::salva($endereco);
     $endereco['endereco'] = EnderecoDao::last()->id;
     return response()->json(['endereco' =>$endereco], 201);
@@ -78,6 +83,11 @@ class EnderecoController extends Controller
 
     $endereco = $this->request->all();
     $endereco['usuarioAlterador'] = $this->getUsuario();
+    $endereco['codigoReduzido'] = $endereco['codigo'];
+    $endereco['codigoReduzido'] = str_replace(" ", '', $endereco['codigoReduzido']);
+    $endereco['codigoReduzido'] = str_replace("ª", '', $endereco['codigoReduzido']);
+    $endereco['codigoReduzido'] = str_replace("º", '', $endereco['codigoReduzido']);
+    $endereco['codigoReduzido'] = str_replace("°", '', $endereco['codigoReduzido']);
     $results = EnderecoDao::altera($endereco);
     return response()->json(['endereco' =>$endereco], 202);
   }

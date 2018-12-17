@@ -1,6 +1,6 @@
 export default class Estoque {
   constructor (obj = {}) {
-    this.estoque = obj.estoque || ''
+    this.endereco = obj.endereco || ''
     this.status = obj.status || 1
     this.descricao = obj.descricao || ''
     this.codigo = obj.codigo || ''

@@ -193,6 +193,7 @@ export default {
   validations: {
     endereco: {
       codigo: {required},
+      cep: {required},
       descricao: {
         required,
         isUnique (value) {
