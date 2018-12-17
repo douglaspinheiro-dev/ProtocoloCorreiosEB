@@ -50,4 +50,7 @@ export default {
 .form-input{
   margin: 10px;
 }
+.router-link-exact-active{
+  background: blue
+}
 </style>

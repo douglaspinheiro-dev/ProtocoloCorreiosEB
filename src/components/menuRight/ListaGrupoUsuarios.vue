@@ -1,6 +1,6 @@
 <template>
   <q-layout-drawer v-model="mostraMenuRight" side="right">
-    <q-list no-border link inset-delimiter>
+    <q-list>
       <q-list-header>Grupos de Usuários</q-list-header>
 
         <q-search
@@ -14,7 +14,7 @@
 
         <q-infinite-scroll :handler="loadMore" ref="infiniteScroll" >
           <!-- Content, in this case some <p> tags -->
-          <q-item class="item-lista" multiline v-for="(grupoUsuario, index) in listaDeRegistros" :class="index%2 ? 'bg-blue-grey-1' : 'bg-blue-grey-2'" item :to="{ name: 'alterarGrupoUsuario', params: { id: grupoUsuario.grupoUsuario} }" exact :key="index">
+          <q-item exact separator link highlight multiline v-for="(grupoUsuario, index) in listaDeRegistros" item :to="{ name: 'alterarGrupoUsuario', params: { id: grupoUsuario.grupoUsuario} }" :key="index">
             <q-item-main>
               <q-item-tile label> {{ grupoUsuario.codigo }}</q-item-tile>
               <q-item-tile sublabel v-if="grupoUsuario.descricao">{{ grupoUsuario.descricao }}</q-item-tile>

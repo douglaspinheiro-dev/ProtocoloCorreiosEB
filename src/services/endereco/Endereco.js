@@ -3,6 +3,7 @@ export default class Estoque {
     this.estoque = obj.estoque || ''
     this.status = obj.status || 1
     this.descricao = obj.descricao || ''
+    this.codigo = obj.codigo || ''
     this.usuarioCriador = obj.usuarioCriador || ''
     this.logradouro = obj.logradouro || ''
     this.numero = obj.numero || ''

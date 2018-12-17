@@ -1,6 +1,6 @@
 <template>
   <q-layout-drawer v-model="mostraMenuRight" side="right">
-    <q-list no-border link inset-delimiter>
+    <q-list>
       <q-list-header>Tipos de Correspondencias</q-list-header>
 
         <q-search
@@ -14,7 +14,7 @@
 
         <q-infinite-scroll :handler="loadMore" ref="infiniteScroll" >
           <!-- Content, in this case some <p> tags -->
-          <q-item class="item-lista" multiline v-for="(tipoCorrespondencia, index) in listaDeRegistros" :class="index%2 ? 'bg-blue-grey-1' : 'bg-blue-grey-2'" item :to="{ name: 'alterarTipoCorrespondencia', params: { id: tipoCorrespondencia.tipoCorrespondencia} }" exact :key="index">
+          <q-item exact separator link highlight multiline v-for="(tipoCorrespondencia, index) in listaDeRegistros" item :to="{ name: 'alterarTipoCorrespondencia', params: { id: tipoCorrespondencia.tipoCorrespondencia} }" :key="index">
             <q-item-main>
               <q-item-tile label> {{ tipoCorrespondencia.descricao }}</q-item-tile>
               <q-item-tile sublabel>{{ tipoCorrespondencia.codigo }} </q-item-tile>

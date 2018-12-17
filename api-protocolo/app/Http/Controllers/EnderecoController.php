@@ -53,6 +53,7 @@ class EnderecoController extends Controller
     $this->validate($this->request,
       [
         'descricao' => 'required',
+        'codigo' => 'required',
         'status' => 'required'
       ]
     );
@@ -70,6 +71,7 @@ class EnderecoController extends Controller
       [
         'endereco' => 'required',
         'descricao' => 'required',
+        'codigo' => 'required',
         'status' => 'required'
       ]
     );

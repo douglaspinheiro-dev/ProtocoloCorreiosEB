@@ -30,7 +30,7 @@
             <q-collapsible label="Dados Gerais" opened>
               <div class="row">
 
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <q-field
                     label="Descrição"
                     orientation="vertical"
@@ -42,7 +42,19 @@
                     <q-input autocomplete="off" type="text" v-model="endereco.descricao" @input="$v.endereco.descricao.$touch()" name="descricao"/>
                   </q-field>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                  <q-field
+                    label="Código"
+                    orientation="vertical"
+                    class="form-input"
+                    helper="Obrigatório"
+                    :error="$v.endereco.codigo.$error"
+                    error-label="Obrigatório"
+                  >
+                    <q-input autocomplete="off" type="text" v-model="endereco.codigo" @input="$v.endereco.codigo.$touch()" name="codigo"/>
+                  </q-field>
+                </div>
+                <div class="col-md-3">
                   <q-field class="form-input" label="Status" orientation="vertical">
                     <q-btn-group  class="fit">
                       <radio-button :status="endereco.status" @toggleRadioButton="toggleStatus"/>
@@ -86,7 +98,7 @@
                   </div>
 
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Referencia" orientation="vertical">
+                    <q-field class="form-input" label="Referência" orientation="vertical">
                       <q-input autocomplete="off" type="text" v-model="endereco.referencia" name="referencia"/>
                     </q-field>
                   </div>
@@ -180,6 +192,7 @@ export default {
   },
   validations: {
     endereco: {
+      codigo: {required},
       descricao: {
         required,
         isUnique (value) {

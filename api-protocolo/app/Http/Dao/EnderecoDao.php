@@ -17,12 +17,11 @@ class EnderecoDao extends Dao
     }
 
     public static function lista($obj) {
-      return DB::select("SELECT endereco, descricao, usuarioCriador FROM enderecos WHERE
+      return DB::select("SELECT endereco, descricao,codigoReduzido,usuarioCriador FROM enderecos WHERE
       (
         descricao LIKE '%{$obj['busca']}%' OR
-        bairro LIKE '%{$obj['busca']}%' OR
-        cidade LIKE '%{$obj['busca']}%' OR
-        uf LIKE '%{$obj['busca']}%'
+        codigoReduzido LIKE '%{$obj['busca']}%' OR
+        codigo LIKE '%{$obj['busca']}%'
       )
       AND ativo = 1 ORDER BY descricao LIMIT {$obj['inicio']}, {$obj['fim']}");
     }
@@ -39,6 +38,7 @@ class EnderecoDao extends Dao
       return DB::insert("INSERT INTO enderecos
       (
         descricao,
+        codigo,
         logradouro,
         numero,
         complemento,
@@ -52,6 +52,7 @@ class EnderecoDao extends Dao
       ) values
       (
         '{$dados['descricao']}'),
+        '{$dados['codigo']}'),
         '{$dados['logradouro']}'),
         '{$dados['numero']}'),
         '{$dados['complemento']}'),
@@ -68,6 +69,7 @@ class EnderecoDao extends Dao
     public static function altera($dados) {
       return DB::update("UPDATE enderecos SET
       descricao = '{$dados['descricao']}',
+      codigo = '{$dados['codigo']}',
       logradouro = '{$dados['logradouro']}',
       numero = '{$dados['numero']}',
       complemento = '{$dados['complemento']}',
