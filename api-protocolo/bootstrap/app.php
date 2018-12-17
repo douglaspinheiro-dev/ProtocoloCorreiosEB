@@ -72,6 +72,7 @@ $app->routeMiddleware([
     'tipoDocumento' => App\Http\Middleware\TipoDocumentoMiddleware::class,
     'tipoCorrespondencia' => App\Http\Middleware\TipoCorrespondenciaMiddleware::class,
     'endereco' => App\Http\Middleware\EnderecoMiddleware::class,
+    'setor' => App\Http\Middleware\EnderecoMiddleware::class,
 ]);
 
 /*

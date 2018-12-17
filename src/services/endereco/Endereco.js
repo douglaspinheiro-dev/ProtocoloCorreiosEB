@@ -1,4 +1,4 @@
-export default class Estoque {
+export default class Endereco {
   constructor (obj = {}) {
     this.endereco = obj.endereco || ''
     this.status = obj.status || 1

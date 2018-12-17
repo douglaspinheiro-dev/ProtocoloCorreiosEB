@@ -88,6 +88,19 @@ $app->group(
       }
     );
 
+    $app->group(
+      ['middleware' => 'setor'],
+      function() use ($app) {
+        $app->delete('/setores/setor/{id}', 'SetorController@apaga');
+        $app->get('/setores', 'SetorController@lista');
+        $app->get('/setores/options', 'SetorController@options');
+        $app->get('/setores/setor/{id}', 'SetorController@seleciona');
+        $app->post('/setores/setor', 'SetorController@salva');
+        $app->put('/setores/setor/{id}', 'SetorController@altera');
+
+      }
+    );
+
 
 
     $app->get('/registros/confere', 'RegistroController@confere');

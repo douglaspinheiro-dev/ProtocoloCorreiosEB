@@ -1,9 +1,9 @@
 import http from 'src/plugins/axios'
 import { Dialog, Loading } from 'quasar'
 import Notify from '../../tools/Notify'
-export const EnderecoService = {
+export const SetorService = {
   procura (busca, inicio, fim) {
-    return http.get('enderecos', { params: { busca: busca, inicio: inicio, fim: fim } })
+    return http.get('setores', { params: { busca: busca, inicio: inicio, fim: fim } })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -22,8 +22,8 @@ export const EnderecoService = {
       })
   },
 
-  grava (endereco) {
-    return http.post(`enderecos/endereco`, endereco)
+  grava (setor) {
+    return http.post(`setores/setor`, setor)
       .then(response => response)
       .catch(error => {
         console.log(error.response)
@@ -46,8 +46,8 @@ export const EnderecoService = {
       })
   },
 
-  altera (endereco) {
-    return http.put(`enderecos/endereco/${endereco.endereco}`, endereco)
+  altera (setor) {
+    return http.put(`setores/setor/${setor.setor}`, setor)
       .then(response => response)
       .catch(error => {
         console.log(error.response)
@@ -71,7 +71,7 @@ export const EnderecoService = {
   },
 
   apaga (id) {
-    return http.delete(`enderecos/endereco/${id}`)
+    return http.delete(`setores/setor/${id}`)
       .then(response => response)
       .catch(error => {
         console.log(error.response)
@@ -90,11 +90,11 @@ export const EnderecoService = {
   },
 
   seleciona (id) {
-    return http.get(`enderecos/endereco/${id}`)
+    return http.get(`setores/setor/${id}`)
       .then(response => response)
       .catch(error => {
         Loading.hide()
-        console.log('erro no servidor ao buscar um endereco', id)
+        console.log('erro no servidor ao buscar um setor', id)
 
         if (error.response.status === 401) {
           Notify.semPermissao()
@@ -112,4 +112,4 @@ export const EnderecoService = {
       })
   }
 }
-export default EnderecoService
+export default SetorService

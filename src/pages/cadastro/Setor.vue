@@ -3,7 +3,7 @@
     <q-layout-header>
       <q-toolbar>
         <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Tipos de Documento</q-toolbar-title>
+        <q-toolbar-title>Cadastro de Setores Internos</q-toolbar-title>
         <botao-menu-right/>
       </q-toolbar>
 
@@ -20,10 +20,10 @@
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
               <div class="col-md-6 linhaBotoes">
-                <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarTipoDocumento">Novo</q-btn>
-                <q-btn small type="submit" icon="save" v-if="!tipoDocumento.tipoDocumento && possoGravarTipoDocumento" >Gravar</q-btn>
-                <q-btn small type="submit" icon="save" v-if="tipoDocumento.tipoDocumento && possoAlterarTipoDocumento" >Alterar</q-btn>
-                <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirTipoDocumento">Excluir</q-btn>
+                <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarSetor">Novo</q-btn>
+                <q-btn small type="submit" icon="save" v-if="!setor.setor && possoGravarSetor" >Gravar</q-btn>
+                <q-btn small type="submit" icon="save" v-if="setor.setor && possoAlterarSetor" >Alterar</q-btn>
+                <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirSetor">Excluir</q-btn>
               </div>
             </div>
 
@@ -35,10 +35,10 @@
                   orientation="vertical"
                   class="form-input"
                   helper="Obrigatório"
-                  :error="$v.tipoDocumento.descricao.$error"
+                  :error="$v.setor.descricao.$error"
                   :error-label="errorDescricao"
                 >
-                  <q-input autocomplete="off" type="text" v-model="tipoDocumento.descricao" @input="$v.tipoDocumento.descricao.$touch()" name="descricao"/>
+                  <q-input autocomplete="off" type="text" v-model="setor.descricao" @input="$v.setor.descricao.$touch()" name="descricao"/>
                 </q-field>
               </div>
               <div class="col-md-3">
@@ -47,16 +47,16 @@
                   orientation="vertical"
                   class="form-input"
                   helper="Obrigatório"
-                  :error="$v.tipoDocumento.codigo.$error"
+                  :error="$v.setor.codigo.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="off" type="text" v-model="tipoDocumento.codigo" @input="$v.tipoDocumento.codigo.$touch()" name="codigo"/>
+                  <q-input autocomplete="off" type="text" v-model="setor.codigo" @input="$v.setor.codigo.$touch()" name="codigo"/>
                 </q-field>
               </div>
               <div class="col-md-3">
                 <q-field class="form-input" label="Status" orientation="vertical">
                   <q-btn-group  class="fit">
-                    <radio-button :status="tipoDocumento.status" @toggleRadioButton="toggleRadioButton"/>
+                    <radio-button :status="setor.status" @toggleRadioButton="toggleRadioButton"/>
                   </q-btn-group>
                 </q-field>
               </div>
@@ -64,10 +64,10 @@
           </form>
 
           <botao-mobile
-            :id="tipoDocumento.tipoDocumento"
-            :possoGravar="possoGravarTipoDocumento"
-            :possoAlterar="possoAlterarTipoDocumento"
-            :possoExcluir="possoExcluirTipoDocumento"
+            :id="setor.setor"
+            :possoGravar="possoGravarSetor"
+            :possoAlterar="possoAlterarSetor"
+            :possoExcluir="possoExcluirSetor"
             @salvarAlterar="salvarAlterar"
             @excluir="excluir"
             @reset="reset"
@@ -83,10 +83,10 @@
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import RadioButton from 'src/components/form/radios/RadioButton'
-import ListaDeRegistros from 'src/components/menuRight/ListaTipoDocumentos.vue'
+import ListaDeRegistros from 'src/components/menuRight/ListaSetores.vue'
 import { required } from 'vuelidate/lib/validators'
-import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
-import tipoDocumentoService from 'src/services/tipoDocumento/TipoDocumentoService'
+import Setor from 'src/services/setor/Setor'
+import setorService from 'src/services/setor/SetorService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
@@ -94,7 +94,7 @@ import notify from '../../tools/Notify'
 var timer
 
 export default {
-  name: 'Cadastro-de-TipoDocumentos',
+  name: 'Cadastro-de-Setores',
   components: {
     ListaDeRegistros,
     BotaoMenuLeft,
@@ -104,14 +104,14 @@ export default {
   },
   data () {
     return {
-      tipoDocumento: new TipoDocumento(),
+      setor: new Setor(),
       errorDescricao: 'Preencha a descrição',
-      possoAlterarTipoDocumento: false,
-      possoExcluirTipoDocumento: false
+      possoAlterarSetor: false,
+      possoExcluirSetor: false
     }
   },
   validations: {
-    tipoDocumento: {
+    setor: {
       codigo: {required},
       descricao: {
         required,
@@ -123,9 +123,9 @@ export default {
           }
           let opcao = 'gravar'
           let id = ''
-          if (this.tipoDocumento.tipoDocumento) {
+          if (this.setor.setor) {
             opcao = 'alterar'
-            id = this.tipoDocumento.tipoDocumento
+            id = this.setor.setor
           }
           let retorno = confereRegistro('categoriasDocumentos', 'descricao', opcao, id, 'categoriaDocumento', descricao)
             .then(result => {
@@ -145,17 +145,17 @@ export default {
   },
   methods: {
     toggleRadioButton () {
-      this.tipoDocumento.status = !this.tipoDocumento.status
+      this.setor.status = !this.setor.status
     },
     reset () {
-      this.$v.tipoDocumento.$reset()
-      this.tipoDocumento = new TipoDocumento()
-      this.$router.push({name: 'tipoDocumento'})
-      this.possoAlterarTipoDocumento = false
-      this.possoExcluirTipoDocumento = false
+      this.$v.setor.$reset()
+      this.setor = new Setor()
+      this.$router.push({name: 'setor'})
+      this.possoAlterarSetor = false
+      this.possoExcluirSetor = false
     },
     carrega (id) {
-      console.log('vou carregar o tipoDocumento')
+      console.log('vou carregar o setor')
       this.$q.loading.show({
         message: 'Localizando o registro',
         messageColor: 'white',
@@ -163,12 +163,12 @@ export default {
         spinnerColor: 'white'
       })
 
-      tipoDocumentoService
+      setorService
         .seleciona(id)
         .then(result => {
           this.$q.loading.hide()
-          console.log('peguei o tipoDocumento com sucesso')
-          this.tipoDocumento = Object.assign({}, this.tipoDocumento, result.data)
+          console.log('peguei o setor com sucesso')
+          this.setor = Object.assign({}, this.setor, result.data)
           this.confereAlterarExcluir()
         })
     },
@@ -181,8 +181,8 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.tipoDocumento.$touch()
-        if (this.$v.tipoDocumento.$error) {
+        this.$v.setor.$touch()
+        if (this.$v.setor.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
@@ -191,32 +191,32 @@ export default {
           return
         }
 
-        if (this.tipoDocumento.tipoDocumento && this.possoAlterarTipoDocumento) {
+        if (this.setor.setor && this.possoAlterarSetor) {
           console.log('estou alterando o form')
-          tipoDocumentoService.altera(this.tipoDocumento)
+          setorService.altera(this.setor)
             .then(result => {
               this.$q.loading.hide()
-              console.log('tipoDocumento alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.tipoDocumento)
+              console.log('setor alterado com sucesso')
+              this.$root.$emit('alteraUnicoRegistro', this.setor)
               this.$q.notify({
                 type: 'positive',
-                message: 'Tipo de Documento alterado com sucesso.',
+                message: 'Setor alterado com sucesso.',
                 timeout: 5000
               })
             })
-        } else if (!this.tipoDocumento.tipoDocumento && this.possoGravarTipoDocumento) {
-          tipoDocumentoService.grava(this.tipoDocumento)
+        } else if (!this.setor.setor && this.possoGravarSetor) {
+          setorService.grava(this.setor)
             .then(result => {
-              console.log('tipoDocumento criado com sucesso')
-              this.tipoDocumento.tipoDocumento = result.data.tipoDocumento.tipoDocumento
-              this.tipoDocumento.usuarioCriador = result.data.tipoDocumento.usuarioCriador
-              this.$router.push('/tipoDocumentos/tipoDocumento/' + result.data.tipoDocumento.tipoDocumento)
+              console.log('setor criado com sucesso')
+              this.setor.setor = result.data.setor.setor
+              this.setor.usuarioCriador = result.data.setor.usuarioCriador
+              this.$router.push('/setores/setor/' + result.data.setor.setor)
               this.$q.notify({
                 type: 'positive',
-                message: 'Tipo de Documento criado com sucesso.',
+                message: 'Setor criado com sucesso.',
                 timeout: 5000
               })
-              this.$root.$emit('adicionaRegistroNaLista', this.tipoDocumento)
+              this.$root.$emit('adicionaRegistroNaLista', this.setor)
               this.confereAlterarExcluir()
             })
         } else {
@@ -225,7 +225,7 @@ export default {
       }, 2000)
     },
     excluir () {
-      if (this.possoExcluirTipoDocumento) {
+      if (this.possoExcluirSetor) {
         this.$q.dialog({
           title: 'Tem certeza?',
           message: 'Ao confirmar esta operação, não poderá desfazer.',
@@ -239,16 +239,16 @@ export default {
             spinnerColor: 'white'
           })
 
-          tipoDocumentoService.apaga(this.tipoDocumento.tipoDocumento)
+          setorService.apaga(this.setor.setor)
             .then(result => {
               this.$q.loading.hide()
-              console.log('tipoDocumento removido com sucesso')
+              console.log('setor removido com sucesso')
               this.$q.notify({
                 type: 'negative',
-                message: 'Tipo de Documento removido com sucesso.',
+                message: 'Setor removido com sucesso.',
                 timeout: 5000
               })
-              this.$root.$emit('removeRegistro', this.tipoDocumento.tipoDocumento)
+              this.$root.$emit('removeRegistro', this.setor.setor)
               this.reset()
             })
         }).catch(() => {
@@ -259,8 +259,8 @@ export default {
       }
     },
     confereAlterarExcluir () {
-      this.possoAlterarTipoDocumento = permissoes.alterar('tipoDocumento', this.tipoDocumento.usuarioCriador)
-      this.possoExcluirTipoDocumento = permissoes.excluir('tipoDocumento', this.tipoDocumento.usuarioCriador)
+      this.possoAlterarSetor = permissoes.alterar('setor', this.setor.usuarioCriador)
+      this.possoExcluirSetor = permissoes.excluir('setor', this.setor.usuarioCriador)
     }
   },
   props: {
@@ -272,7 +272,7 @@ export default {
     }
   },
   computed: {
-    possoGravarTipoDocumento: () => permissoes.gravar('tipoDocumento')
+    possoGravarSetor: () => permissoes.gravar('setor')
   }
 }
 </script>

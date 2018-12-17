@@ -62,6 +62,11 @@
           <q-item-main label="Endereços" />
         </q-item>
 
+        <q-item link :to="{name: 'setor'}" v-if="getPermissoes.setor.abrir">
+          <q-item-side icon="work_outline" />
+          <q-item-main label="Setores Internos" />
+        </q-item>
+
       </q-collapsible>
 
     </q-list>
