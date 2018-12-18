@@ -62,6 +62,15 @@
                   </q-field>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-3">
+                  <q-field class="form-input" label="É rota para Malote?" orientation="vertical">
+                    <q-btn-group  class="fit">
+                      <radio-button :status="endereco.malote" @toggleRadioButton="toggleMalote" :label="['Sim', 'Não']"/>
+                    </q-btn-group>
+                  </q-field>
+                </div>
+              </div>
             </q-collapsible>
             <q-collapsible label="Endereço" opened>
               <div class="panel-body">
@@ -259,8 +268,8 @@ export default {
     toggleStatus () {
       this.endereco.status = !this.endereco.status
     },
-    toggleTipo () {
-      this.endereco.tipo = !this.endereco.tipo
+    toggleMalote () {
+      this.endereco.malote = !this.endereco.malote
     },
     reset () {
       this.$v.endereco.$reset()

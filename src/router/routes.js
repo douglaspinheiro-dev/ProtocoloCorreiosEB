@@ -20,7 +20,9 @@ export default [
       { path: '/enderecos', name: 'endereco', component: () => import('pages/cadastro/Endereco'), meta: { requerAutenticacao: true } },
       { path: '/enderecos/endereco/:id', name: 'alterarEndereco', component: () => import('pages/cadastro/Endereco'), meta: { requerAutenticacao: true }, props: true },
       { path: '/setores', name: 'setor', component: () => import('pages/cadastro/Setor'), meta: { requerAutenticacao: true } },
-      { path: '/setores/setor/:id', name: 'alterarSetor', component: () => import('pages/cadastro/Setor'), meta: { requerAutenticacao: true }, props: true }
+      { path: '/setores/setor/:id', name: 'alterarSetor', component: () => import('pages/cadastro/Setor'), meta: { requerAutenticacao: true }, props: true },
+      { path: '/protocoloentradas', name: 'protocoloEntrada', component: () => import('pages/cadastro/ProtocoloEntrada'), meta: { requerAutenticacao: true } },
+      { path: '/protocoloentradas/protocoloentrada/:id', name: 'alterarProtocoloEntrada', component: () => import('pages/cadastro/ProtocoloEntrada'), meta: { requerAutenticacao: true }, props: true }
 
     ]
   },

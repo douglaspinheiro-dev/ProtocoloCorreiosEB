@@ -67,6 +67,11 @@
           <q-item-main label="Setores Internos" />
         </q-item>
 
+        <q-item link :to="{name: 'protocoloEntrada'}" v-if="getPermissoes.protocoloEntrada.abrir">
+          <q-item-side icon="fas fa-file-alt" />
+          <q-item-main label="Protocolo de Entrada" />
+        </q-item>
+
       </q-collapsible>
 
     </q-list>

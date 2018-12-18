@@ -39,5 +39,9 @@ class TipoDocumentoDao extends Dao
       return DB::update("UPDATE categoriasDocumentos SET codigo = '{$dados['codigo']}', descricao = '{$dados['descricao']}', usuarioAlterador = {$dados['usuarioAlterador']} where categoriaDocumento = {$dados['tipoDocumento']}");
     }
 
+    public static function options() {
+      return DB::select("SELECT categoriaDocumento as tipoDocumento, codigo, descricao FROM categoriasDocumentos WHERE ativo = 1 order by descricao");
+    }
+
     //
 }

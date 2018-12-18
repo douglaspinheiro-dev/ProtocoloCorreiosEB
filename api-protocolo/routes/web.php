@@ -101,6 +101,19 @@ $app->group(
       }
     );
 
+    $app->group(
+      ['middleware' => 'protocoloEntrada'],
+      function() use ($app) {
+        $app->delete('/protocoloentradas/protocoloentrada/{id}', 'ProtocoloEntradaController@apaga');
+        $app->get('/protocoloentradas', 'ProtocoloEntradaController@lista');
+        $app->get('/protocoloentradas/options', 'ProtocoloEntradaController@options');
+        $app->get('/protocoloentradas/protocoloentrada/{id}', 'ProtocoloEntradaController@seleciona');
+        $app->post('/protocoloentradas/protocoloentrada', 'ProtocoloEntradaController@salva');
+        $app->put('/protocoloentradas/protocoloentrada/{id}', 'ProtocoloEntradaController@altera');
+
+      }
+    );
+
 
 
     $app->get('/registros/confere', 'RegistroController@confere');

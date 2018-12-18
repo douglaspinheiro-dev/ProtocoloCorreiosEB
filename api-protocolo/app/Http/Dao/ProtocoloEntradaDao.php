@@ -4,7 +4,7 @@ namespace App\Http\Dao;
 use App\Http\Dao\Dao;
 use Illuminate\Support\Facades\DB;
 
-class SetorDao extends Dao
+class ProtocoloEntradaDao extends Dao
 {
     /**
      * Create a new controller instance.
@@ -17,25 +17,27 @@ class SetorDao extends Dao
     }
 
     public static function lista($obj) {
-      return DB::select("SELECT setor, descricao,codigoReduzido,usuarioCriador FROM setores WHERE
+      return DB::select("SELECT protocoloEntrada, numero, assunto, dataDocumento, origem, destino, usuarioCriador FROM protocoloEntradas WHERE
       (
-        descricao LIKE '%{$obj['busca']}%' OR
-        codigoReduzido LIKE '%{$obj['busca']}%' OR
-        codigo LIKE '%{$obj['busca']}%'
+        dataDocumento LIKE '%{$obj['busca']}%' OR
+        numero LIKE '%{$obj['busca']}%' OR
+        assunto LIKE '%{$obj['busca']}%' OR
+        origem LIKE '%{$obj['busca']}%' OR
+        destino LIKE '%{$obj['busca']}%'
       )
-      AND ativo = 1 ORDER BY descricao LIMIT {$obj['inicio']}, {$obj['fim']}");
+      AND ativo = 1 ORDER BY dataDocumento LIMIT {$obj['inicio']}, {$obj['fim']}");
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT * FROM setores WHERE setor = {$id} AND ativo = 1");
+      return DB::select("SELECT * FROM protocoloEntradas WHERE protocoloEntrada = {$id} AND ativo = 1");
     }
 
     public static function apaga($dados) {
-      return DB::update("UPDATE setores SET ativo = 0, usuarioAlterador = {$dados['usuarioAlterador']} WHERE setor = {$dados['id']}");
+      return DB::update("UPDATE protocoloEntradas SET ativo = 0, usuarioAlterador = {$dados['usuarioAlterador']} WHERE protocoloEntrada = {$dados['id']}");
     }
 
     public static function salva($dados) {
-      return DB::insert("INSERT INTO setores
+      return DB::insert("INSERT INTO protocoloEntradas
       (
         descricao,
         codigo,
@@ -53,18 +55,13 @@ class SetorDao extends Dao
     }
 
     public static function altera($dados) {
-      return DB::update("UPDATE setores SET
+      return DB::update("UPDATE protocoloEntradas SET
       descricao = '{$dados['descricao']}',
       codigo = '{$dados['codigo']}',
       codigoReduzido = '{$dados['codigoReduzido']}',
       status = '{$dados['status']}',
       usuarioCriador = '{$dados['usuarioCriador']}'
-      where setor = {$dados['setor']}");
-    }
-
-    public static function options() {
-      return DB::select("SELECT setor, descricao, codigo FROM setores WHERE
-      ativo = 1 ORDER BY descricao");
+      where protocoloEntrada = {$dados['protocoloEntrada']}");
     }
 
     //

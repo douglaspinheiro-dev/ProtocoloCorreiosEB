@@ -49,6 +49,7 @@ class EnderecoDao extends Dao
         cep,
         referencia,
         status,
+        malote,
         usuarioCriador
       ) values
       (
@@ -64,6 +65,7 @@ class EnderecoDao extends Dao
         '{$dados['cep']}',
         '{$dados['referencia']}',
         '{$dados['status']}',
+        '{$dados['malote']}',
         '{$dados['usuarioCriador']}'
       )");
     }
@@ -82,8 +84,13 @@ class EnderecoDao extends Dao
       cep = '{$dados['cep']}',
       referencia = '{$dados['referencia']}',
       status = '{$dados['status']}',
+      malote = '{$dados['malote']}',
       usuarioCriador = '{$dados['usuarioCriador']}'
       where endereco = {$dados['endereco']}");
+    }
+
+    public static function options() {
+      return DB::select("SELECT endereco, descricao,codigoReduzido,usuarioCriador FROM enderecos WHERE ativo = 1 ORDER BY descricao");
     }
 
     //

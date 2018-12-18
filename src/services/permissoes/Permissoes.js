@@ -44,5 +44,22 @@ export default class Permissoes {
       'excluir',
       'relatorios'
     ]
+
+    // SETORES INTERNOS
+    this.setor = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
+    // PROTOCOLO DE ENTRADA
+    this.protocoloEntrada = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
   }
 }
