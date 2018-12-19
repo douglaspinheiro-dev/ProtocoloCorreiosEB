@@ -96,19 +96,16 @@
                   :error="$v.protocoloEntrada.origem.$error"
                   error-label="Obrigatório"
                 >
-                  <q-search v-model="protocoloEntrada.origem" placeholder="Start typing a country name">
-                    <q-autocomplete @search="search" @selected="selected" />
-                  </q-search>
-                  <!-- <q-select
+                  <q-select
                     v-model="protocoloEntrada.origem"
                     :options="optionsEndereco"
                     filter
                     autofocus-filter
                     filter-placeholder="Selecione a Origem"
                     name="select"
-                    @input="$v.protocoloEntrada.origem.$touch()"
+                    @input="procuraEndereco"
                   />
-                  <q-progress indeterminate v-show="optionsLoading"/> -->
+                  <q-progress indeterminate v-show="optionsLoading"/>
                 </q-field>
               </div>
 
@@ -139,20 +136,20 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <q-field class="form-input" label="Destino" orientation="vertical"
-                  :error="$v.protocoloEntrada.destino.$error"
+                  :error="$v.protocoloEntrada.setor.$error"
                   error-label="Obrigatório"
                   helper="Obrigatório"
                 >
                   <q-select
-                    v-model="protocoloEntrada.destino"
+                    v-model="protocoloEntrada.setor"
                     :options="optionsSetor"
                     filter
                     autofocus-filter
                     filter-placeholder="Selecione o Destino"
                     name="select"
-                    @input="$v.protocoloEntrada.destino.$touch()"
+                    @input="$v.protocoloEntrada.setor.$touch()"
                   />
                   <q-progress indeterminate v-show="optionsLoading"/>
                 </q-field>
@@ -185,7 +182,6 @@ import ListaDeRegistros from 'src/components/menuRight/ListaProtocoloEntradas.vu
 import { required } from 'vuelidate/lib/validators'
 import ProtocoloEntrada from 'src/services/protocoloEntrada/ProtocoloEntrada'
 import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntradaService'
-import enderecoService from 'src/services/endereco/EnderecoService'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
 import notify from '../../tools/Notify'
@@ -220,42 +216,16 @@ export default {
       dataDocumento: {required},
       origem: {required},
       assunto: {required},
-      destino: {required}
+      setor: {required}
     }
   },
   methods: {
-    search (terms, done) {
-
-      // make an AJAX call
-      // then call done(Array results)
-
-      // DO NOT forget to call done! When no results or an error occurred,
-      // just call with empty array as param. Example: done([])
-      // enderecoService.procura(terms, 0, 200)
-      //   .then(result => {
-      //     if (result.data.registros.length === 0) {
-      //       console.log('sem registros')
-      //       this.listaDeRegistros = [{
-      //         descricao: 'Sem registros encontrados'
-      //       }]
-      //       this.registros = []
-      //       this.$refs.infiniteScroll.stop()
-      //     } else {
-      //       if (inicio === 0) {
-      //         this.registros = []
-      //       }
-      //       this.registros = this.registros.concat(result.data.registros)
-      //       this.listaDeRegistros = this.registros
-      //       // this.$store.commit('menuRight/setRegistros', listaDeRegistros)
-      //       if (result.data.fim === true) {
-      //         console.log('fim da lista')
-      //         this.$refs.infiniteScroll.stop()
-      //       }
-
-      //     }
-      //     done()
-      //   })
+    procuraEndereco (busca) {
+      this.$v.protocoloEntrada.origem.$touch()
+      console.log(busca)
+      console.log('procurando no select')
     },
+
     setOptionsTipoDocumento (tipoDocumentos) {
       if (tipoDocumentos.length > 0) {
         let optionsTipoDocumento = []
@@ -360,10 +330,12 @@ export default {
             .then(result => {
               this.$q.loading.hide()
               console.log('protocoloEntrada alterado com sucesso')
+              let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
+              this.protocoloEntrada.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
               this.$root.$emit('alteraUnicoRegistro', this.protocoloEntrada)
               this.$q.notify({
                 type: 'positive',
-                message: 'ProtocoloEntrada alterado com sucesso.',
+                message: 'Protocolo de Entrada alterado com sucesso.',
                 timeout: 5000
               })
             })
@@ -376,9 +348,11 @@ export default {
               this.$router.push('/protocoloEntradas/protocoloEntrada/' + result.data.protocoloEntrada.protocoloEntrada)
               this.$q.notify({
                 type: 'positive',
-                message: 'ProtocoloEntrada criado com sucesso.',
+                message: 'Protocolo de Entrada criado com sucesso.',
                 timeout: 5000
               })
+              let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
+              this.protocoloEntrada.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
               this.$root.$emit('adicionaRegistroNaLista', this.protocoloEntrada)
               this.confereAlterarExcluir()
             })
@@ -408,7 +382,7 @@ export default {
               console.log('protocoloEntrada removido com sucesso')
               this.$q.notify({
                 type: 'negative',
-                message: 'ProtocoloEntrada removido com sucesso.',
+                message: 'Protocolo de Entrada removido com sucesso.',
                 timeout: 5000
               })
               this.$root.$emit('removeRegistro', this.protocoloEntrada.protocoloEntrada)

@@ -43,8 +43,6 @@ class PermissoesModuloDao
   }
 
   public static function confereAbrir($dados) {
-    ChromePhp::log("SELECT permissoesModulos.abrir from permissoesModulos JOIN modulos on modulos.modulo = permissoesModulos.modulo and modulos.nomeHtml = '{$dados['modulo']}' join categoriasModulos on categoriasModulos.categoriaModulo = modulos.categoriaModulo and categoriaUsuario = (select categoriaUsuario from usuarios where usuario = '{$dados['usuario']}')");
-
     return DB::select("SELECT permissoesModulos.abrir from permissoesModulos JOIN modulos on modulos.modulo = permissoesModulos.modulo and modulos.nomeHtml = '{$dados['modulo']}' join categoriasModulos on categoriasModulos.categoriaModulo = modulos.categoriaModulo and categoriaUsuario = (select categoriaUsuario from usuarios where usuario = '{$dados['usuario']}')");
   }
 

@@ -17,19 +17,36 @@ class ProtocoloEntradaDao extends Dao
     }
 
     public static function lista($obj) {
-      return DB::select("SELECT protocoloEntrada, numero, assunto, dataDocumento, origem, destino, usuarioCriador FROM protocoloEntradas WHERE
+      return DB::select("SELECT
+        protocoloEntrada,
+        numero,
+        assunto,
+        categoriasDocumentos.descricao as tipoDocumentoDescricao,
+        DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
+        origem,
+        setores.codigo as setorDescricao
+         FROM protocoloEntradas
+        JOIN categoriasDocumentos on protocoloEntradas.categoriaDocumento = categoriasDocumentos.categoriaDocumento
+        JOIN setores on protocoloEntradas.setor = setores.setor
+        AND
       (
-        dataDocumento LIKE '%{$obj['busca']}%' OR
-        numero LIKE '%{$obj['busca']}%' OR
-        assunto LIKE '%{$obj['busca']}%' OR
-        origem LIKE '%{$obj['busca']}%' OR
-        destino LIKE '%{$obj['busca']}%'
+        protocoloEntradas.numero LIKE '%{$obj['busca']}%' OR
+        protocoloEntradas.protocoloEntrada LIKE '%{$obj['busca']}%'
       )
-      AND ativo = 1 ORDER BY dataDocumento LIMIT {$obj['inicio']}, {$obj['fim']}");
+      AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT {$obj['inicio']}, {$obj['fim']}");
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT * FROM protocoloEntradas WHERE protocoloEntrada = {$id} AND ativo = 1");
+      return DB::select("SELECT
+      protocoloEntrada,
+      numero,
+      dataDocumento,
+      categoriaDocumento as tipoDocumento,
+      origem,
+      setor,
+      assunto,
+      usuarioCriador
+      FROM protocoloEntradas WHERE protocoloEntrada = {$id} AND ativo = 1");
     }
 
     public static function apaga($dados) {
@@ -39,27 +56,33 @@ class ProtocoloEntradaDao extends Dao
     public static function salva($dados) {
       return DB::insert("INSERT INTO protocoloEntradas
       (
-        descricao,
-        codigo,
-        codigoReduzido,
-        status,
+        numero,
+        dataDocumento,
+        categoriaDocumento,
+        origem,
+        setor,
+        assunto,
         usuarioCriador
       ) values
       (
-        '{$dados['descricao']}',
-        '{$dados['codigo']}',
-        '{$dados['codigoReduzido']}',
-        '{$dados['status']}',
+        '{$dados['numero']}',
+        '{$dados['dataDocumento']}',
+        '{$dados['tipoDocumento']}',
+        '{$dados['origem']}',
+        '{$dados['setor']}',
+        '{$dados['assunto']}',
         '{$dados['usuarioCriador']}'
       )");
     }
 
     public static function altera($dados) {
       return DB::update("UPDATE protocoloEntradas SET
-      descricao = '{$dados['descricao']}',
-      codigo = '{$dados['codigo']}',
-      codigoReduzido = '{$dados['codigoReduzido']}',
-      status = '{$dados['status']}',
+      numero = '{$dados['numero']}',
+      dataDocumento = '{$dados['dataDocumento']}',
+      categoriaDocumento = '{$dados['tipoDocumento']}',
+      origem = '{$dados['origem']}',
+      setor = '{$dados['setor']}',
+      assunto = '{$dados['assunto']}',
       usuarioCriador = '{$dados['usuarioCriador']}'
       where protocoloEntrada = {$dados['protocoloEntrada']}");
     }

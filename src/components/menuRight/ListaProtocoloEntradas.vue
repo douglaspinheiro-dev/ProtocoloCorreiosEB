@@ -1,12 +1,12 @@
 <template>
-  <q-layout-drawer v-model="mostraMenuRight" side="right">
+  <q-layout-drawer v-model="mostraMenuRight" side="right" :width="400">
     <q-list>
       <q-list-header>Protocolos de Entrada</q-list-header>
 
         <q-search
           @input="pesquisando"
           v-model.lazy="busca"
-          :debounce="600"
+          :debounce="300"
           placeholder="Busca"
           icon="search"
           stack-label="Busca"
@@ -16,9 +16,10 @@
           <!-- Content, in this case some <p> tags -->
           <q-item exact separator link highlight multiline v-for="(protocoloEntrada, index) in listaDeRegistros"  item :to="{ name: 'alterarProtocoloEntrada', params: { id: protocoloEntrada.protocoloEntrada} }" :key="index">
             <q-item-main>
-              <q-item-tile label> {{ protocoloEntrada.descricao }}</q-item-tile>
-              <q-item-tile sublabel>{{ protocoloEntrada.codigoReduzido }} </q-item-tile>
+              <q-item-tile label> {{ `${protocoloEntrada.dataDocumento} | ${protocoloEntrada.origem}` }}</q-item-tile>
+              <q-item-tile sublabel lines="2">{{`${protocoloEntrada.tipoDocumentoDescricao} ${protocoloEntrada.numero} | ${protocoloEntrada.assunto}` }} </q-item-tile>
             </q-item-main>
+            <q-item-side right :stamp="`Prot: ${protocoloEntrada.protocoloEntrada}`" />
           </q-item>
           <div slot="message" class="row justify-center" style="margin-bottom: 50px;">
             <q-spinner-dots :size="40" />
@@ -32,6 +33,7 @@
 <script>
 import ProtocoloEntrada from 'src/services/protocoloEntrada/ProtocoloEntrada'
 import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntradaService'
+import moment from 'src/tools/Moment'
 export default {
   name: 'ListaProtocoloEntradaes',
   components: {
@@ -99,18 +101,29 @@ export default {
     })
 
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
+      console.log(novoRegistro)
+
       let idRegistro = this.registros.filter(registro => registro.protocoloEntrada === novoRegistro.protocoloEntrada)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].codigoReduzido = novoRegistro.codigoReduzido
-      this.registros[id].descricao = novoRegistro.descricao
+      this.registros[id].assunto = novoRegistro.assunto
+      this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
+      this.registros[id].numero = novoRegistro.numero
+      this.registros[id].origem = novoRegistro.origem
+      this.registros[id].setorDescricao = novoRegistro.setorDescricao
+      this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let protocoloEntrada = new ProtocoloEntrada()
       protocoloEntrada.protocoloEntrada = obj.protocoloEntrada
-      protocoloEntrada.codigoReduzido = obj.codigoReduzido
-      protocoloEntrada.descricao = obj.descricao
+
+      protocoloEntrada.assunto = obj.assunto
+      protocoloEntrada.dataDocumento = moment(obj.dataDocumento).format('L')
+      protocoloEntrada.numero = obj.numero
+      protocoloEntrada.origem = obj.origem
+      protocoloEntrada.setorDescricao = obj.setorDescricao
+      protocoloEntrada.tipoDocumentoDescricao = obj.tipoDocumentoDescricao
       this.registros.push(protocoloEntrada)
       this.listaDeRegistros = this.registros
     })

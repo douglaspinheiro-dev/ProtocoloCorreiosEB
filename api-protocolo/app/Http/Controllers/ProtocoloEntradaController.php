@@ -55,19 +55,17 @@ class ProtocoloEntradaController extends Controller
   {
     $this->validate($this->request,
       [
-        'descricao' => 'required',
-        'codigo' => 'required',
-        'status' => 'required'
+        'tipoDocumento' => 'required',
+        'numero' => 'required',
+        'dataDocumento' => 'required',
+        'origem' => 'required',
+        'assunto' => 'required',
+        'setor' => 'required'
       ]
     );
 
     $protocoloEntrada = $this->request->all();
     $protocoloEntrada['usuarioCriador'] = $this->getUsuario();
-    $protocoloEntrada['codigoReduzido'] = $protocoloEntrada['codigo'];
-    $protocoloEntrada['codigoReduzido'] = str_replace(" ", '', $protocoloEntrada['codigoReduzido']);
-    $protocoloEntrada['codigoReduzido'] = str_replace("ª", '', $protocoloEntrada['codigoReduzido']);
-    $protocoloEntrada['codigoReduzido'] = str_replace("º", '', $protocoloEntrada['codigoReduzido']);
-    $protocoloEntrada['codigoReduzido'] = str_replace("°", '', $protocoloEntrada['codigoReduzido']);
     $results = ProtocoloEntradaDao::salva($protocoloEntrada);
     $protocoloEntrada['protocoloEntrada'] = ProtocoloEntradaDao::last()->id;
     return response()->json(['protocoloEntrada' =>$protocoloEntrada], 201);
@@ -78,19 +76,17 @@ class ProtocoloEntradaController extends Controller
     $this->validate($this->request,
       [
         'protocoloEntrada' => 'required',
-        'descricao' => 'required',
-        'codigo' => 'required',
-        'status' => 'required'
+        'tipoDocumento' => 'required',
+        'numero' => 'required',
+        'dataDocumento' => 'required',
+        'origem' => 'required',
+        'assunto' => 'required',
+        'setor' => 'required'
       ]
     );
 
     $protocoloEntrada = $this->request->all();
     $protocoloEntrada['usuarioAlterador'] = $this->getUsuario();
-    $protocoloEntrada['codigoReduzido'] = $protocoloEntrada['codigo'];
-    $protocoloEntrada['codigoReduzido'] = str_replace(" ", '', $protocoloEntrada['codigoReduzido']);
-    $protocoloEntrada['codigoReduzido'] = str_replace("ª", '', $protocoloEntrada['codigoReduzido']);
-    $protocoloEntrada['codigoReduzido'] = str_replace("º", '', $protocoloEntrada['codigoReduzido']);
-    $protocoloEntrada['codigoReduzido'] = str_replace("°", '', $protocoloEntrada['codigoReduzido']);
     $results = ProtocoloEntradaDao::altera($protocoloEntrada);
     return response()->json(['protocoloEntrada' =>$protocoloEntrada], 202);
   }
