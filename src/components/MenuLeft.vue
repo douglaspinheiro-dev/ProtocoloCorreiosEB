@@ -72,6 +72,11 @@
           <q-item-main label="Protocolo de Entrada" />
         </q-item>
 
+        <q-item link :to="{name: 'rota'}" v-if="getPermissoes.rota.abrir">
+          <q-item-side icon="fas fa-map-marked-alt" />
+          <q-item-main label="Rotas" />
+        </q-item>
+
       </q-collapsible>
 
     </q-list>

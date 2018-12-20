@@ -114,6 +114,32 @@ $app->group(
       }
     );
 
+    $app->group(
+      ['middleware' => 'rota'],
+      function() use ($app) {
+        $app->delete('/rotas/rota/{id}', 'RotaController@apaga');
+        $app->get('/rotas', 'RotaController@lista');
+        $app->get('/rotas/options', 'RotaController@options');
+        $app->get('/rotas/rota/{id}', 'RotaController@seleciona');
+        $app->post('/rotas/rota', 'RotaController@salva');
+        $app->put('/rotas/rota/{id}', 'RotaController@altera');
+
+      }
+    );
+
+    $app->group(
+      ['middleware' => 'rotaEndereco'],
+      function() use ($app) {
+        $app->delete('/rotasenderecos/rotaendereco/{id}', 'RotaEnderecoController@apaga');
+        $app->get('/rotasenderecos/rota/{id}', 'RotaEnderecoController@lista');
+        $app->get('/rotasenderecos/options', 'RotaEnderecoController@options');
+        $app->get('/rotasenderecos/rotaendereco/{id}', 'RotaEnderecoController@seleciona');
+        $app->post('/rotasenderecos/rotaendereco', 'RotaEnderecoController@salva');
+        $app->put('/rotasenderecos/rotaendereco/{id}', 'RotaEnderecoController@altera');
+
+      }
+    );
+
 
 
     $app->get('/registros/confere', 'RegistroController@confere');

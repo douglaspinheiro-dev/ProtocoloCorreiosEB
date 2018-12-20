@@ -93,5 +93,9 @@ class EnderecoDao extends Dao
       return DB::select("SELECT endereco, descricao,codigoReduzido,usuarioCriador FROM enderecos WHERE ativo = 1 ORDER BY descricao");
     }
 
+    public static function optionsRota() {
+      return DB::select("SELECT endereco, descricao,codigoReduzido,usuarioCriador FROM enderecos WHERE ativo = 1 AND malote = 1 ORDER BY descricao");
+    }
+
     //
 }

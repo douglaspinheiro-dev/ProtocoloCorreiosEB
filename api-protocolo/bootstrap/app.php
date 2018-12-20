@@ -74,6 +74,8 @@ $app->routeMiddleware([
     'endereco' => App\Http\Middleware\EnderecoMiddleware::class,
     'setor' => App\Http\Middleware\EnderecoMiddleware::class,
     'protocoloEntrada' => App\Http\Middleware\EnderecoMiddleware::class,
+    'rota' => App\Http\Middleware\RotaMiddleware::class,
+    'rotaEndereco' => App\Http\Middleware\RotaEnderecoMiddleware::class,
 ]);
 
 /*
