@@ -117,9 +117,9 @@ export const RotaEnderecoService = {
       })
   },
 
-  apaga (rotaEndereco) {
-    console.log(rotaEndereco)
-    return http.delete(`rotasenderecos/rota/${rotaEndereco.rota}/endereco/${rotaEndereco.endereco}`)
+  apaga (obj) {
+    console.log(obj)
+    return http.delete(`rotasenderecos/rotaendereco/${obj.rotaEndereco}`)
       .then(response => response)
       .catch(error => {
         console.log(error.response)

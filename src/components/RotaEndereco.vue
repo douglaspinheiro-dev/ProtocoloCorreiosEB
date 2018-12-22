@@ -99,7 +99,6 @@
 
     <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
       possoGravarRotaEndereco ||
-      possoAlterarRotaEndereco ||
       possoExcluirRotaEndereco
     ">
       <q-fab color="primary" active-icon="close" direction="up" icon="expand less">
@@ -141,8 +140,6 @@ export default {
       optionsEndereco: [],
       rotaEndereco: new RotaEndereco(),
       botaoSalvarAlterar: 'Salvar',
-      possoAlterarRotaEndereco: false,
-      possoExcluirRotaEndereco: false,
       carregandoLista: false,
       listaDeRotaEnderecos: [],
       colunasVisiveis: [
@@ -257,8 +254,6 @@ export default {
       this.rotaEndereco = new RotaEndereco()
       this.rotaEndereco.rota = this.rota
       this.botaoSalvarAlterar = 'Gravar'
-      this.possoAlterarRotaEndereco = false
-      this.possoExcluirRotaEndereco = false
     },
     carrega (id) {
       console.log('vou carregar o rotaEndereco')
@@ -276,7 +271,7 @@ export default {
           console.log('peguei o rotaEndereco com sucesso')
           this.rotaEndereco = Object.assign({}, this.rotaEndereco, result.data)
           this.botaoSalvarAlterar = 'Alterar'
-          this.confereAlterarExcluir()
+          this.confereExcluir()
         })
     },
     salvarAlterar () {
@@ -316,7 +311,8 @@ export default {
                 id: this.rotaEndereco.rotaEndereco,
                 endereco: enderecoDescricao
               })
-              this.confereAlterarExcluir()
+              console.log(result.data)
+              this.preencheListaTabela(result.data.rota.lista)
             })
         } else {
           notify.semPermissao()
@@ -324,6 +320,8 @@ export default {
       }, 2000)
     },
     excluir (id) {
+      console.log(id)
+
       if (this.possoExcluirRotaEndereco) {
         this.$q.dialog({
           title: 'Tem certeza?',
@@ -338,7 +336,7 @@ export default {
             spinnerColor: 'white'
           })
 
-          rotaEnderecoService.apaga(id)
+          rotaEnderecoService.apaga({rotaEndereco: id, rota: this.rota})
             .then(result => {
               this.$q.loading.hide()
               console.log('rotaEndereco removido com sucesso')
@@ -358,9 +356,30 @@ export default {
         notify.semPermissao()
       }
     },
-    confereAlterarExcluir () {
-      this.possoAlterarRotaEndereco = permissoes.alterar('rotaEndereco')
-      this.possoExcluirRotaEndereco = permissoes.excluir('rotaEndereco')
+    listaEnderecos () {
+      this.carregandoLista = true
+      rotaEnderecoService
+        .lista(this.rota)
+        .then(result => {
+          this.carregandoLista = false
+          console.log('carreguei a lista de rotaEnderecos')
+          this.preencheListaTabela(result.data.registros)
+        })
+    },
+    preencheListaTabela (registros) {
+      let lista = []
+      registros.forEach(rotaEndereco => {
+        lista.push({
+          id: rotaEndereco.rotaEndereco,
+          codigo: rotaEndereco.codigo,
+          descricao: rotaEndereco.descricao,
+          logradouro: rotaEndereco.logradouro,
+          cidade: rotaEndereco.cidade,
+          cep: rotaEndereco.cep,
+          uf: rotaEndereco.uf
+        })
+      })
+      this.listaDeRotaEnderecos = lista
     }
   },
   props: [
@@ -368,32 +387,12 @@ export default {
   ],
   computed: {
     possoGravarRotaEndereco: () => permissoes.gravar('rotaEndereco'),
-    possoAbrirRotaEndereco: () => permissoes.abrir('rotaEndereco')
+    possoAbrirRotaEndereco: () => permissoes.abrir('rotaEndereco'),
+    possoExcluirRotaEndereco: () => permissoes.excluir('rotaEndereco')
   },
   mounted () {
     console.log('vou carregar a rotaEndereco')
-    this.carregandoLista = true
-    rotaEnderecoService
-      .lista(this.rota)
-      .then(result => {
-        this.carregandoLista = false
-        console.log('carreguei a lista de rotaEnderecos')
-        let lista = []
-        console.log(result)
-
-        result.data.registros.forEach(rotaEndereco => {
-          lista.push({
-            id: rotaEndereco.rotaEndereco,
-            codigo: rotaEndereco.codigo,
-            descricao: rotaEndereco.descricao,
-            logradouro: rotaEndereco.logradouro,
-            cidade: rotaEndereco.cidade,
-            cep: rotaEndereco.cep,
-            uf: rotaEndereco.uf
-          })
-        })
-        this.listaDeRotaEnderecos = lista
-      })
+    this.listaEnderecos()
 
     this.optionsLoading = true
     rotaEnderecoService.getOptions()

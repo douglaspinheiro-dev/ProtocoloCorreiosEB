@@ -88,7 +88,7 @@
                 </q-field>
               </div>
 
-              <div class="col-md-8" v-show="enderecoCadastrado">
+              <!-- <div class="col-md-8" v-show="enderecoCadastrado">
                 <q-field class="form-input"
                   label="Origem"
                   orientation="vertical"
@@ -107,7 +107,7 @@
                   />
                   <q-progress indeterminate v-show="optionsLoading"/>
                 </q-field>
-              </div>
+              </div> -->
 
               <div class="col-md-8" v-show="!enderecoCadastrado">
                 <q-field class="form-input"
@@ -117,7 +117,13 @@
                   :error="$v.protocoloEntrada.origem.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" />
+                  <q-input autocomplete="on" type="text" v-model="terms" name="origem" >
+                    <q-autocomplete
+                      @search="search"
+                      :min-characters="3"
+                      @selected="selected"
+                    />
+                  </q-input>
                 </q-field>
               </div>
             </div>
@@ -185,6 +191,7 @@ import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntr
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
 import notify from '../../tools/Notify'
+import { filter } from 'quasar'
 var timer
 
 export default {
@@ -206,7 +213,8 @@ export default {
       enderecoCadastrado: true,
       optionsEndereco: [],
       optionsSetor: [],
-      optionsLoading: false
+      optionsLoading: false,
+      terms: ''
     }
   },
   validations: {
@@ -220,6 +228,24 @@ export default {
     }
   },
   methods: {
+    parseEnderecos () {
+      return this.optionsEndereco.map(endereco => {
+        console.log(endereco)
+
+        return {
+          label: endereco.label,
+          value: endereco.value
+        }
+      })
+    },
+    search (terms, done) {
+      setTimeout(() => {
+        done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
+      }, 1000)
+    },
+    selected (item) {
+      this.$q.notify(`Selected suggestion "${item.label}"`)
+    },
     procuraEndereco (busca) {
       this.$v.protocoloEntrada.origem.$touch()
       console.log(busca)

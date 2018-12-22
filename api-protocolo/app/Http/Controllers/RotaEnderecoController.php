@@ -52,7 +52,9 @@ class RotaEnderecoController extends Controller
     $rota = $this->request->all();
     $rota['usuarioCriador'] = $this->getUsuario();
     $results = RotaEnderecoDao::salva($rota);
-    $rota['rota'] = RotaEnderecoDao::last()->id;
+    $rota['rotaEndereco'] = RotaEnderecoDao::last()->id;
+
+    $rota['lista'] = RotaEnderecoDao::lista($rota['rota']);
     return response()->json(['rota' =>$rota], 201);
   }
 
