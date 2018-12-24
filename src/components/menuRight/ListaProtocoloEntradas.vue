@@ -59,7 +59,13 @@ export default {
           if (result.data.registros.length === 0 && inicio === 0) {
             console.log('sem registros')
             this.listaDeRegistros = [{
-              descricao: 'Sem registros encontrados'
+              assunto: 'Sem registros encontrados',
+              dataDocumento: '',
+              numero: '',
+              origem: '',
+              setorDescricao: '',
+              protocoloEntrada: '',
+              tipoDocumentoDescricao: ''
             }]
             this.registros = []
             this.$refs.infiniteScroll.stop()
@@ -117,7 +123,6 @@ export default {
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let protocoloEntrada = new ProtocoloEntrada()
       protocoloEntrada.protocoloEntrada = obj.protocoloEntrada
-
       protocoloEntrada.assunto = obj.assunto
       protocoloEntrada.dataDocumento = moment(obj.dataDocumento).format('L')
       protocoloEntrada.numero = obj.numero

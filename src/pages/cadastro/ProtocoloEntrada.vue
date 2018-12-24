@@ -80,8 +80,8 @@
               <div class="col-md-4">
                 <q-field class="form-input" label="É endereço cadastrado?" orientation="vertical">
                   <q-btn-group  class="fit">
-                    <radio-button :status="enderecoCadastrado"
-                    @toggleRadioButton="enderecoCadastrado = !enderecoCadastrado"
+                    <radio-button :status="protocoloEntrada.enderecoCadastrado"
+                    @toggleRadioButton="protocoloEntrada.enderecoCadastrado = !protocoloEntrada.enderecoCadastrado"
                     :label="['Sim','Não']"
                   />
                   </q-btn-group>
@@ -109,7 +109,7 @@
                 </q-field>
               </div> -->
 
-              <div class="col-md-8" v-show="!enderecoCadastrado">
+              <div class="col-md-8" v-show="protocoloEntrada.enderecoCadastrado">
                 <q-field class="form-input"
                   label="Origem"
                   orientation="vertical"
@@ -117,12 +117,30 @@
                   :error="$v.protocoloEntrada.origem.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="on" type="text" v-model="terms" name="origem" >
+                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" >
                     <q-autocomplete
                       @search="search"
                       :min-characters="3"
                       @selected="selected"
                     />
+                  </q-input>
+                </q-field>
+              </div>
+
+              <div class="col-md-8" v-show="!protocoloEntrada.enderecoCadastrado">
+                <q-field class="form-input"
+                  label="Origem"
+                  orientation="vertical"
+                  helper="Obrigatório"
+                  :error="$v.protocoloEntrada.origem.$error"
+                  error-label="Obrigatório"
+                >
+                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" >
+                    <!-- <q-autocomplete
+                      @search="search"
+                      :min-characters="3"
+                      @selected="selected"
+                    /> -->
                   </q-input>
                 </q-field>
               </div>
@@ -213,8 +231,7 @@ export default {
       enderecoCadastrado: true,
       optionsEndereco: [],
       optionsSetor: [],
-      optionsLoading: false,
-      terms: ''
+      optionsLoading: false
     }
   },
   validations: {
@@ -230,7 +247,7 @@ export default {
   methods: {
     parseEnderecos () {
       return this.optionsEndereco.map(endereco => {
-        console.log(endereco)
+        // console.log(endereco)
 
         return {
           label: endereco.label,
@@ -244,7 +261,7 @@ export default {
       }, 1000)
     },
     selected (item) {
-      this.$q.notify(`Selected suggestion "${item.label}"`)
+      // this.$q.notify(`Selected suggestion "${item.label}"`)
     },
     procuraEndereco (busca) {
       this.$v.protocoloEntrada.origem.$touch()

@@ -41,6 +41,7 @@ class ProtocoloEntradaDao extends Dao
       protocoloEntrada,
       numero,
       dataDocumento,
+      enderecoCadastrado,
       categoriaDocumento as tipoDocumento,
       origem,
       setor,
@@ -62,6 +63,7 @@ class ProtocoloEntradaDao extends Dao
         origem,
         setor,
         assunto,
+        enderecoCadastrado,
         usuarioCriador
       ) values
       (
@@ -71,6 +73,7 @@ class ProtocoloEntradaDao extends Dao
         '{$dados['origem']}',
         '{$dados['setor']}',
         '{$dados['assunto']}',
+        '{$dados['enderecoCadastrado']}',
         '{$dados['usuarioCriador']}'
       )");
     }
@@ -83,7 +86,8 @@ class ProtocoloEntradaDao extends Dao
       origem = '{$dados['origem']}',
       setor = '{$dados['setor']}',
       assunto = '{$dados['assunto']}',
-      usuarioCriador = '{$dados['usuarioCriador']}'
+      enderecoCadastrado = '{$dados['enderecoCadastrado']}',
+      usuarioAlterador = '{$dados['usuarioAlterador']}'
       where protocoloEntrada = {$dados['protocoloEntrada']}");
     }
 

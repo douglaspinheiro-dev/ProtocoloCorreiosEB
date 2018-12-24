@@ -7,6 +7,7 @@ export default class ProtocoloEntrada {
     this.origem = obj.origem || ''
     this.setor = obj.setor || ''
     this.dataDocumento = obj.dataDocumento || ''
+    this.enderecoCadastrado = obj.enderecoCadastrado || true
     this.usuarioCriador = obj.usuarioCriador || ''
   }
 }

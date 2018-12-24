@@ -60,7 +60,8 @@ class ProtocoloEntradaController extends Controller
         'dataDocumento' => 'required',
         'origem' => 'required',
         'assunto' => 'required',
-        'setor' => 'required'
+        'setor' => 'required',
+        'enderecoCadastrado' => 'required'
       ]
     );
 
@@ -81,7 +82,9 @@ class ProtocoloEntradaController extends Controller
         'dataDocumento' => 'required',
         'origem' => 'required',
         'assunto' => 'required',
-        'setor' => 'required'
+        'setor' => 'required',
+        'enderecoCadastrado' => 'required'
+
       ]
     );
 
