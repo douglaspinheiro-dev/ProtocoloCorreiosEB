@@ -77,6 +77,11 @@
           <q-item-main label="Rotas" />
         </q-item>
 
+        <q-item link :to="{name: 'malote'}" v-if="getPermissoes.malote.abrir">
+          <q-item-side icon="move_to_inbox" />
+          <q-item-main label="Malotes" />
+        </q-item>
+
       </q-collapsible>
 
     </q-list>

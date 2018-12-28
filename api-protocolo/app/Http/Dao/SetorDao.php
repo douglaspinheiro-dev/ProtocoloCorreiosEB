@@ -63,7 +63,7 @@ class SetorDao extends Dao
     }
 
     public static function options() {
-      return DB::select("SELECT setor, descricao, codigo FROM setores WHERE
+      return DB::select("SELECT setor, descricao, codigoReduzido FROM setores WHERE
       ativo = 1 ORDER BY descricao");
     }
 

@@ -140,6 +140,32 @@ $app->group(
       }
     );
 
+    $app->group(
+      ['middleware' => 'malote'],
+      function() use ($app) {
+        $app->delete('/malotes/malote/{id}', 'MaloteController@apaga');
+        $app->get('/malotes', 'MaloteController@lista');
+        $app->get('/malotes/options', 'MaloteController@options');
+        $app->get('/malotes/malote/{id}', 'MaloteController@seleciona');
+        $app->post('/malotes/malote', 'MaloteController@salva');
+        $app->put('/malotes/malote/{id}', 'MaloteController@altera');
+
+      }
+    );
+
+    $app->group(
+      ['middleware' => 'maloteDocumento'],
+      function() use ($app) {
+        $app->delete('/malotedocumentos/malotedocumento/{id}', 'MaloteDocumentoController@apaga');
+        $app->get('/malotedocumentos/malote/{id}', 'MaloteDocumentoController@lista');
+        $app->get('/malotedocumentos/options/{id}', 'MaloteDocumentoController@options');
+        $app->get('/malotedocumentos/malotedocumento/{id}', 'MaloteDocumentoController@seleciona');
+        $app->post('/malotedocumentos/malotedocumento', 'MaloteDocumentoController@salva');
+        $app->put('/malotedocumentos/malotedocumento/{id}', 'MaloteDocumentoController@altera');
+
+      }
+    );
+
 
 
     $app->get('/registros/confere', 'RegistroController@confere');

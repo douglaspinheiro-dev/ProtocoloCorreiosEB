@@ -61,5 +61,23 @@ export default class Permissoes {
       'excluir',
       'relatorios'
     ]
+
+    // CADASTRO DE MALOTES
+    this.malote = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
+
+    // DOCUMENTOS DO MALOTE
+    this.maloteDocumento = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
   }
 }

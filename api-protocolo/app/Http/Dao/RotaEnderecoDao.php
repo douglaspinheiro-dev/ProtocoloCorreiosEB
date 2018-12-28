@@ -34,4 +34,9 @@ class RotaEnderecoDao extends Dao
       return DB::insert("INSERT INTO rotasEnderecos (endereco, rota, usuarioCriador) values ('{$dados['endereco']}','{$dados['rota']}', {$dados['usuarioCriador']})");
     }
 
+    public static function options($rota) {
+      return DB::select("SELECT rotasEnderecos.*, enderecos.descricao,enderecos.codigoReduzido FROM rotasEnderecos
+        JOIN enderecos ON enderecos.endereco = rotasEnderecos.endereco AND rotasEnderecos.rota = {$rota}");
+    }
+
 }

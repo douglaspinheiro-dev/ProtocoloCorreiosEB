@@ -24,7 +24,9 @@ export default [
       { path: '/protocoloentradas', name: 'protocoloEntrada', component: () => import('pages/cadastro/ProtocoloEntrada'), meta: { requerAutenticacao: true } },
       { path: '/protocoloentradas/protocoloentrada/:id', name: 'alterarProtocoloEntrada', component: () => import('pages/cadastro/ProtocoloEntrada'), meta: { requerAutenticacao: true }, props: true },
       { path: '/rotas', name: 'rota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true } },
-      { path: '/rotas/rota/:id', name: 'alterarRota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true }, props: true }
+      { path: '/rotas/rota/:id', name: 'alterarRota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true }, props: true },
+      { path: '/malotes', name: 'malote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true } },
+      { path: '/malotes/malote/:id', name: 'alterarMalote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true }, props: true }
 
     ]
   },
