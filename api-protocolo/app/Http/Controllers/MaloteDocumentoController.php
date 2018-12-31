@@ -20,11 +20,11 @@ class MaloteDocumentoController extends Controller
 
   public function apaga($id)
   {
-    $dados = [
-      'id' => $id,
-      'usuarioAlterador' => $this->getUsuario()
-    ];
-    $results = MaloteDocumentoDao::apaga($dados);
+    // $dados = [
+    //   'id' => $id,
+    //   'usuarioAlterador' => $this->getUsuario()
+    // ];
+    $results = MaloteDocumentoDao::apaga($id);
     return response()->json('', 204);
   }
 
@@ -68,8 +68,12 @@ class MaloteDocumentoController extends Controller
   {
     $this->validate($this->request,
       [
-        'rota' => 'required',
-        'endereco' => 'required'
+        'tipoDocumento' => 'required',
+        'numero' => 'required',
+        'setor' => 'required',
+        'rotaEndereco' => 'required',
+        'malote' => 'required',
+        'maloteDocumento' => 'required'
       ]
     );
 

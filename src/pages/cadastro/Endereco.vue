@@ -70,6 +70,26 @@
                     </q-btn-group>
                   </q-field>
                 </div>
+                <div class="col-md-3" v-show="this.endereco.malote">
+                  <q-field class="form-input"
+                    label="Qual Rota?"
+                    orientation="vertical"
+                    helper="Obrigatório"
+                    :error="$v.endereco.rota.$error"
+                    error-label="Obrigatório"
+                  >
+                    <q-select
+                      v-model="endereco.rota"
+                      :options="optionsRota"
+                      filter
+                      autofocus-filter
+                      filter-placeholder="Selecione a Origem"
+                      name="select"
+                      @input="$v.endereco.rota.$touch()"
+                    />
+                    <q-progress indeterminate v-show="optionsLoading"/>
+                  </q-field>
+                </div>
               </div>
             </q-collapsible>
             <q-collapsible label="Endereço" opened>
@@ -165,7 +185,7 @@ import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import RadioButton from 'src/components/form/radios/RadioButton'
 import ListaDeRegistros from 'src/components/menuRight/ListaEnderecos.vue'
-import { required } from 'vuelidate/lib/validators'
+import { required, requiredIf } from 'vuelidate/lib/validators'
 import Endereco from 'src/services/endereco/Endereco'
 import enderecoService from 'src/services/endereco/EnderecoService'
 import confereRegistro from 'src/services/confereRegistro'
@@ -196,13 +216,14 @@ export default {
       optionsEstados: optionsEstados,
       cepLoading: false,
       possoAlterarEndereco: false,
-      possoExcluirEndereco: false
+      possoExcluirEndereco: false,
+      optionsRota: [],
+      optionsLoading: false
     }
   },
   validations: {
     endereco: {
       codigo: {required},
-      cep: {required},
       descricao: {
         required,
         isUnique (value) {
@@ -230,6 +251,11 @@ export default {
             })
           return retorno
         }
+      },
+      rota: {
+        required: requiredIf(function (nestedModel) {
+          return nestedModel.malote
+        })
       }
     }
   },
@@ -387,6 +413,23 @@ export default {
     confereAlterarExcluir () {
       this.possoAlterarEndereco = permissoes.alterar('endereco', this.endereco.usuarioCriador)
       this.possoExcluirEndereco = permissoes.excluir('endereco', this.endereco.usuarioCriador)
+    },
+    setOptionsRota (rotas) {
+      if (rotas.length > 0) {
+        let optionsRota = []
+        rotas.map(rota => optionsRota.push(
+          {
+            label: rota.descricao,
+            value: rota.rota
+          }
+        ))
+        this.optionsRota = optionsRota
+      } else {
+        this.optionsRota = [{
+          label: 'Sem registros cadastrados',
+          value: ''
+        }]
+      }
     }
   },
   props: {
@@ -399,6 +442,14 @@ export default {
   },
   computed: {
     possoGravarEndereco: () => permissoes.gravar('endereco')
+  },
+  mounted () {
+    this.optionsLoading = true
+    enderecoService.getOptions()
+      .then(result => {
+        this.optionsLoading = false
+        this.setOptionsRota(result.data.rotas)
+      })
   }
 }
 </script>

@@ -110,6 +110,29 @@ export const EnderecoService = {
         }
         throw new Error(error)
       })
+  },
+  getOptions () {
+    return http.get(`enderecos/options`)
+      .then(response => response)
+      .catch(error => {
+        // throw new Error(error)
+        Loading.hide()
+        console.log('erro no servidor ao selecionar as options')
+
+        if (error.response.status === 401) {
+          Notify.semPermissao()
+        } else {
+          Dialog.create({
+            title: 'Atenção',
+            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
+          }).then(() => {
+            // Picked "OK"
+          }).catch(() => {
+            // Picked "Cancel" or dismissed
+          })
+        }
+        throw new Error(error)
+      })
   }
 }
 export default EnderecoService

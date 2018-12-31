@@ -14,5 +14,6 @@ export default class Endereco {
     this.cep = obj.cep || ''
     this.referencia = obj.referencia || ''
     this.malote = obj.malote || false
+    this.rota = obj.rota || ''
   }
 }

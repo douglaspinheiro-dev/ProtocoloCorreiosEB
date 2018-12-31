@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Dao\EnderecoDao;
+use App\Http\Dao\RotaDao;
+use App\Http\Dao\RotaEnderecoDao;
 use Illuminate\Http\Request;
 use App\ChromePhp;
 
@@ -45,7 +47,14 @@ class EnderecoController extends Controller
   public function seleciona($id)
   {
     $results = EnderecoDao::seleciona($id);
-    return response()->json($results[0], 200);
+    $endereco = $results[0];
+    if($endereco->malote) {
+      $results = RotaEnderecoDao::selecionaEndereco($endereco->endereco);
+      ChromePhp::log($endereco);
+      ChromePhp::log($results);
+      $endereco->rota = $results[0]->rota;
+    }
+    return response()->json($endereco, 200);
   }
 
   public function salva()
@@ -67,6 +76,14 @@ class EnderecoController extends Controller
     $endereco['codigoReduzido'] = str_replace("°", '', $endereco['codigoReduzido']);
     $results = EnderecoDao::salva($endereco);
     $endereco['endereco'] = EnderecoDao::last()->id;
+
+    if($endereco['malote']){
+      // se for rota pra malote, salva a rota na tabela de rotasEnderecos
+      $rota['usuarioCriador'] = $this->getUsuario();
+      $rota['endereco'] = $endereco['endereco'];
+      $rota['rota'] = $endereco['rota'];
+      $results = RotaEnderecoDao::salva($rota);
+    }
     return response()->json(['endereco' =>$endereco], 201);
   }
 
@@ -89,14 +106,24 @@ class EnderecoController extends Controller
     $endereco['codigoReduzido'] = str_replace("º", '', $endereco['codigoReduzido']);
     $endereco['codigoReduzido'] = str_replace("°", '', $endereco['codigoReduzido']);
     $results = EnderecoDao::altera($endereco);
+
+    $results = RotaEnderecoDao::apagaEndereco($endereco['endereco']);
+    if($endereco['malote']){
+      // se for rota pra malote, salva a rota na tabela de rotasEnderecos
+      $rota['usuarioCriador'] = $this->getUsuario();
+      $rota['endereco'] = $endereco['endereco'];
+      $rota['rota'] = $endereco['rota'];
+      $results = RotaEnderecoDao::salva($rota);
+    }
+
     return response()->json(['endereco' =>$endereco], 202);
   }
 
   public function options()
   {
-    $endereco = GrupoEnderecoDao::lista();
+    $rota = RotaDao::options();
     return response()->json([
-      'enderecos' => $endereco,
+      'rotas' => $rota,
     ], 200);
   }
 }

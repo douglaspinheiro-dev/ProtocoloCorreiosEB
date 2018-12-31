@@ -244,7 +244,7 @@ export default {
         this.optionsEndereco = optionsEndereco
       } else {
         this.optionsEndereco = [{
-          label: 'Sem registros cadastrados',
+          label: 'Nenhum endereço foi marcado como rota, confira o cadastro de endereços',
           value: ''
         }]
       }

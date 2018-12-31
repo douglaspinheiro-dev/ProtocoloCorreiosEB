@@ -57,7 +57,9 @@ export default {
           if (result.data.registros.length === 0 && inicio === 0) {
             console.log('sem registros')
             this.listaDeRegistros = [{
-              descricao: 'Sem registros encontrados'
+              data: '',
+              descricao: 'Sem registros encontrados',
+              malote: ''
             }]
             this.registros = []
             this.$refs.infiniteScroll.stop()

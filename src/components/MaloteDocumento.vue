@@ -252,7 +252,7 @@ export default {
         this.optionsRotaEndereco = optionsRotaEndereco
       } else {
         this.optionsRotaEndereco = [{
-          label: 'Sem registros cadastrados',
+          label: 'Sem registros cadastrados, confira o cadastro de Rotas',
           value: ''
         }]
       }
@@ -387,7 +387,7 @@ export default {
             spinnerColor: 'white'
           })
 
-          maloteDocumentoService.apaga({maloteDocumento: id, rota: this.rota})
+          maloteDocumentoService.apaga(this.maloteDocumento.maloteDocumento)
             .then(result => {
               this.$q.loading.hide()
               console.log('maloteDocumento removido com sucesso')
@@ -396,7 +396,7 @@ export default {
                 message: 'MaloteDocumento removido com sucesso.',
                 timeout: 5000
               })
-              let idRegistro = this.listaDeMaloteDocumentos.filter(registro => registro.id === id)
+              let idRegistro = this.listaDeMaloteDocumentos.filter(registro => registro.id === this.maloteDocumento.maloteDocumento)
               this.listaDeMaloteDocumentos.splice(this.listaDeMaloteDocumentos.indexOf(idRegistro[0]), 1)
               this.reset()
             })

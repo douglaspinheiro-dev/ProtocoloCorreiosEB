@@ -94,7 +94,7 @@ export const MaloteDocumentoService = {
   },
 
   altera (maloteDocumento) {
-    return http.put(`malotedocumentos/malotedocumento/${maloteDocumento.documento}`, maloteDocumento)
+    return http.put(`malotedocumentos/malotedocumento/${maloteDocumento.maloteDocumento}`, maloteDocumento)
       .then(response => response)
       .catch(error => {
         console.log(error.response)
@@ -119,7 +119,7 @@ export const MaloteDocumentoService = {
 
   apaga (obj) {
     console.log(obj)
-    return http.delete(`malotedocumentos/malotedocumento/${obj.maloteDocumento}`)
+    return http.delete(`malotedocumentos/malotedocumento/${obj}`)
       .then(response => response)
       .catch(error => {
         console.log(error.response)

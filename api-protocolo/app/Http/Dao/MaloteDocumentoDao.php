@@ -43,8 +43,8 @@ class MaloteDocumentoDao extends Dao
         FROM maloteDocumentos WHERE maloteDocumento = {$id}");
     }
 
-    public static function apaga($dados) {
-      return DB::delete("DELETE FROM maloteDocumentos WHERE maloteDocumento = {$dados['id']}");
+    public static function apaga($id) {
+      return DB::delete("DELETE FROM maloteDocumentos WHERE maloteDocumento = {$id}");
     }
 
     public static function salva($dados) {
