@@ -133,7 +133,7 @@ var timer
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from '../../tools/Notify'
-import RadioButton from 'src/components/form/radios/RadioButton'
+// import RadioButton from 'src/components/form/radios/RadioButton'
 import {mask} from 'vue-the-mask'
 import botaoMobile from 'src/components/QFab/QFab'
 
@@ -143,7 +143,7 @@ export default {
     ListaDeRegistros,
     BotaoMenuLeft,
     BotaoMenuRight,
-    RadioButton,
+    // RadioButton,
     formMaloteDocumento,
     botaoMobile
   },

@@ -241,6 +241,74 @@
                 <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
               </q-inner-loading>
             </q-collapsible>
+            <div class="row">
+              <div class="col-md-3">
+                <q-field class="form-input" label="Tipo de Correspondencia" orientation="vertical"
+                  :error="$v.correspondencia.setor.$error"
+                  error-label="Obrigatório"
+                  helper="Obrigatório"
+                >
+                  <q-select
+                    v-model="correspondencia.setor"
+                    :options="optionsSetor"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o origem"
+                    name="select"
+                    @input="$v.correspondencia.setor.$touch()"
+                  />
+                  <q-progress indeterminate v-show="optionsLoading"/>
+                </q-field>
+              </div>
+              <div class="col-md-3">
+                <q-field class="form-input" label="Tipo de Cobrança" orientation="vertical"
+                  :error="$v.correspondencia.setor.$error"
+                  error-label="Obrigatório"
+                  helper="Obrigatório"
+                >
+                  <q-select
+                    v-model="correspondencia.setor"
+                    :options="optionsSetor"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o origem"
+                    name="select"
+                    @input="$v.correspondencia.setor.$touch()"
+                  />
+                  <q-progress indeterminate v-show="optionsLoading"/>
+                </q-field>
+              </div>
+              <div class="col-md-3">
+                <q-field class="form-input" label="valorTC" orientation="vertical"
+                  :error="$v.correspondencia.setor.$error"
+                  error-label="Obrigatório"
+                  helper="Obrigatório"
+                >
+                  <q-select
+                    v-model="correspondencia.setor"
+                    :options="optionsSetor"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o origem"
+                    name="select"
+                    @input="$v.correspondencia.setor.$touch()"
+                  />
+                  <q-progress indeterminate v-show="optionsLoading"/>
+                </q-field>
+              </div>
+              <div class="col-md-3">
+                <q-field
+                  label="Valor Total"
+                  orientation="vertical"
+                  class="form-input"
+                  helper="Obrigatório"
+                  :error="$v.correspondencia.valorTotal.$error"
+                  error-label="Obrigatório"
+                >
+                  <q-input autocomplete="off" type="tel" v-model.lazy="correspondencia.valorTotal" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money" @input="$v.correspondencia.valorTotal.$touch()"/>
+                </q-field>
+              </div>
+            </div>
           </form>
 
           <botao-mobile
@@ -275,6 +343,7 @@ import notify from '../../tools/Notify'
 import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
+import VMoney from 'src/tools/money'
 import enderecoService from 'src/services/endereco/EnderecoService'
 
 var timer
@@ -289,7 +358,8 @@ export default {
     botaoMobile
   },
   directives: {
-    'mask': AwesomeMask
+    'mask': AwesomeMask,
+    money: VMoney
   },
   data () {
     return {
@@ -303,13 +373,22 @@ export default {
       optionsSetor: [],
       optionsLoading: false,
       optionsEstados: optionsEstados,
-      cepLoading: false
+      cepLoading: false,
+      money: {
+        decimal: '.',
+        thousands: '',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: true /* doesn't work with directive */
+      }
     }
   },
   validations: {
     correspondencia: {
       tipoDocumento: {required},
       numero: {required},
+      valorTotal: {required},
       dataCadastro: {required},
       destino: {required},
       setor: {required}

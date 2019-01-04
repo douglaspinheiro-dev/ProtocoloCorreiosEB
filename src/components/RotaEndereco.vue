@@ -54,7 +54,7 @@
         loading-label="Carregando"
         :visible-columns="colunasVisiveis"
       >
-        <template slot="top-left" slot-scope="props">
+        <template slot="top-left">
           <q-search
             placeholder="Busca"
             hide-underline
