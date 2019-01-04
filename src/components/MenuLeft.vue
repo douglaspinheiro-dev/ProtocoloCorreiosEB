@@ -83,7 +83,7 @@
         </q-item>
 
         <q-item link :to="{name: 'correspondencia'}" v-if="getPermissoes.correspondencia.abrir">
-          <q-item-side icon="move_to_inbox" />
+          <q-item-side icon="mail_outline" />
           <q-item-main label="Correspondencias" />
         </q-item>
 

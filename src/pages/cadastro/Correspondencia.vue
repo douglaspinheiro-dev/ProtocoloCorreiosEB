@@ -101,7 +101,7 @@
                 <q-field class="form-input" label="É endereço cadastrado?" orientation="vertical">
                   <q-btn-group  class="fit">
                     <radio-button :status="correspondencia.enderecoCadastrado"
-                    @toggleRadioButton="correspondencia.enderecoCadastrado = !correspondencia.enderecoCadastrado"
+                    @toggleRadioButton="toogleEnderecoCadastrado"
                     :label="['Sim','Não']"
                   />
                   </q-btn-group>
@@ -138,10 +138,15 @@
                   error-label="Obrigatório"
                 >
                   <q-input autocomplete="on" type="text" v-model="correspondencia.destino" name="destino" >
-                    <q-autocomplete
-                      @search="search"
+                    <!-- <q-autocomplete
+                      :static-data="{field: 'value', list: optionsEndereco}"
                       :min-characters="3"
-                      @selected="selected"
+                      @selected="procurarEnderecoCadastrado"
+                    /> -->
+                    <q-autocomplete
+                      :min-characters="3"
+                      @selected="carregaEndereco"
+                      @search="procurarEnderecoCadastrado"
                     />
                   </q-input>
                 </q-field>
@@ -266,10 +271,11 @@ import correspondenciaService from 'src/services/correspondencia/Correspondencia
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
 import notify from '../../tools/Notify'
-import { filter } from 'quasar'
+// import { filter } from 'quasar'
 import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
+import enderecoService from 'src/services/endereco/EnderecoService'
 
 var timer
 
@@ -310,6 +316,33 @@ export default {
     }
   },
   methods: {
+    toogleEnderecoCadastrado () {
+      this.correspondencia.enderecoCadastrado = !this.correspondencia.enderecoCadastrado
+      if (this.correspondencia.enderecoCadastrado === false) {
+        this.correspondencia.logradouro = ''
+        this.correspondencia.numero = ''
+        this.correspondencia.complemento = ''
+        this.correspondencia.bairro = ''
+        this.correspondencia.cidade = ''
+        this.correspondencia.uf = ''
+        this.correspondencia.cep = ''
+        this.correspondencia.referencia = ''
+      } else {
+        this.correspondencia.destino = ''
+      }
+    },
+    carregaEndereco () {
+      console.log('carregando endereco quartel')
+      let endereco = this.optionsEndereco.filter(endereco => endereco.value === this.correspondencia.destino)[0]
+      this.correspondencia.logradouro = endereco.logradouro
+      this.correspondencia.numero = endereco.numero
+      this.correspondencia.complemento = endereco.complemento
+      this.correspondencia.bairro = endereco.bairro
+      this.correspondencia.cidade = endereco.cidade
+      this.correspondencia.uf = endereco.uf
+      this.correspondencia.cep = endereco.cep
+      this.correspondencia.referencia = endereco.referencia
+    },
     procuraCep () {
       clearTimeout(timer)
       timer = setTimeout(() => {
@@ -351,13 +384,18 @@ export default {
         }
       })
     },
-    search (terms, done) {
+    procurarEnderecoCadastrado (terms, done) {
+      // search do autocomplete
       setTimeout(() => {
-        done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
-      }, 1000)
-    },
-    selected (item) {
-      // this.$q.notify(`Selected suggestion "${item.label}"`)
+        console.log('selecionei quartel')
+        enderecoService
+          .buscaEnderecoPorCodigo(this.correspondencia.destino)
+          .then(result => {
+            console.log('peguei o correspondencia com sucesso')
+            this.setOptionsEndereco(result.data)
+            done(this.optionsEndereco)
+          })
+      }, 300)
     },
     procuraEndereco (busca) {
       this.$v.correspondencia.origem.$touch()
@@ -388,7 +426,16 @@ export default {
         enderecos.map(endereco => optionsEndereco.push(
           {
             label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.codigoReduzido
+            value: endereco.codigoReduzido,
+            logradouro: endereco.logradouro,
+            numero: endereco.numero,
+            complemento: endereco.complemento,
+            bairro: endereco.bairro,
+            cidade: endereco.cidade,
+            uf: endereco.uf,
+            cep: endereco.cep,
+            referencia: endereco.referencia
+
           }
         ))
         this.optionsEndereco = optionsEndereco

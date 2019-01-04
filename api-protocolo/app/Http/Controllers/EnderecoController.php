@@ -57,6 +57,13 @@ class EnderecoController extends Controller
     return response()->json($endereco, 200);
   }
 
+  public function selecionaEnderecoPorCodigo($id)
+  {
+    $results = EnderecoDao::selecionaEnderecoPorCodigo($id);
+    $endereco = $results;
+    return response()->json($endereco, 200);
+  }
+
   public function salva()
   {
     $this->validate($this->request,

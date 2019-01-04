@@ -133,6 +133,29 @@ export const EnderecoService = {
         }
         throw new Error(error)
       })
+  },
+
+  buscaEnderecoPorCodigo (id) {
+    return http.get(`enderecos/codigo/${id}`)
+      .then(response => response)
+      .catch(error => {
+        Loading.hide()
+        console.log('erro no servidor ao buscar um setor', id)
+
+        if (error.response.status === 401) {
+          Notify.semPermissao()
+        } else {
+          Dialog.create({
+            title: 'Atenção',
+            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
+          }).then(() => {
+            // Picked "OK"
+          }).catch(() => {
+            // Picked "Cancel" or dismissed
+          })
+        }
+        throw new Error(error)
+      })
   }
 }
 export default EnderecoService

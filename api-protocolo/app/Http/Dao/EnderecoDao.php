@@ -30,6 +30,10 @@ class EnderecoDao extends Dao
       return DB::select("SELECT * FROM enderecos WHERE endereco = {$id} AND ativo = 1");
     }
 
+    public static function selecionaEnderecoPorCodigo($id) {
+      return DB::select("SELECT * FROM enderecos WHERE codigoReduzido LIKE '%{$id}%' AND ativo = 1");
+    }
+
     public static function apaga($dados) {
       return DB::update("UPDATE enderecos SET ativo = 0, usuarioAlterador = {$dados['usuarioAlterador']} WHERE endereco = {$dados['id']}");
     }

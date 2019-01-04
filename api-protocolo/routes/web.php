@@ -82,6 +82,7 @@ $app->group(
         $app->get('/enderecos', 'EnderecoController@lista');
         $app->get('/enderecos/options', 'EnderecoController@options');
         $app->get('/enderecos/endereco/{id}', 'EnderecoController@seleciona');
+        $app->get('/enderecos/codigo/{id}', 'EnderecoController@selecionaEnderecoPorCodigo');
         $app->post('/enderecos/endereco', 'EnderecoController@salva');
         $app->put('/enderecos/endereco/{id}', 'EnderecoController@altera');
 
