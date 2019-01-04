@@ -26,7 +26,9 @@ export default [
       { path: '/rotas', name: 'rota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true } },
       { path: '/rotas/rota/:id', name: 'alterarRota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true }, props: true },
       { path: '/malotes', name: 'malote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true } },
-      { path: '/malotes/malote/:id', name: 'alterarMalote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true }, props: true }
+      { path: '/malotes/malote/:id', name: 'alterarMalote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true }, props: true },
+      { path: '/correspondencias', name: 'correspondencia', component: () => import('pages/cadastro/Correspondencia'), meta: { requerAutenticacao: true } },
+      { path: '/correspondencias/correspondencia/:id', name: 'alterarCorrespondencia', component: () => import('pages/cadastro/Correspondencia'), meta: { requerAutenticacao: true }, props: true }
 
     ]
   },

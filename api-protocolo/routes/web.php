@@ -115,6 +115,19 @@ $app->group(
     );
 
     $app->group(
+      ['middleware' => 'correspondencia'],
+      function() use ($app) {
+        $app->delete('/correspondencias/correspondencia/{id}', 'CorrespondenciaController@apaga');
+        $app->get('/correspondencias', 'CorrespondenciaController@lista');
+        $app->get('/correspondencias/options', 'CorrespondenciaController@options');
+        $app->get('/correspondencias/correspondencia/{id}', 'CorrespondenciaController@seleciona');
+        $app->post('/correspondencias/correspondencia', 'CorrespondenciaController@salva');
+        $app->put('/correspondencias/correspondencia/{id}', 'CorrespondenciaController@altera');
+
+      }
+    );
+
+    $app->group(
       ['middleware' => 'rota'],
       function() use ($app) {
         $app->delete('/rotas/rota/{id}', 'RotaController@apaga');

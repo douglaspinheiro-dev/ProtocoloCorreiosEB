@@ -79,5 +79,14 @@ export default class Permissoes {
       'excluir',
       'relatorios'
     ]
+
+    // DOCUMENTOS DO MALOTE
+    this.correspondencia = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
   }
 }

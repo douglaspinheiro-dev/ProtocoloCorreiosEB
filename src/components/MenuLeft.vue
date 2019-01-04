@@ -82,6 +82,11 @@
           <q-item-main label="Malotes" />
         </q-item>
 
+        <q-item link :to="{name: 'correspondencia'}" v-if="getPermissoes.correspondencia.abrir">
+          <q-item-side icon="move_to_inbox" />
+          <q-item-main label="Correspondencias" />
+        </q-item>
+
       </q-collapsible>
 
     </q-list>
