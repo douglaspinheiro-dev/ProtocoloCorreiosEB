@@ -110,9 +110,11 @@ export default {
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let malote = new Malote()
+      console.log(obj)
+
       malote.malote = obj.malote
       malote.data = obj.data
-      malote.descricao = obj.descricao
+      malote.descricao = obj.rotaDescricao
       this.registros.push(malote)
       this.listaDeRegistros = this.registros
     })

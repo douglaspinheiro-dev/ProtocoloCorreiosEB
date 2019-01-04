@@ -66,9 +66,10 @@ class ProtocoloEntradaController extends Controller
     );
 
     $protocoloEntrada = $this->request->all();
+    $protocoloEntrada['anoCadastro'] = date( 'Y', strtotime($protocoloEntrada['dataDocumento']) );
     $protocoloEntrada['usuarioCriador'] = $this->getUsuario();
+    $protocoloEntrada['protocoloEntrada'] = md5(uniqid(rand(), true));
     $results = ProtocoloEntradaDao::salva($protocoloEntrada);
-    $protocoloEntrada['protocoloEntrada'] = ProtocoloEntradaDao::last()->id;
     return response()->json(['protocoloEntrada' =>$protocoloEntrada], 201);
   }
 

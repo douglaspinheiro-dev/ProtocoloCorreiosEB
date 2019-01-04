@@ -286,6 +286,9 @@ export default {
 
               this.malote.malote = result.data.malote.malote
               this.malote.usuarioCriador = result.data.malote.usuarioCriador
+
+              let rotaDescricao = this.optionsRota.filter(rota => rota.value === this.malote.rota)
+              this.malote.rotaDescricao = rotaDescricao[0].label
               this.$router.push('/malotes/malote/' + result.data.malote.malote)
               this.$q.notify({
                 type: 'positive',

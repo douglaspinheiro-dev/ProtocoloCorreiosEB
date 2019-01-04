@@ -19,13 +19,15 @@ class ProtocoloEntradaDao extends Dao
     public static function lista($obj) {
       return DB::select("SELECT
         protocoloEntrada,
+        protocolo,
+        anoCadastro,
         numero,
         assunto,
         categoriasDocumentos.descricao as tipoDocumentoDescricao,
         DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
         origem,
         setores.codigo as setorDescricao
-         FROM protocoloEntradas
+        FROM protocoloEntradas
         JOIN categoriasDocumentos on protocoloEntradas.categoriaDocumento = categoriasDocumentos.categoriaDocumento
         JOIN setores on protocoloEntradas.setor = setores.setor
         AND
@@ -37,26 +39,18 @@ class ProtocoloEntradaDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT
-      protocoloEntrada,
-      numero,
-      dataDocumento,
-      enderecoCadastrado,
-      categoriaDocumento as tipoDocumento,
-      origem,
-      setor,
-      assunto,
-      usuarioCriador
-      FROM protocoloEntradas WHERE protocoloEntrada = {$id} AND ativo = 1");
+      return DB::select("SELECT *, categoriaDocumento as tipoDocumento FROM protocoloEntradas WHERE protocoloEntrada = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {
-      return DB::update("UPDATE protocoloEntradas SET ativo = 0, usuarioAlterador = {$dados['usuarioAlterador']} WHERE protocoloEntrada = {$dados['id']}");
+      return DB::update("UPDATE protocoloEntradas SET ativo = 0, usuarioAlterador = {$dados['usuarioAlterador']} WHERE protocoloEntrada = '{$dados['id']}'");
     }
 
     public static function salva($dados) {
       return DB::insert("INSERT INTO protocoloEntradas
       (
+        protocoloEntrada,
+        anoCadastro,
         numero,
         dataDocumento,
         categoriaDocumento,
@@ -67,6 +61,8 @@ class ProtocoloEntradaDao extends Dao
         usuarioCriador
       ) values
       (
+        '{$dados['protocoloEntrada']}',
+        '{$dados['anoCadastro']}',
         '{$dados['numero']}',
         '{$dados['dataDocumento']}',
         '{$dados['tipoDocumento']}',
@@ -88,7 +84,7 @@ class ProtocoloEntradaDao extends Dao
       assunto = '{$dados['assunto']}',
       enderecoCadastrado = '{$dados['enderecoCadastrado']}',
       usuarioAlterador = '{$dados['usuarioAlterador']}'
-      where protocoloEntrada = {$dados['protocoloEntrada']}");
+      where protocoloEntrada = '{$dados['protocoloEntrada']}'");
     }
 
     //

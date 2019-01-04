@@ -19,7 +19,7 @@
               <q-item-tile label> {{ `${protocoloEntrada.dataDocumento} | ${protocoloEntrada.origem}` }}</q-item-tile>
               <q-item-tile sublabel lines="2">{{`${protocoloEntrada.tipoDocumentoDescricao} ${protocoloEntrada.numero} | ${protocoloEntrada.assunto}` }} </q-item-tile>
             </q-item-main>
-            <q-item-side right :stamp="`Prot: ${protocoloEntrada.protocoloEntrada}`" />
+            <q-item-side right :stamp="`Prot: ${protocoloEntrada.anoCadastro}-${protocoloEntrada.protocolo}`" />
           </q-item>
           <div slot="message" class="row justify-center" style="margin-bottom: 50px;">
             <q-spinner-dots :size="40" />
@@ -115,6 +115,8 @@ export default {
       this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
       this.registros[id].numero = novoRegistro.numero
       this.registros[id].origem = novoRegistro.origem
+      this.registros[id].protocolo = novoRegistro.protocolo
+      this.registros[id].anoCadastro = novoRegistro.anoCadastro
       this.registros[id].setorDescricao = novoRegistro.setorDescricao
       this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.listaDeRegistros = this.registros
@@ -126,6 +128,8 @@ export default {
       protocoloEntrada.assunto = obj.assunto
       protocoloEntrada.dataDocumento = moment(obj.dataDocumento).format('L')
       protocoloEntrada.numero = obj.numero
+      protocoloEntrada.protocolo = obj.protocolo
+      protocoloEntrada.anoCadastro = obj.anoCadastro
       protocoloEntrada.origem = obj.origem
       protocoloEntrada.setorDescricao = obj.setorDescricao
       protocoloEntrada.tipoDocumentoDescricao = obj.tipoDocumentoDescricao

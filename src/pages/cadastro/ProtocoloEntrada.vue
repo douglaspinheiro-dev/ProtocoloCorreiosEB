@@ -30,7 +30,7 @@
             <div class="row">
               <div class="col-md-2">
                 <q-field label="Nº" orientation="vertical" class="form-input">
-                  {{protocoloEntrada.protocoloEntrada}}
+                  {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
                 </q-field>
               </div>
               <div class="col-md-4">
@@ -308,7 +308,7 @@ export default {
         let optionsSetor = []
         setores.map(setor => optionsSetor.push(
           {
-            label: `${setor.codigo} - ${setor.descricao}`,
+            label: `${setor.codigoReduzido} - ${setor.descricao}`,
             value: setor.setor
           }
         ))
