@@ -21,7 +21,8 @@ class CorrespondenciaDao extends Dao
         correspondencia,
         protocolo,
         anoCadastro,
-        numero,
+        numeroDocumento,
+        codigoRastreio,
         categoriasDocumentos.descricao as tipoDocumentoDescricao,
         DATE_FORMAT(dataCadastro, '%d/%m/%Y') as dataCadastro,
         destino,
@@ -31,14 +32,19 @@ class CorrespondenciaDao extends Dao
         JOIN setores on correspondencias.setor = setores.setor
         AND
       (
-        correspondencias.numero LIKE '%{$obj['busca']}%' OR
-        correspondencias.correspondencia LIKE '%{$obj['busca']}%'
+        correspondencias.protocolo LIKE '%{$obj['busca']}%' OR
+        correspondencias.codigoRastreio LIKE '%{$obj['busca']}%' OR
+        correspondencias.numeroDocumento LIKE '%{$obj['busca']}%'
       )
       AND correspondencias.ativo = 1 ORDER BY correspondencias.dataCadastro desc LIMIT {$obj['inicio']}, {$obj['fim']}");
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT *, categoriaDocumento as tipoDocumento FROM correspondencias WHERE correspondencia = '{$id}' AND ativo = 1");
+      return DB::select("SELECT *,
+        categoriaDocumento as tipoDocumento,
+        categoriaCorrespondencia as tipoCorrespondencia,
+        categoriaCobranca as tipoCobranca
+        FROM correspondencias WHERE correspondencia = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {
@@ -50,36 +56,72 @@ class CorrespondenciaDao extends Dao
       (
         correspondencia,
         anoCadastro,
-        numero,
+        numeroDocumento,
         dataCadastro,
         categoriaDocumento,
-        origem,
         setor,
+        destino,
         enderecoCadastrado,
-        usuarioCriador
+        codigoRastreio,
+        usuarioCriador,
+        categoriaCorrespondencia,
+        categoriaCobranca,
+        valorTotal,
+        bairro,
+        cep,
+        cidade,
+        complemento,
+        logradouro,
+        numero,
+        referencia,
+        uf
       ) values
       (
         '{$dados['correspondencia']}',
         '{$dados['anoCadastro']}',
-        '{$dados['numero']}',
+        '{$dados['numeroDocumento']}',
         '{$dados['dataCadastro']}',
         '{$dados['tipoDocumento']}',
-        '{$dados['origem']}',
         '{$dados['setor']}',
-        '{$dados['assunto']}',
+        '{$dados['destino']}',
         '{$dados['enderecoCadastrado']}',
-        '{$dados['usuarioCriador']}'
+        '{$dados['codigoRastreio']}',
+        '{$dados['usuarioCriador']}',
+        '{$dados['tipoCorrespondencia']}',
+        '{$dados['tipoCobranca']}',
+        '{$dados['valorTotal']}',
+        '{$dados['bairro']}',
+        '{$dados['cep']}',
+        '{$dados['cidade']}',
+        '{$dados['complemento']}',
+        '{$dados['logradouro']}',
+        '{$dados['numero']}',
+        '{$dados['referencia']}',
+        '{$dados['uf']}'
       )");
     }
 
     public static function altera($dados) {
       return DB::update("UPDATE correspondencias SET
-      numero = '{$dados['numero']}',
+      numeroDocumento = '{$dados['numeroDocumento']}',
       dataCadastro = '{$dados['dataCadastro']}',
       categoriaDocumento = '{$dados['tipoDocumento']}',
-      origem = '{$dados['origem']}',
       setor = '{$dados['setor']}',
+      destino = '{$dados['destino']}',
       enderecoCadastrado = '{$dados['enderecoCadastrado']}',
+      codigoRastreio = '{$dados['codigoRastreio']}',
+      usuarioCriador = '{$dados['usuarioCriador']}',
+      categoriaCorrespondencia = '{$dados['tipoCorrespondencia']}',
+      categoriaCobranca = '{$dados['tipoCobranca']}',
+      valorTotal = '{$dados['valorTotal']}',
+      bairro = '{$dados['bairro']}',
+      cep = '{$dados['cep']}',
+      cidade = '{$dados['cidade']}',
+      complemento = '{$dados['complemento']}',
+      logradouro = '{$dados['logradouro']}',
+      numero = '{$dados['numero']}',
+      referencia = '{$dados['referencia']}',
+      uf = '{$dados['uf']}',
       usuarioAlterador = '{$dados['usuarioAlterador']}'
       where correspondencia = '{$dados['correspondencia']}'");
     }

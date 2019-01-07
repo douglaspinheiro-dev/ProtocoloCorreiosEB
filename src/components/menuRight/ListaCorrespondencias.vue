@@ -7,7 +7,7 @@
           @input="pesquisando"
           v-model.lazy="busca"
           :debounce="300"
-          placeholder="Busca por Protocolo, ou nº do Documento"
+          placeholder="Rastreio, Protocolo, Nº do doc"
           icon="search"
           stack-label="Busca"
         />
@@ -16,8 +16,8 @@
           <!-- Content, in this case some <p> tags -->
           <q-item exact separator link highlight multiline v-for="(correspondencia, index) in listaDeRegistros"  item :to="{ name: 'alterarCorrespondencia', params: { id: correspondencia.correspondencia} }" :key="index">
             <q-item-main>
-              <q-item-tile label> {{ `${correspondencia.dataDocumento} | ${correspondencia.origem}` }}</q-item-tile>
-              <q-item-tile sublabel lines="2">{{`${correspondencia.tipoDocumentoDescricao} ${correspondencia.numero} | ${correspondencia.assunto}` }} </q-item-tile>
+              <q-item-tile label> {{ `${correspondencia.setorDescricao} >>> ${correspondencia.destino}` }}</q-item-tile>
+              <q-item-tile sublabel lines="2">{{`${correspondencia.tipoDocumentoDescricao} ${correspondencia.numeroDocumento} | Rastreio: ${correspondencia.codigoRastreio}` }} </q-item-tile>
             </q-item-main>
             <q-item-side right :stamp="`Prot: ${correspondencia.anoCadastro}-${correspondencia.protocolo}`" />
           </q-item>
@@ -112,6 +112,8 @@ export default {
       let idRegistro = this.registros.filter(registro => registro.correspondencia === novoRegistro.correspondencia)
       let id = this.registros.indexOf(idRegistro[0])
       this.registros[id] = new Correspondencia(novoRegistro)
+      this.registros[id].setorDescricao = novoRegistro.setorDescricao
+      this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
       this.listaDeRegistros = this.registros
     })
@@ -119,6 +121,8 @@ export default {
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let correspondencia = new Correspondencia(obj)
       correspondencia.dataDocumento = moment(obj.dataDocumento).format('L')
+      correspondencia.setorDescricao = obj.setorDescricao
+      correspondencia.tipoDocumentoDescricao = obj.tipoDocumentoDescricao
       this.registros.push(correspondencia)
       this.listaDeRegistros = this.registros
     })

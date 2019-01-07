@@ -32,7 +32,7 @@ class TipoDocumentoDao extends Dao
     }
 
     public static function salva($dados) {
-      return DB::insert("INSERT INTO categoriasDocumentos (status, codigo, descricao, usuarioCriador) values ('{$dados['status']}','{$dados['codigo']}',{$dados['descricao']}, {$dados['usuarioCriador']})");
+      return DB::insert("INSERT INTO categoriasDocumentos (status, codigo, descricao, usuarioCriador) values ('{$dados['status']}','{$dados['codigo']}','{$dados['descricao']}', {$dados['usuarioCriador']})");
     }
 
     public static function altera($dados) {

@@ -68,16 +68,24 @@
                   orientation="vertical"
                   class="form-input"
                   helper="Obrigatório"
-                  :error="$v.correspondencia.numero.$error"
+                  :error="$v.correspondencia.numeroDocumento.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="off" type="text" v-model="correspondencia.numero" @input="$v.correspondencia.numero.$touch()" name="numero"/>
+                  <q-input autocomplete="off" type="text" v-model="correspondencia.numeroDocumento" @input="$v.correspondencia.numeroDocumento.$touch()" name="numero"/>
                 </q-field>
               </div>
 
             </div>
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
+                <q-field class="form-input"
+                  label="Codigo de Rastreio"
+                  orientation="vertical"
+                >
+                  <q-input autocomplete="off" type="text" v-model="correspondencia.codigoRastreio" name="text" />
+                </q-field>
+              </div>
+              <div class="col-md-6">
                 <q-field class="form-input" label="Origem" orientation="vertical"
                   :error="$v.correspondencia.setor.$error"
                   error-label="Obrigatório"
@@ -179,6 +187,9 @@
                     <q-field class="form-input"
                       label="Cep"
                       orientation="vertical"
+                      helper="Obrigatório"
+                      :error="$v.correspondencia.cep.$error"
+                      error-label="Obrigatório"
                     >
                       <q-input autocomplete="off" type="text" v-model="correspondencia.cep" @input="procuraCep" v-mask="'99999-999'" placeholder="00000-000" name="cep"/>
                     </q-field>
@@ -242,61 +253,39 @@
               </q-inner-loading>
             </q-collapsible>
             <div class="row">
-              <div class="col-md-3">
-                <q-field class="form-input" label="Tipo de Correspondencia" orientation="vertical"
-                  :error="$v.correspondencia.setor.$error"
+              <div class="col-md-4">
+                <q-field class="form-input" label="Tipo de Correspondência" orientation="vertical"
+                  :error="$v.correspondencia.tipoCorrespondencia.$error"
                   error-label="Obrigatório"
                   helper="Obrigatório"
                 >
                   <q-select
-                    v-model="correspondencia.setor"
-                    :options="optionsSetor"
+                    v-model="correspondencia.tipoCorrespondencia"
+                    :options="optionsTipoCorrespondencia"
                     filter
                     autofocus-filter
-                    filter-placeholder="Selecione o origem"
+                    filter-placeholder="Selecione o tipo de correspondência"
                     name="select"
-                    @input="$v.correspondencia.setor.$touch()"
+                    @input="somaTipoCorrespondencia"
                   />
                   <q-progress indeterminate v-show="optionsLoading"/>
                 </q-field>
               </div>
-              <div class="col-md-3">
-                <q-field class="form-input" label="Tipo de Cobrança" orientation="vertical"
-                  :error="$v.correspondencia.setor.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
+              <div class="col-md-4">
+                <q-field class="form-input" label="Tipo de Cobrança" orientation="vertical">
                   <q-select
-                    v-model="correspondencia.setor"
-                    :options="optionsSetor"
+                    v-model="correspondencia.tipoCobranca"
+                    :options="optionsTipoCobranca"
                     filter
                     autofocus-filter
-                    filter-placeholder="Selecione o origem"
+                    filter-placeholder="Selecione o tipo de cobrança"
                     name="select"
-                    @input="$v.correspondencia.setor.$touch()"
+                    @input="somaTipoCobranca"
                   />
                   <q-progress indeterminate v-show="optionsLoading"/>
                 </q-field>
               </div>
-              <div class="col-md-3">
-                <q-field class="form-input" label="valorTC" orientation="vertical"
-                  :error="$v.correspondencia.setor.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
-                  <q-select
-                    v-model="correspondencia.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o origem"
-                    name="select"
-                    @input="$v.correspondencia.setor.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
-              </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <q-field
                   label="Valor Total"
                   orientation="vertical"
@@ -371,9 +360,13 @@ export default {
       enderecoCadastrado: true,
       optionsEndereco: [],
       optionsSetor: [],
+      optionsTipoCorrespondencia: [],
+      optionsTipoCobranca: [],
       optionsLoading: false,
       optionsEstados: optionsEstados,
       cepLoading: false,
+      valorTipoCorrespondencia: 0,
+      valorTipoCobranca: 0,
       money: {
         decimal: '.',
         thousands: '',
@@ -387,14 +380,29 @@ export default {
   validations: {
     correspondencia: {
       tipoDocumento: {required},
+      numeroDocumento: {required},
       numero: {required},
       valorTotal: {required},
       dataCadastro: {required},
       destino: {required},
-      setor: {required}
+      setor: {required},
+      tipoCorrespondencia: {required},
+      cep: {required}
     }
   },
   methods: {
+    somaTipoCorrespondencia () {
+      this.$v.correspondencia.tipoCorrespondencia.$touch()
+      this.valorTipoCorrespondencia = Number(this.optionsTipoCorrespondencia.filter(tipoCorrespondencia => tipoCorrespondencia.value === this.correspondencia.tipoCorrespondencia)[0]['valor'])
+      this.somaValores()
+    },
+    somaTipoCobranca () {
+      this.valorTipoCobranca = Number(this.optionsTipoCobranca.filter(tipoCobranca => tipoCobranca.value === this.correspondencia.tipoCobranca)[0]['valor'])
+      this.somaValores()
+    },
+    somaValores () {
+      this.correspondencia.valorTotal = (this.valorTipoCorrespondencia + this.valorTipoCobranca).toFixed(2)
+    },
     toogleEnderecoCadastrado () {
       this.correspondencia.enderecoCadastrado = !this.correspondencia.enderecoCadastrado
       if (this.correspondencia.enderecoCadastrado === false) {
@@ -542,6 +550,50 @@ export default {
         }]
       }
     },
+    setOptionsTipoCorrespondencia (tiposCorrespondencias) {
+      if (tiposCorrespondencias.length > 0) {
+        let optionsTipoCorrespondencia = []
+
+        tiposCorrespondencias.map(tipoCorrespondencia => optionsTipoCorrespondencia.push(
+          {
+            label: `${tipoCorrespondencia.descricao} - R$ ${tipoCorrespondencia.valor} `,
+            value: tipoCorrespondencia.tipoCorrespondencia,
+            valor: tipoCorrespondencia.valor
+          }
+        ))
+        this.optionsTipoCorrespondencia = optionsTipoCorrespondencia
+      } else {
+        this.optionsTipoCorrespondencia = [{
+          label: 'Sem registros cadastrados',
+          value: ''
+        }]
+      }
+    },
+    setOptionsTipoCobranca (tiposCobrancas) {
+      if (tiposCobrancas.length > 0) {
+        let optionsTipoCobranca = []
+        optionsTipoCobranca.push(
+          {
+            label: `-------`,
+            value: '',
+            valor: 0.00
+          }
+        )
+        tiposCobrancas.map(tipoCobranca => optionsTipoCobranca.push(
+          {
+            label: `${tipoCobranca.descricao} - R$ ${tipoCobranca.valor} `,
+            value: tipoCobranca.tipoCobranca,
+            valor: tipoCobranca.valor
+          }
+        ))
+        this.optionsTipoCobranca = optionsTipoCobranca
+      } else {
+        this.optionsTipoCobranca = [{
+          label: 'Sem registros cadastrados',
+          value: ''
+        }]
+      }
+    },
     toggleRadioButton () {
       this.correspondencia.status = !this.correspondencia.status
     },
@@ -596,7 +648,9 @@ export default {
               this.$q.loading.hide()
               console.log('correspondencia alterado com sucesso')
               let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
+              let setorDescricao = this.optionsSetor.filter(tipo => tipo.value === this.correspondencia.setor)
               this.correspondencia.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
+              this.correspondencia.setorDescricao = setorDescricao[0].label
               this.$root.$emit('alteraUnicoRegistro', this.correspondencia)
               this.$q.notify({
                 type: 'positive',
@@ -618,6 +672,10 @@ export default {
               })
               let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
               this.correspondencia.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
+
+              let setorDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.setor)
+              this.correspondencia.setorDescricao = setorDescricao[0].label
+
               this.$root.$emit('adicionaRegistroNaLista', this.correspondencia)
               this.confereAlterarExcluir()
             })
@@ -684,6 +742,8 @@ export default {
         this.setOptionsTipoDocumento(result.data.tipoDocumento)
         this.setOptionsEndereco(result.data.endereco)
         this.setOptionsSetor(result.data.setor)
+        this.setOptionsTipoCorrespondencia(result.data.tipoCorrespondencia)
+        this.setOptionsTipoCobranca(result.data.tipoCobranca)
       })
   }
 }

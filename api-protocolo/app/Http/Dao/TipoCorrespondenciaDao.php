@@ -38,5 +38,9 @@ class TipoCorrespondenciaDao extends Dao
       return DB::update("UPDATE categoriasCorrespondencias SET  descricao = '{$dados['descricao']}', status = '{$dados['status']}', valor = '{$dados['valor']}', usuarioAlterador = {$dados['usuarioAlterador']} where categoriaCorrespondencia = {$dados['tipoCorrespondencia']}");
     }
 
+    public static function options() {
+      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, valor, descricao FROM categoriasCorrespondencias WHERE ativo = 1 order by descricao");
+    }
+
     //
 }

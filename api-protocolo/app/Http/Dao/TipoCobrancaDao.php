@@ -38,5 +38,9 @@ class TipoCobrancaDao extends Dao
       return DB::update("UPDATE categoriasCobrancas SET  descricao = '{$dados['descricao']}', status = '{$dados['status']}', valor = '{$dados['valor']}', usuarioAlterador = {$dados['usuarioAlterador']} where categoriaCobranca = {$dados['tipoCobranca']}");
     }
 
+    public static function options() {
+      return DB::select("SELECT categoriaCobranca as tipoCobranca, valor, descricao FROM categoriasCobrancas WHERE ativo = 1 order by descricao");
+    }
+
     //
 }

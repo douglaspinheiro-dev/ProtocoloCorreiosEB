@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Dao\CorrespondenciaDao;
 use App\Http\Dao\TipoDocumentoDao;
+use App\Http\Dao\TipoCorrespondenciaDao;
+use App\Http\Dao\TipoCobrancaDao;
 use App\Http\Dao\EnderecoDao;
 use App\Http\Dao\SetorDao;
 use Illuminate\Http\Request;
@@ -56,43 +58,42 @@ class CorrespondenciaController extends Controller
     $this->validate($this->request,
       [
         'tipoDocumento' => 'required',
-        'numero' => 'required',
-        'dataDocumento' => 'required',
-        'origem' => 'required',
-        'assunto' => 'required',
+        'numeroDocumento' => 'required',
         'setor' => 'required',
-        'enderecoCadastrado' => 'required'
+        'destino' => 'required',
+        'enderecoCadastrado' => 'required',
+        'cep' => 'required'
       ]
     );
 
-    $protocoloEntrada = $this->request->all();
-    $protocoloEntrada['anoCadastro'] = date( 'Y', strtotime($protocoloEntrada['dataDocumento']) );
-    $protocoloEntrada['usuarioCriador'] = $this->getUsuario();
-    $protocoloEntrada['protocoloEntrada'] = md5(uniqid(rand(), true));
-    $results = CorrespondenciaDao::salva($protocoloEntrada);
-    return response()->json(['protocoloEntrada' =>$protocoloEntrada], 201);
+    $correspondencia = $this->request->all();
+    $correspondencia['anoCadastro'] = date( 'Y', strtotime($correspondencia['dataCadastro']) );
+    $correspondencia['usuarioCriador'] = $this->getUsuario();
+    $correspondencia['correspondencia'] = md5(uniqid(rand(), true));
+    $results = CorrespondenciaDao::salva($correspondencia);
+    return response()->json(['correspondencia' =>$correspondencia], 201);
   }
 
   public function altera()
   {
     $this->validate($this->request,
       [
-        'protocoloEntrada' => 'required',
+        'correspondencia' => 'required',
         'tipoDocumento' => 'required',
-        'numero' => 'required',
-        'dataDocumento' => 'required',
-        'origem' => 'required',
-        'assunto' => 'required',
+        'numeroDocumento' => 'required',
         'setor' => 'required',
-        'enderecoCadastrado' => 'required'
+        'destino' => 'required',
+        'enderecoCadastrado' => 'required',
+        'cep' => 'required'
+
 
       ]
     );
 
-    $protocoloEntrada = $this->request->all();
-    $protocoloEntrada['usuarioAlterador'] = $this->getUsuario();
-    $results = CorrespondenciaDao::altera($protocoloEntrada);
-    return response()->json(['protocoloEntrada' =>$protocoloEntrada], 202);
+    $correspondencia = $this->request->all();
+    $correspondencia['usuarioAlterador'] = $this->getUsuario();
+    $results = CorrespondenciaDao::altera($correspondencia);
+    return response()->json(['correspondencia' =>$correspondencia], 202);
   }
 
   public function options()
@@ -100,8 +101,12 @@ class CorrespondenciaController extends Controller
     $tipoDocumento = TipoDocumentoDao::options();
     $endereco = EnderecoDao::options();
     $setor = SetorDao::options();
+    $tipoCorrespondencia = TipoCorrespondenciaDao::options();
+    $tipoCobranca = TipoCobrancaDao::options();
     return response()->json([
       'tipoDocumento' => $tipoDocumento,
+      'tipoCorrespondencia' => $tipoCorrespondencia,
+      'tipoCobranca' => $tipoCobranca,
       'endereco' => $endereco,
       'setor' => $setor,
     ], 200);
