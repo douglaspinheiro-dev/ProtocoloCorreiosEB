@@ -107,7 +107,7 @@
         rows-per-page-label="Linhas por página"
         loading-label="Carregando"
       >
-        <template slot="top-left" slot-scope="props">
+        <template slot="top-left">
           <q-search
             placeholder="Busca"
             hide-underline
