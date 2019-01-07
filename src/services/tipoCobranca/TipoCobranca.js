@@ -1,9 +1,9 @@
-export default class TipoDocumento {
+export default class TipoCobranca {
   constructor (obj = {}) {
-    this.tipoDocumento = obj.tipoDocumento || ''
+    this.tipoCobranca = obj.tipoCobranca || ''
     this.status = obj.status || 1
     this.descricao = obj.descricao || ''
-    this.codigo = obj.codigo || ''
     this.usuarioCriador = obj.usuarioCriador || ''
+    this.valor = obj.valor || 0.00
   }
 }

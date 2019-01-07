@@ -1,9 +1,9 @@
 export default class Rota {
-  constructor (status = 1, descricao = '', codigo = '', rota = '', usuarioCriador = '') {
-    this.rota = rota
-    this.status = status
-    this.descricao = descricao
-    this.codigo = codigo
-    this.usuarioCriador = usuarioCriador
+  constructor (obj = {}) {
+    this.rota = obj.rota || ''
+    this.status = obj.status || 1
+    this.descricao = obj.descricao || ''
+    this.codigo = obj.codigo || ''
+    this.usuarioCriador = obj.usuarioCriador || ''
   }
 }

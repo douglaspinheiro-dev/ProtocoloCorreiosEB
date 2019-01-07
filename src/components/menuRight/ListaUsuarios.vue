@@ -110,13 +110,12 @@ export default {
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
       let idRegistro = this.registros.filter(registro => registro.usuario === novoRegistro.usuario)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].nome = novoRegistro.nome
-      this.registros[id].login = novoRegistro.login
+      this.registros[id] = new Usuario(novoRegistro)
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let usuario = new Usuario(obj.nome, obj.login, obj.email, obj.usuario)
+      let usuario = new Usuario(obj)
       this.registros.push(usuario)
       this.listaDeRegistros = this.registros
     })

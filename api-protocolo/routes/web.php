@@ -76,6 +76,19 @@ $app->group(
     );
 
     $app->group(
+      ['middleware' => 'tipoCobranca'],
+      function() use ($app) {
+        $app->delete('/tipocobrancas/tipocobranca/{id}', 'TipoCobrancaController@apaga');
+        $app->get('/tipocobrancas', 'TipoCobrancaController@lista');
+        $app->get('/tipocobrancas/options', 'TipoCobrancaController@options');
+        $app->get('/tipocobrancas/tipocobranca/{id}', 'TipoCobrancaController@seleciona');
+        $app->post('/tipocobrancas/tipocobranca', 'TipoCobrancaController@salva');
+        $app->put('/tipocobrancas/tipocobranca/{id}', 'TipoCobrancaController@altera');
+
+      }
+    );
+
+    $app->group(
       ['middleware' => 'endereco'],
       function() use ($app) {
         $app->delete('/enderecos/endereco/{id}', 'EnderecoController@apaga');

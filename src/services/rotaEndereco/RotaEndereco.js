@@ -1,11 +1,7 @@
 export default class RotaEndereco {
-  constructor (
-    rota = '',
-    endereco = '',
-    usuarioCriador = ''
-  ) {
-    this.rota = rota
-    this.endereco = endereco
-    this.usuarioCriador = usuarioCriador
+  constructor (obj = {}) {
+    this.rota = obj.rota || ''
+    this.endereco = obj.endereco || ''
+    this.usuarioCriador = obj.usuarioCriador || ''
   }
 }

@@ -57,6 +57,11 @@
           <q-item-main label="Tipos de Correspondencias" />
         </q-item>
 
+        <q-item link :to="{name: 'tipoCobranca'}" v-if="getPermissoes.tipoCobranca.abrir">
+          <q-item-side icon="attach_money" />
+          <q-item-main label="Tipos de Cobrancas" />
+        </q-item>
+
         <q-item link :to="{name: 'endereco'}" v-if="getPermissoes.endereco.abrir">
           <q-item-side icon="fas fa-map-marked-alt" />
           <q-item-main label="Endereços" />

@@ -71,6 +71,7 @@ $app->routeMiddleware([
     'grupoUsuario' => App\Http\Middleware\GrupoUsuarioMiddleware::class,
     'tipoDocumento' => App\Http\Middleware\TipoDocumentoMiddleware::class,
     'tipoCorrespondencia' => App\Http\Middleware\TipoCorrespondenciaMiddleware::class,
+    'tipoCobranca' => App\Http\Middleware\TipoCobrancaMiddleware::class,
     'endereco' => App\Http\Middleware\EnderecoMiddleware::class,
     'setor' => App\Http\Middleware\EnderecoMiddleware::class,
     'protocoloEntrada' => App\Http\Middleware\EnderecoMiddleware::class,

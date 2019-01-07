@@ -101,16 +101,12 @@ export default {
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
       let idRegistro = this.registros.filter(registro => registro.setor === novoRegistro.setor)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].codigoReduzido = novoRegistro.codigoReduzido
-      this.registros[id].descricao = novoRegistro.descricao
+      this.registros[id] = new Setor(novoRegistro)
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let setor = new Setor()
-      setor.setor = obj.setor
-      setor.codigoReduzido = obj.codigoReduzido
-      setor.descricao = obj.descricao
+      let setor = new Setor(obj)
       this.registros.push(setor)
       this.listaDeRegistros = this.registros
     })

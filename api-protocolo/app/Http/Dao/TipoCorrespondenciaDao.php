@@ -17,13 +17,13 @@ class TipoCorrespondenciaDao extends Dao
     }
 
     public static function lista($obj) {
-      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, descricao, usuarioCriador FROM categoriasCorrespondencias WHERE
+      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, descricao, valor, usuarioCriador FROM categoriasCorrespondencias WHERE
       descricao LIKE '%{$obj['busca']}%'
       AND ativo = 1 ORDER BY descricao LIMIT {$obj['inicio']}, {$obj['fim']}");
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, descricao, usuarioCriador FROM categoriasCorrespondencias WHERE categoriaCorrespondencia = {$id} AND ativo = 1");
+      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, descricao, valor, usuarioCriador FROM categoriasCorrespondencias WHERE categoriaCorrespondencia = {$id} AND ativo = 1");
     }
 
     public static function apaga($dados) {
@@ -31,11 +31,11 @@ class TipoCorrespondenciaDao extends Dao
     }
 
     public static function salva($dados) {
-      return DB::insert("INSERT INTO categoriasCorrespondencias (descricao, status, usuarioCriador) values ('{$dados['descricao']}', {$dados['status']}, {$dados['usuarioCriador']})");
+      return DB::insert("INSERT INTO categoriasCorrespondencias (descricao, status, valor, usuarioCriador) values ('{$dados['descricao']}', {$dados['status']}, {$dados['valor']}, {$dados['usuarioCriador']})");
     }
 
     public static function altera($dados) {
-      return DB::update("UPDATE categoriasCorrespondencias SET  descricao = '{$dados['descricao']}', usuarioAlterador = {$dados['usuarioAlterador']} where categoriaCorrespondencia = {$dados['tipoCorrespondencia']}");
+      return DB::update("UPDATE categoriasCorrespondencias SET  descricao = '{$dados['descricao']}', status = '{$dados['status']}', valor = '{$dados['valor']}', usuarioAlterador = {$dados['usuarioAlterador']} where categoriaCorrespondencia = {$dados['tipoCorrespondencia']}");
     }
 
     //

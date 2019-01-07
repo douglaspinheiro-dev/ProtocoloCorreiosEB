@@ -36,6 +36,15 @@ export default class Permissoes {
       'relatorios'
     ]
 
+    // TIPOS DE COBRANCA
+    this.tipoCobranca = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
+
     // ENDEREÇOS
     this.endereco = [
       'abrir',

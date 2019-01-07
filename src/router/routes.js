@@ -28,7 +28,9 @@ export default [
       { path: '/malotes', name: 'malote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true } },
       { path: '/malotes/malote/:id', name: 'alterarMalote', component: () => import('pages/cadastro/Malote'), meta: { requerAutenticacao: true }, props: true },
       { path: '/correspondencias', name: 'correspondencia', component: () => import('pages/cadastro/Correspondencia'), meta: { requerAutenticacao: true } },
-      { path: '/correspondencias/correspondencia/:id', name: 'alterarCorrespondencia', component: () => import('pages/cadastro/Correspondencia'), meta: { requerAutenticacao: true }, props: true }
+      { path: '/correspondencias/correspondencia/:id', name: 'alterarCorrespondencia', component: () => import('pages/cadastro/Correspondencia'), meta: { requerAutenticacao: true }, props: true },
+      { path: '/tipocobrancas', name: 'tipoCobranca', component: () => import('pages/cadastro/TipoCobranca'), meta: { requerAutenticacao: true } },
+      { path: '/tipocobrancas/tipocobranca/:id', name: 'alterarTipoCobranca', component: () => import('pages/cadastro/TipoCobranca'), meta: { requerAutenticacao: true }, props: true }
 
     ]
   },

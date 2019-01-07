@@ -1,7 +1,7 @@
 <template>
   <q-layout-drawer v-model="mostraMenuRight" side="right" :width="400">
     <q-list>
-      <q-list-header>Protocolos de Entrada</q-list-header>
+      <q-list-header>Correspondências</q-list-header>
 
         <q-search
           @input="pesquisando"
@@ -111,28 +111,14 @@ export default {
 
       let idRegistro = this.registros.filter(registro => registro.correspondencia === novoRegistro.correspondencia)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].assunto = novoRegistro.assunto
+      this.registros[id] = new Correspondencia(novoRegistro)
       this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
-      this.registros[id].numero = novoRegistro.numero
-      this.registros[id].origem = novoRegistro.origem
-      this.registros[id].protocolo = novoRegistro.protocolo
-      this.registros[id].anoCadastro = novoRegistro.anoCadastro
-      this.registros[id].setorDescricao = novoRegistro.setorDescricao
-      this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let correspondencia = new Correspondencia()
-      correspondencia.correspondencia = obj.correspondencia
-      correspondencia.assunto = obj.assunto
+      let correspondencia = new Correspondencia(obj)
       correspondencia.dataDocumento = moment(obj.dataDocumento).format('L')
-      correspondencia.numero = obj.numero
-      correspondencia.protocolo = obj.protocolo
-      correspondencia.anoCadastro = obj.anoCadastro
-      correspondencia.origem = obj.origem
-      correspondencia.setorDescricao = obj.setorDescricao
-      correspondencia.tipoDocumentoDescricao = obj.tipoDocumentoDescricao
       this.registros.push(correspondencia)
       this.listaDeRegistros = this.registros
     })

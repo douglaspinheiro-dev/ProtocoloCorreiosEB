@@ -1,17 +1,10 @@
 export default class MaloteDocumento {
-  constructor (
-    malote = '',
-    tipoDocumento = '',
-    setor = '',
-    numero = '',
-    rotaEndereco = '',
-    usuarioCriador = ''
-  ) {
-    this.malote = malote
-    this.tipoDocumento = tipoDocumento
-    this.setor = setor
-    this.numero = numero
-    this.rotaEndereco = rotaEndereco
-    this.usuarioCriador = usuarioCriador
+  constructor (obj = {}) {
+    this.malote = obj.malote || ''
+    this.tipoDocumento = obj.tipoDocumento || ''
+    this.setor = obj.setor || ''
+    this.numero = obj.numero || ''
+    this.rotaEndereco = obj.rotaEndereco || ''
+    this.usuarioCriador = obj.usuarioCriador || ''
   }
 }

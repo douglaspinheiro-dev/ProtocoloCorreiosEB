@@ -111,28 +111,14 @@ export default {
 
       let idRegistro = this.registros.filter(registro => registro.protocoloEntrada === novoRegistro.protocoloEntrada)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].assunto = novoRegistro.assunto
+      this.registros[id] = new ProtocoloEntrada(novoRegistro)
       this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
-      this.registros[id].numero = novoRegistro.numero
-      this.registros[id].origem = novoRegistro.origem
-      this.registros[id].protocolo = novoRegistro.protocolo
-      this.registros[id].anoCadastro = novoRegistro.anoCadastro
-      this.registros[id].setorDescricao = novoRegistro.setorDescricao
-      this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let protocoloEntrada = new ProtocoloEntrada()
-      protocoloEntrada.protocoloEntrada = obj.protocoloEntrada
-      protocoloEntrada.assunto = obj.assunto
+      let protocoloEntrada = new ProtocoloEntrada(obj)
       protocoloEntrada.dataDocumento = moment(obj.dataDocumento).format('L')
-      protocoloEntrada.numero = obj.numero
-      protocoloEntrada.protocolo = obj.protocolo
-      protocoloEntrada.anoCadastro = obj.anoCadastro
-      protocoloEntrada.origem = obj.origem
-      protocoloEntrada.setorDescricao = obj.setorDescricao
-      protocoloEntrada.tipoDocumentoDescricao = obj.tipoDocumentoDescricao
       this.registros.push(protocoloEntrada)
       this.listaDeRegistros = this.registros
     })

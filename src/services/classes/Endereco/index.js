@@ -1,21 +1,12 @@
 export default class Endereco {
-  constructor (
-    bairro = '',
-    cep = '',
-    cidade = '',
-    complemento = '',
-    logradouro = '',
-    numero = '',
-    referencia = '',
-    uf = ''
-  ) {
-    this.bairro = bairro
-    this.cep = cep
-    this.cidade = cidade
-    this.complemento = complemento
-    this.logradouro = logradouro
-    this.numero = numero
-    this.referencia = referencia
-    this.uf = uf
+  constructor (obj = {}) {
+    this.bairro = obj.bairro || ''
+    this.cep = obj.cep || ''
+    this.cidade = obj.cidade || ''
+    this.complemento = obj.complemento || ''
+    this.logradouro = obj.logradouro || ''
+    this.numero = obj.numero || ''
+    this.referencia = obj.referencia || ''
+    this.uf = obj.uf || ''
   }
 }

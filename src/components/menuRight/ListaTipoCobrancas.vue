@@ -1,7 +1,7 @@
 <template>
   <q-layout-drawer v-model="mostraMenuRight" side="right">
     <q-list>
-      <q-list-header>Tipos de Correspondências</q-list-header>
+      <q-list-header>Tipos de Cobranças</q-list-header>
 
         <q-search
           @input="pesquisando"
@@ -14,12 +14,12 @@
 
         <q-infinite-scroll :handler="loadMore" ref="infiniteScroll" >
           <!-- Content, in this case some <p> tags -->
-          <q-item exact separator link highlight multiline v-for="(tipoCorrespondencia, index) in listaDeRegistros" item :to="{ name: 'alterarTipoCorrespondencia', params: { id: tipoCorrespondencia.tipoCorrespondencia} }" :key="index">
+          <q-item exact separator link highlight multiline v-for="(tipoCobranca, index) in listaDeRegistros" item :to="{ name: 'alterarTipoCobranca', params: { id: tipoCobranca.tipoCobranca} }" :key="index">
             <q-item-main>
-              <q-item-tile label> {{ tipoCorrespondencia.descricao }}</q-item-tile>
-              <q-item-tile sublabel>{{ tipoCorrespondencia.codigo }} </q-item-tile>
+              <q-item-tile label> {{ tipoCobranca.descricao }}</q-item-tile>
+              <q-item-tile sublabel>{{ tipoCobranca.codigo }} </q-item-tile>
             </q-item-main>
-            <q-item-side right :stamp="`R$ ${tipoCorrespondencia.valor}`" v-show="tipoCorrespondencia.tipoCorrespondencia" />
+            <q-item-side right :stamp="`R$ ${tipoCobranca.valor}`" v-show="tipoCobranca.tipoCobranca"/>
           </q-item>
           <div slot="message" class="row justify-center" style="margin-bottom: 50px;">
             <q-spinner-dots :size="40" />
@@ -31,10 +31,10 @@
 </template>
 
 <script>
-import TipoCorrespondencia from 'src/services/tipoCorrespondencia/TipoCorrespondencia'
-import tipoCorrespondenciaService from 'src/services/tipoCorrespondencia/TipoCorrespondenciaService'
+import TipoCobranca from 'src/services/tipoCobranca/TipoCobranca'
+import tipoCobrancaService from 'src/services/tipoCobranca/TipoCobrancaService'
 export default {
-  name: 'ListaTipoCorrespondencias',
+  name: 'ListaTipoCobrancas',
   components: {
   },
   data () {
@@ -49,16 +49,17 @@ export default {
   },
   methods: {
     loadMore (index, done) {
-      console.log('vou atualizar a lista em tipoCorrespondencias')
+      console.log('vou atualizar a lista em tipoCobrancas')
       let inicio = this.inicio
       let fim = this.fim
       let busca = this.busca
-      tipoCorrespondenciaService.procura(busca, inicio, fim)
+      tipoCobrancaService.procura(busca, inicio, fim)
         .then(result => {
           if (result.data.registros.length === 0 && inicio === 0) {
             console.log('sem registros')
             this.listaDeRegistros = [{
               descricao: 'Sem registros encontrados'
+
             }]
             this.registros = []
             this.$refs.infiniteScroll.stop()
@@ -93,22 +94,22 @@ export default {
       this.mostraMenuRight = !this.mostraMenuRight
     })
 
-    this.$root.$on('removeRegistro', (tipoCorrespondencia) => {
-      let idRegistro = this.registros.filter(registro => registro.tipoCorrespondencia === tipoCorrespondencia)
+    this.$root.$on('removeRegistro', (tipoCobranca) => {
+      let idRegistro = this.registros.filter(registro => registro.tipoCobranca === tipoCobranca)
       this.registros.splice(this.registros.indexOf(idRegistro[0]), 1)
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
-      let idRegistro = this.registros.filter(registro => registro.tipoCorrespondencia === novoRegistro.tipoCorrespondencia)
+      let idRegistro = this.registros.filter(registro => registro.tipoCobranca === novoRegistro.tipoCobranca)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id] = new TipoCorrespondencia(novoRegistro)
+      this.registros[id] = new TipoCobranca(novoRegistro)
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let tipoCorrespondencia = new TipoCorrespondencia(obj)
-      this.registros.push(tipoCorrespondencia)
+      let tipoCobranca = new TipoCobranca(obj)
+      this.registros.push(tipoCobranca)
       this.listaDeRegistros = this.registros
     })
   },

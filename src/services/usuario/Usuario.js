@@ -1,9 +1,9 @@
 export default class Usuario {
-  constructor (nome = '', login = '', grupoUsuario = '', usuario = '', usuarioCriador = '') {
-    this.usuario = usuario
-    this.nome = nome
-    this.login = login
-    this.grupoUsuario = grupoUsuario
-    this.usuarioCriador = usuarioCriador
+  constructor (obj = {}) {
+    this.usuario = obj.usuario || ''
+    this.nome = obj.nome || ''
+    this.login = obj.login || ''
+    this.grupoUsuario = obj.grupoUsuario || ''
+    this.usuarioCriador = obj.usuarioCriador || ''
   }
 }

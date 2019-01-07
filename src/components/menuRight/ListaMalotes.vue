@@ -103,18 +103,12 @@ export default {
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
       let idRegistro = this.registros.filter(registro => registro.malote === novoRegistro.malote)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].data = novoRegistro.data
-      this.registros[id].descricao = novoRegistro.descricao
+      this.registros[id] = new Malote(novoRegistro)
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let malote = new Malote()
-      console.log(obj)
-
-      malote.malote = obj.malote
-      malote.data = obj.data
-      malote.descricao = obj.rotaDescricao
+      let malote = new Malote(obj)
       this.registros.push(malote)
       this.listaDeRegistros = this.registros
     })

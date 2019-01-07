@@ -3,7 +3,7 @@
     <q-layout-header>
       <q-toolbar>
         <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Tipos de Correspondência</q-toolbar-title>
+        <q-toolbar-title>Cadastro de Tipos de Cobrança</q-toolbar-title>
         <botao-menu-right/>
       </q-toolbar>
 
@@ -20,10 +20,10 @@
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
               <div class="col-md-6 linhaBotoes">
-                <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarTipoCorrespondencia">Novo</q-btn>
-                <q-btn small type="submit" icon="save" v-if="!tipoCorrespondencia.tipoCorrespondencia && possoGravarTipoCorrespondencia" >Gravar</q-btn>
-                <q-btn small type="submit" icon="save" v-if="tipoCorrespondencia.tipoCorrespondencia && possoAlterarTipoCorrespondencia" >Alterar</q-btn>
-                <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirTipoCorrespondencia">Excluir</q-btn>
+                <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarTipoCobranca">Novo</q-btn>
+                <q-btn small type="submit" icon="save" v-if="!tipoCobranca.tipoCobranca && possoGravarTipoCobranca" >Gravar</q-btn>
+                <q-btn small type="submit" icon="save" v-if="tipoCobranca.tipoCobranca && possoAlterarTipoCobranca" >Alterar</q-btn>
+                <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirTipoCobranca">Excluir</q-btn>
               </div>
             </div>
 
@@ -35,10 +35,10 @@
                   orientation="vertical"
                   class="form-input"
                   helper="Obrigatório"
-                  :error="$v.tipoCorrespondencia.descricao.$error"
+                  :error="$v.tipoCobranca.descricao.$error"
                   :error-label="errorDescricao"
                 >
-                  <q-input autocomplete="off" type="text" v-model="tipoCorrespondencia.descricao" @input="$v.tipoCorrespondencia.descricao.$touch()" name="descricao"/>
+                  <q-input autocomplete="off" type="text" v-model="tipoCobranca.descricao" @input="$v.tipoCobranca.descricao.$touch()" name="descricao"/>
                 </q-field>
               </div>
               <div class="col-md-4">
@@ -47,13 +47,13 @@
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="tel" v-model.lazy="tipoCorrespondencia.valor" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money"/>
+                  <q-input autocomplete="off" type="tel" v-model.lazy="tipoCobranca.valor" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money"/>
                 </q-field>
               </div>
               <div class="col-md-4">
                 <q-field class="form-input" label="Status" orientation="vertical">
                   <q-btn-group  class="fit">
-                    <radio-button :status="tipoCorrespondencia.status" @toggleRadioButton="toggleRadioButton"/>
+                    <radio-button :status="tipoCobranca.status" @toggleRadioButton="toggleRadioButton"/>
                   </q-btn-group>
                 </q-field>
               </div>
@@ -61,10 +61,10 @@
           </form>
 
           <botao-mobile
-            :id="tipoCorrespondencia.tipoCorrespondencia"
-            :possoGravar="possoGravarTipoCorrespondencia"
-            :possoAlterar="possoAlterarTipoCorrespondencia"
-            :possoExcluir="possoExcluirTipoCorrespondencia"
+            :id="tipoCobranca.tipoCobranca"
+            :possoGravar="possoGravarTipoCobranca"
+            :possoAlterar="possoAlterarTipoCobranca"
+            :possoExcluir="possoExcluirTipoCobranca"
             @salvarAlterar="salvarAlterar"
             @excluir="excluir"
             @reset="reset"
@@ -80,10 +80,10 @@
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import RadioButton from 'src/components/form/radios/RadioButton'
-import ListaDeRegistros from 'src/components/menuRight/ListaTipoCorrespondencias.vue'
+import ListaDeRegistros from 'src/components/menuRight/ListaTipoCobrancas.vue'
 import { required } from 'vuelidate/lib/validators'
-import TipoCorrespondencia from 'src/services/tipoCorrespondencia/TipoCorrespondencia'
-import tipoCorrespondenciaService from 'src/services/tipoCorrespondencia/TipoCorrespondenciaService'
+import TipoCobranca from 'src/services/tipoCobranca/TipoCobranca'
+import tipoCobrancaService from 'src/services/tipoCobranca/TipoCobrancaService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
@@ -93,7 +93,7 @@ import VMoney from 'src/tools/money'
 var timer
 
 export default {
-  name: 'Cadastro-de-TipoCorrespondencias',
+  name: 'Cadastro-de-TipoCobrancas',
   components: {
     ListaDeRegistros,
     BotaoMenuLeft,
@@ -103,10 +103,10 @@ export default {
   },
   data () {
     return {
-      tipoCorrespondencia: new TipoCorrespondencia(),
+      tipoCobranca: new TipoCobranca(),
       errorDescricao: 'Preencha a descrição',
-      possoAlterarTipoCorrespondencia: false,
-      possoExcluirTipoCorrespondencia: false,
+      possoAlterarTipoCobranca: false,
+      possoExcluirTipoCobranca: false,
       money: {
         decimal: '.',
         thousands: '',
@@ -122,7 +122,7 @@ export default {
     money: VMoney
   },
   validations: {
-    tipoCorrespondencia: {
+    tipoCobranca: {
       descricao: {
         required,
         isUnique (value) {
@@ -133,11 +133,11 @@ export default {
           }
           let opcao = 'gravar'
           let id = ''
-          if (this.tipoCorrespondencia.tipoCorrespondencia) {
+          if (this.tipoCobranca.tipoCobranca) {
             opcao = 'alterar'
-            id = this.tipoCorrespondencia.tipoCorrespondencia
+            id = this.tipoCobranca.tipoCobranca
           }
-          let retorno = confereRegistro('categoriasCorrespondencias', 'descricao', opcao, id, 'categoriaCorrespondencia', descricao)
+          let retorno = confereRegistro('categoriasCobrancas', 'descricao', opcao, id, 'categoriaCobranca', descricao)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -155,17 +155,17 @@ export default {
   },
   methods: {
     toggleRadioButton () {
-      this.tipoCorrespondencia.status = !this.tipoCorrespondencia.status
+      this.tipoCobranca.status = !this.tipoCobranca.status
     },
     reset () {
-      this.$v.tipoCorrespondencia.$reset()
-      this.tipoCorrespondencia = new TipoCorrespondencia()
-      this.$router.push({name: 'tipoCorrespondencia'})
-      this.possoAlterarTipoCorrespondencia = false
-      this.possoExcluirTipoCorrespondencia = false
+      this.$v.tipoCobranca.$reset()
+      this.tipoCobranca = new TipoCobranca()
+      this.$router.push({name: 'tipoCobranca'})
+      this.possoAlterarTipoCobranca = false
+      this.possoExcluirTipoCobranca = false
     },
     carrega (id) {
-      console.log('vou carregar o tipoCorrespondencia')
+      console.log('vou carregar o tipoCobranca')
       this.$q.loading.show({
         message: 'Localizando o registro',
         messageColor: 'white',
@@ -173,12 +173,12 @@ export default {
         spinnerColor: 'white'
       })
 
-      tipoCorrespondenciaService
+      tipoCobrancaService
         .seleciona(id)
         .then(result => {
           this.$q.loading.hide()
-          console.log('peguei o tipoCorrespondencia com sucesso')
-          this.tipoCorrespondencia = Object.assign({}, this.tipoCorrespondencia, result.data)
+          console.log('peguei o tipoCobranca com sucesso')
+          this.tipoCobranca = Object.assign({}, this.tipoCobranca, result.data)
           this.confereAlterarExcluir()
         })
     },
@@ -191,8 +191,8 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.tipoCorrespondencia.$touch()
-        if (this.$v.tipoCorrespondencia.$error) {
+        this.$v.tipoCobranca.$touch()
+        if (this.$v.tipoCobranca.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
@@ -201,32 +201,32 @@ export default {
           return
         }
 
-        if (this.tipoCorrespondencia.tipoCorrespondencia && this.possoAlterarTipoCorrespondencia) {
+        if (this.tipoCobranca.tipoCobranca && this.possoAlterarTipoCobranca) {
           console.log('estou alterando o form')
-          tipoCorrespondenciaService.altera(this.tipoCorrespondencia)
+          tipoCobrancaService.altera(this.tipoCobranca)
             .then(result => {
               this.$q.loading.hide()
-              console.log('tipoCorrespondencia alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.tipoCorrespondencia)
+              console.log('tipoCobranca alterado com sucesso')
+              this.$root.$emit('alteraUnicoRegistro', this.tipoCobranca)
               this.$q.notify({
                 type: 'positive',
-                message: 'Tipo de Correspondência alterado com sucesso.',
+                message: 'Tipo de Cobrança alterado com sucesso.',
                 timeout: 5000
               })
             })
-        } else if (!this.tipoCorrespondencia.tipoCorrespondencia && this.possoGravarTipoCorrespondencia) {
-          tipoCorrespondenciaService.grava(this.tipoCorrespondencia)
+        } else if (!this.tipoCobranca.tipoCobranca && this.possoGravarTipoCobranca) {
+          tipoCobrancaService.grava(this.tipoCobranca)
             .then(result => {
-              console.log('tipoCorrespondencia criado com sucesso')
-              this.tipoCorrespondencia.tipoCorrespondencia = result.data.tipoCorrespondencia.tipoCorrespondencia
-              this.tipoCorrespondencia.usuarioCriador = result.data.tipoCorrespondencia.usuarioCriador
-              this.$router.push('/tipoCorrespondencias/tipoCorrespondencia/' + result.data.tipoCorrespondencia.tipoCorrespondencia)
+              console.log('tipoCobranca criado com sucesso')
+              this.tipoCobranca.tipoCobranca = result.data.tipoCobranca.tipoCobranca
+              this.tipoCobranca.usuarioCriador = result.data.tipoCobranca.usuarioCriador
+              this.$router.push('/tipoCobrancas/tipoCobranca/' + result.data.tipoCobranca.tipoCobranca)
               this.$q.notify({
                 type: 'positive',
-                message: 'Tipo de Correspondência criado com sucesso.',
+                message: 'Tipo de Cobrança criado com sucesso.',
                 timeout: 5000
               })
-              this.$root.$emit('adicionaRegistroNaLista', this.tipoCorrespondencia)
+              this.$root.$emit('adicionaRegistroNaLista', this.tipoCobranca)
               this.confereAlterarExcluir()
             })
         } else {
@@ -235,7 +235,7 @@ export default {
       }, 2000)
     },
     excluir () {
-      if (this.possoExcluirTipoCorrespondencia) {
+      if (this.possoExcluirTipoCobranca) {
         this.$q.dialog({
           title: 'Tem certeza?',
           message: 'Ao confirmar esta operação, não poderá desfazer.',
@@ -249,16 +249,16 @@ export default {
             spinnerColor: 'white'
           })
 
-          tipoCorrespondenciaService.apaga(this.tipoCorrespondencia.tipoCorrespondencia)
+          tipoCobrancaService.apaga(this.tipoCobranca.tipoCobranca)
             .then(result => {
               this.$q.loading.hide()
-              console.log('tipoCorrespondencia removido com sucesso')
+              console.log('tipoCobranca removido com sucesso')
               this.$q.notify({
                 type: 'negative',
-                message: 'Tipo de Correspondência removido com sucesso.',
+                message: 'Tipo de Cobrança removido com sucesso.',
                 timeout: 5000
               })
-              this.$root.$emit('removeRegistro', this.tipoCorrespondencia.tipoCorrespondencia)
+              this.$root.$emit('removeRegistro', this.tipoCobranca.tipoCobranca)
               this.reset()
             })
         }).catch(() => {
@@ -269,8 +269,8 @@ export default {
       }
     },
     confereAlterarExcluir () {
-      this.possoAlterarTipoCorrespondencia = permissoes.alterar('tipoCorrespondencia', this.tipoCorrespondencia.usuarioCriador)
-      this.possoExcluirTipoCorrespondencia = permissoes.excluir('tipoCorrespondencia', this.tipoCorrespondencia.usuarioCriador)
+      this.possoAlterarTipoCobranca = permissoes.alterar('tipoCobranca', this.tipoCobranca.usuarioCriador)
+      this.possoExcluirTipoCobranca = permissoes.excluir('tipoCobranca', this.tipoCobranca.usuarioCriador)
     }
   },
   props: {
@@ -282,7 +282,7 @@ export default {
     }
   },
   computed: {
-    possoGravarTipoCorrespondencia: () => permissoes.gravar('tipoCorrespondencia')
+    possoGravarTipoCobranca: () => permissoes.gravar('tipoCobranca')
   }
 }
 </script>

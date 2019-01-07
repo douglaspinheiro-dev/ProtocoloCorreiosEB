@@ -101,16 +101,12 @@ export default {
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
       let idRegistro = this.registros.filter(registro => registro.tipoDocumento === novoRegistro.tipoDocumento)
       let id = this.registros.indexOf(idRegistro[0])
-      this.registros[id].codigo = novoRegistro.codigo
-      this.registros[id].descricao = novoRegistro.descricao
+      this.registros[id] = new TipoDocumento(novoRegistro)
       this.listaDeRegistros = this.registros
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
-      let tipoDocumento = new TipoDocumento()
-      tipoDocumento.tipoDocumento = obj.tipoDocumento
-      tipoDocumento.codigo = obj.codigo
-      tipoDocumento.descricao = obj.descricao
+      let tipoDocumento = new TipoDocumento(obj)
       this.registros.push(tipoDocumento)
       this.listaDeRegistros = this.registros
     })
