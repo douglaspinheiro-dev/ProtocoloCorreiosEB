@@ -11,15 +11,17 @@
     <q-tabs position="top" no-pane-border inverted>
       <!-- Tabs - notice slot="title" -->
       <q-tab default slot="title" name="tab-1" icon="" label="Inicio" />
-      <!-- <q-tab slot="title" name="tab-2" icon="list" label="Mineradoras"/> -->
+      <q-tab slot="title" name="tab-2" icon="list" label="Correspondências"/>
+      <q-tab slot="title" name="tab-3" icon="list" label="Entradas"/>
+      <q-tab slot="title" name="tab-4" icon="list" label="Malotes"/>
 
       <!-- Targets -->
       <q-tab-pane name="tab-1">
         <h2> {{ getLogin }} </h2>
       </q-tab-pane>
 
-      <q-tab-pane name="tab-2">
-        <h1>tab2</h1>
+      <q-tab-pane name="tab-3">
+        <consulta-protocolo-entrada></consulta-protocolo-entrada>
       </q-tab-pane>
 
     </q-tabs>
@@ -77,10 +79,12 @@ import {
   minLength
 } from 'vuelidate/lib/validators'
 import usuarioService from 'src/services/usuario/UsuarioService'
+import consultaProtocoloEntrada from 'src/components/ConsultaProtocoloEntrada'
 export default {
   name: 'Dashboard',
   components: {
-    BotaoMenuLeft
+    BotaoMenuLeft,
+    consultaProtocoloEntrada
   },
   data () {
     return {

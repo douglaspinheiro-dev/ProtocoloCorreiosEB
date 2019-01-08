@@ -77,7 +77,7 @@
 
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <q-field class="form-input"
                   label="Codigo de Rastreio"
                   orientation="vertical"
@@ -85,7 +85,7 @@
                   <q-input autocomplete="off" type="text" v-model="correspondencia.codigoRastreio" name="text" />
                 </q-field>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <q-field class="form-input" label="Origem" orientation="vertical"
                   :error="$v.correspondencia.setor.$error"
                   error-label="Obrigatório"
@@ -101,6 +101,11 @@
                     @input="$v.correspondencia.setor.$touch()"
                   />
                   <q-progress indeterminate v-show="optionsLoading"/>
+                </q-field>
+              </div>
+              <div class="col-md-4">
+                <q-field class="form-input" label="Remetente" orientation="vertical">
+                  <q-input autocomplete="off" type="text" v-model="correspondencia.remetente" name="name"/>
                 </q-field>
               </div>
             </div>
@@ -187,9 +192,6 @@
                     <q-field class="form-input"
                       label="Cep"
                       orientation="vertical"
-                      helper="Obrigatório"
-                      :error="$v.correspondencia.cep.$error"
-                      error-label="Obrigatório"
                     >
                       <q-input autocomplete="off" type="text" v-model="correspondencia.cep" @input="procuraCep" v-mask="'99999-999'" placeholder="00000-000" name="cep"/>
                     </q-field>
@@ -386,8 +388,7 @@ export default {
       dataCadastro: {required},
       destino: {required},
       setor: {required},
-      tipoCorrespondencia: {required},
-      cep: {required}
+      tipoCorrespondencia: {required}
     }
   },
   methods: {

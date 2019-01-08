@@ -7,6 +7,7 @@ export default class Correspondencia {
     this.tipoDocumento = obj.tipoDocumento || ''
     this.numeroDocumento = obj.numeroDocumento || ''
     this.setor = obj.setor || ''
+    this.remetente = obj.remetente || ''
     this.destino = obj.destino || ''
     this.enderecoCadastrado = obj.enderecoCadastrado || false
     this.usuarioCriador = obj.usuarioCriador || ''

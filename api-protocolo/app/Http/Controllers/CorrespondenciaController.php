@@ -61,8 +61,7 @@ class CorrespondenciaController extends Controller
         'numeroDocumento' => 'required',
         'setor' => 'required',
         'destino' => 'required',
-        'enderecoCadastrado' => 'required',
-        'cep' => 'required'
+        'enderecoCadastrado' => 'required'
       ]
     );
 
@@ -83,10 +82,7 @@ class CorrespondenciaController extends Controller
         'numeroDocumento' => 'required',
         'setor' => 'required',
         'destino' => 'required',
-        'enderecoCadastrado' => 'required',
-        'cep' => 'required'
-
-
+        'enderecoCadastrado' => 'required'
       ]
     );
 

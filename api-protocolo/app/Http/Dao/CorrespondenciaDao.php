@@ -74,7 +74,8 @@ class CorrespondenciaDao extends Dao
         logradouro,
         numero,
         referencia,
-        uf
+        uf,
+        remetente,
       ) values
       (
         '{$dados['correspondencia']}',
@@ -97,7 +98,8 @@ class CorrespondenciaDao extends Dao
         '{$dados['logradouro']}',
         '{$dados['numero']}',
         '{$dados['referencia']}',
-        '{$dados['uf']}'
+        '{$dados['uf']}',
+        '{$dados['remetente']}'
       )");
     }
 
@@ -122,6 +124,7 @@ class CorrespondenciaDao extends Dao
       numero = '{$dados['numero']}',
       referencia = '{$dados['referencia']}',
       uf = '{$dados['uf']}',
+      remetente = '{$dados['remetente']}',
       usuarioAlterador = '{$dados['usuarioAlterador']}'
       where correspondencia = '{$dados['correspondencia']}'");
     }
