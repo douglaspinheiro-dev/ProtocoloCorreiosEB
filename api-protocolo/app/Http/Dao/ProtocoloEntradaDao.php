@@ -45,7 +45,7 @@ class ProtocoloEntradaDao extends Dao
         anoCadastro,
         numero,
         assunto,
-        categoriasDocumentos.descricao as tipoDocumentoDescricao,
+        categoriasDocumentos.codigo as tipoDocumentoDescricao,
         DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
         origem,
         setores.codigo as setorDescricao
@@ -141,7 +141,7 @@ class ProtocoloEntradaDao extends Dao
           DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
           protocoloEntradas.origem,
           protocoloEntradas.assunto,
-          categoriasDocumentos.descricao as tipoDocumento,
+          categoriasDocumentos.codigo as tipoDocumento,
           setores.descricao as destino
         FROM protocoloEntradas
         JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = protocoloEntradas.categoriaDocumento
