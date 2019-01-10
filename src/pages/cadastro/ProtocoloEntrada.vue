@@ -60,7 +60,7 @@
                   :error="$v.protocoloEntrada.numero.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="off" type="text" v-model="protocoloEntrada.numero" @input="$v.protocoloEntrada.numero.$touch()" name="numero"/>
+                  <q-input autocomplete="off" type="text" v-model="protocoloEntrada.numero" @input="$v.protocoloEntrada.numero.$touch()" name="number"/>
                 </q-field>
               </div>
               <div class="col-md-3">

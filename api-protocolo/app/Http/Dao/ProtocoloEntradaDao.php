@@ -38,8 +38,48 @@ class ProtocoloEntradaDao extends Dao
       AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT {$obj['inicio']}, {$obj['fim']}");
     }
 
+    public static function procura($obj) {
+      return DB::select("SELECT
+        protocoloEntrada,
+        protocolo,
+        anoCadastro,
+        numero,
+        assunto,
+        categoriasDocumentos.descricao as tipoDocumentoDescricao,
+        DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
+        origem,
+        setores.codigo as setorDescricao
+        FROM protocoloEntradas
+        JOIN categoriasDocumentos on protocoloEntradas.categoriaDocumento = categoriasDocumentos.categoriaDocumento
+        JOIN setores on protocoloEntradas.setor = setores.setor
+        AND
+      (
+        protocoloEntradas.numero LIKE '%{$obj['busca']}%' OR
+        protocoloEntradas.protocoloEntrada LIKE '%{$obj['busca']}%'
+      )
+      AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT {$obj['inicio']}, {$obj['fim']}");
+    }
+
     public static function seleciona($id) {
       return DB::select("SELECT *, categoriaDocumento as tipoDocumento FROM protocoloEntradas WHERE protocoloEntrada = '{$id}' AND ativo = 1");
+    }
+
+    public static function selecionaPorAno($dados) {
+      return DB::select("
+      SELECT
+        protocoloEntradas.protocolo,
+        protocoloEntradas.numero,
+        DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
+        protocoloEntradas.origem,
+        protocoloEntradas.assunto,
+        categoriasDocumentos.descricao as tipoDocumento,
+        setores.descricao as destino
+      FROM protocoloEntradas
+      JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = protocoloEntradas.categoriaDocumento
+      JOIN setores ON setores.setor = protocoloEntradas.setor
+      AND protocoloEntradas.protocolo = '{$dados['id']}'
+      AND protocoloEntradas.anoCadastro = '{$dados['ano']}'
+      AND protocoloEntradas.ativo = 1;");
     }
 
     public static function apaga($dados) {
@@ -85,6 +125,10 @@ class ProtocoloEntradaDao extends Dao
       enderecoCadastrado = '{$dados['enderecoCadastrado']}',
       usuarioAlterador = '{$dados['usuarioAlterador']}'
       where protocoloEntrada = '{$dados['protocoloEntrada']}'");
+    }
+
+    public static function listaAnos() {
+      return DB::select("select anoCadastro as ano from protocoloEntradas group by ano order by  ano desc");
     }
 
     //

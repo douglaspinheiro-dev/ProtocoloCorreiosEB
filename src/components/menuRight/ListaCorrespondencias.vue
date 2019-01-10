@@ -16,10 +16,11 @@
           <!-- Content, in this case some <p> tags -->
           <q-item exact separator link highlight multiline v-for="(correspondencia, index) in listaDeRegistros"  item :to="{ name: 'alterarCorrespondencia', params: { id: correspondencia.correspondencia} }" :key="index">
             <q-item-main>
-              <q-item-tile label> {{ `${correspondencia.setorDescricao} >>> ${correspondencia.destino}` }}</q-item-tile>
-              <q-item-tile sublabel lines="2">{{`${correspondencia.tipoDocumentoDescricao} ${correspondencia.numeroDocumento} | Rastreio: ${correspondencia.codigoRastreio}` }} </q-item-tile>
+              <q-item-tile v-show="!correspondencia.correspondencia" label> {{ correspondencia.assunto }}</q-item-tile>
+              <q-item-tile v-show="correspondencia.correspondencia" label> {{ `${correspondencia.setorDescricao} >>> ${correspondencia.destino}` }}</q-item-tile>
+              <q-item-tile v-show="correspondencia.correspondencia" sublabel lines="2">{{`${correspondencia.tipoDocumentoDescricao} ${correspondencia.numeroDocumento} | Rastreio: ${correspondencia.codigoRastreio}` }} </q-item-tile>
             </q-item-main>
-            <q-item-side right :stamp="`Prot: ${correspondencia.anoCadastro}-${correspondencia.protocolo}`" />
+            <q-item-side v-show="correspondencia.correspondencia" right :stamp="`Prot: ${correspondencia.anoCadastro}-${correspondencia.protocolo}`" />
           </q-item>
           <div slot="message" class="row justify-center" style="margin-bottom: 50px;">
             <q-spinner-dots :size="40" />
@@ -74,7 +75,7 @@ export default {
               this.registros = []
             }
             this.registros = this.registros.concat(result.data.registros)
-            this.listaDeRegistros = this.registros
+            this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
             // this.$store.commit('menuRight/setRegistros', listaDeRegistros)
             if (result.data.fim === true) {
               console.log('fim da lista')
@@ -103,7 +104,7 @@ export default {
     this.$root.$on('removeRegistro', (correspondencia) => {
       let idRegistro = this.registros.filter(registro => registro.correspondencia === correspondencia)
       this.registros.splice(this.registros.indexOf(idRegistro[0]), 1)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
@@ -115,7 +116,7 @@ export default {
       this.registros[id].setorDescricao = novoRegistro.setorDescricao
       this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
@@ -124,7 +125,7 @@ export default {
       correspondencia.setorDescricao = obj.setorDescricao
       correspondencia.tipoDocumentoDescricao = obj.tipoDocumentoDescricao
       this.registros.push(correspondencia)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
   },
   beforeDestroy () {

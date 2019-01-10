@@ -106,4 +106,10 @@ class ProtocoloEntradaController extends Controller
       'setor' => $setor,
     ], 200);
   }
+
+  public function listaAnos()
+  {
+    $anos = ProtocoloEntradaDao::listaAnos();
+    return response()->json($anos, 200);
+  }
 }

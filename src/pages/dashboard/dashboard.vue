@@ -79,7 +79,7 @@ import {
   minLength
 } from 'vuelidate/lib/validators'
 import usuarioService from 'src/services/usuario/UsuarioService'
-import consultaProtocoloEntrada from 'src/components/ConsultaProtocoloEntrada'
+import consultaProtocoloEntrada from 'src/components/BuscaProtocoloEntrada'
 export default {
   name: 'Dashboard',
   components: {

@@ -1,16 +1,17 @@
 <template>
   <q-page class="q-pa-sm full-height">
-    <form @submit.prevent="salvarAlterar">
+    <form @submit.prevent="procurar">
       <div class="row barraBotoes">
         <div class="col-md-6 linhaBotoes">
-          <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarProtocoloEntrada">Novo</q-btn>
-          <q-btn small type="submit" icon="save" v-if="!protocoloEntrada.protocoloEntrada && possoGravarProtocoloEntrada">Gravar</q-btn>
+          <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
+          <q-btn small type="submit" icon="search">Procurar</q-btn>
         </div>
       </div>
-      <q-list>
+      <div>
+
         <q-collapsible label="Consulta" opened>
           <div class="row">
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
               <q-field class="form-input"
                 label="Tipo do Documento"
                 orientation="vertical"
@@ -24,20 +25,48 @@
                   name="select"
                 />
               </q-field>
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <q-field
+                label="Número de Protocolo"
+                orientation="vertical"
+                class="form-input"
+                helper="Obrigatório"
+                :error="$v.buscaProtocoloEntrada.protocolo.$error"
+                error-label="Obrigatório"
+              >
+                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.protocolo" @input="$v.buscaProtocoloEntrada.protocolo.$touch()" name="number"/>
+              </q-field>
+            </div>
+            <div class="col-md-3">
+              <q-field class="form-input"
+                label="Ano"
+                orientation="vertical"
+              >
+                <q-select
+                  v-model="buscaProtocoloEntrada.ano"
+                  :options="optionsAno"
+                  filter
+                  autofocus-filter
+                  filter-placeholder="Selecione o ano"
+                  name="select"
+                />
+              </q-field>
             </div>
           </div>
         </q-collapsible>
-      </q-list>
+      </div>
     </form>
     <br>
     <div>
 
-      <q-table title="Lista de ProtocoloEntradas"
-        :data="listaDeProtocoloEntradas"
+      <q-table title="Listagem de Registros"
+        :data="registros"
         :columns="tabelaColunas"
         row-key="id"
         :loading="carregandoLista"
-        :filter="buscaProtocoloEntrada"
         :separator="tabelaSeparador"
         no-data-label="Sem registros encontrados"
         no-results-label="Sem registros encontrados"
@@ -49,7 +78,7 @@
             placeholder="Busca"
             hide-underline
             color="secondary"
-            v-model="buscaProtocoloEntrada"
+            v-model="registros"
             class="col-6"
           />
         </template>
@@ -71,16 +100,16 @@
             @click="props.toggleFullscreen"
           />
         </template>
-        <q-td slot="body-cell-editar" slot-scope="props" :props="props">
+        <!-- <q-td slot="body-cell-editar" slot-scope="props" :props="props">
           <q-btn type="button" color="primary" flat round icon="edit" @click="carrega(props.row.id)" />
-        </q-td>
+        </q-td> -->
       </q-table>
       <!-- <q-inner-loading :visible="carregandoLista">
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
       </q-inner-loading> -->
     </div>
 
-    <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
+    <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
       possoGravarProtocoloEntrada ||
       possoExcluirProtocoloEntrada
     ">
@@ -98,7 +127,7 @@
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Excluir</q-tooltip>
         </q-fab-action>
       </q-fab>
-    </q-page-sticky>
+    </q-page-sticky> -->
   </q-page>
 </template>
 
@@ -106,42 +135,55 @@
 import { required } from 'vuelidate/lib/validators'
 var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
+// import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
-import ProtocoloEntrada from 'src/services/protocoloEntrada/ProtocoloEntrada'
-import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntradaService'
+import BuscaProtocoloEntrada from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntrada'
+import buscaProtocoloEntradaService from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntradaService'
 
 export default {
-  name: 'Consulta Protocolo de Entrada',
+  name: 'ConsultaProtocoloEntrada',
   directives: {
     mask
   },
   data () {
     return {
-      buscaProtocoloEntrada: '',
       optionsLoading: false,
       optionsSetor: [],
+      optionsAno: [],
       optionsRotaEndereco: [],
-      protocoloEntrada: new ProtocoloEntrada(),
-      botaoSalvarAlterar: 'Salvar',
+      busca: '',
+      buscaProtocoloEntrada: new BuscaProtocoloEntrada(),
       carregandoLista: false,
-      listaDeProtocoloEntradas: [],
+      registros: [],
       tabelaSeparador: 'horizontal',
       tabelaColunas: [
         {
+          name: 'protocolo',
+          required: true,
+          label: 'Protocolo',
+          align: 'left',
+          field: 'protocolo',
+          sortable: true
+        },
+        {
           name: 'tipoDocumento',
           required: true,
-          label: 'Documento',
+          label: 'Tipo de Documento',
           align: 'left',
           field: 'tipoDocumento',
           sortable: true
         },
         {
           name: 'numero',
-          required: true,
-          label: 'Número',
+          label: 'nº',
           align: 'left',
-          field: 'numero',
+          field: 'numero'
+        },
+        {
+          name: 'dataDocumento',
+          label: 'Data do doc.',
+          align: 'left',
+          field: 'dataDocumento',
           sortable: true
         },
         {
@@ -152,43 +194,42 @@ export default {
           sortable: true
         },
         {
+          name: 'assunto',
+          label: 'Assunto',
+          align: 'left',
+          field: 'assunto',
+          sortable: true
+        },
+        {
           name: 'destino',
           label: 'Destino',
           align: 'left',
-          field: 'destino'
-        },
-        {
-          name: 'editar',
-          label: 'Editar',
-          align: 'center',
-          field: 'editar',
-          required: true
+          field: 'destino',
+          sortable: true
         }
       ]
     }
   },
   validations: {
-    protocoloEntrada: {
-      tipoDocumento: { required },
-      numero: { required },
-      setor: { required },
-      rotaEndereco: { required }
+    buscaProtocoloEntrada: {
+      ano: { required },
+      protocolo: { required }
     }
   },
   methods: {
-    setOptionsRotaEndereco (enderecos) {
-      if (enderecos.length > 0) {
-        let optionsRotaEndereco = []
-        enderecos.map(endereco => optionsRotaEndereco.push(
+    setOptionsAno (anos) {
+      if (anos.length > 0) {
+        let optionsAno = []
+        anos.map(ano => optionsAno.push(
           {
-            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.rotaEndereco
+            label: `${ano.ano}`,
+            value: `${ano.ano}`
           }
         ))
-        this.optionsRotaEndereco = optionsRotaEndereco
+        this.optionsAno = optionsAno
       } else {
-        this.optionsRotaEndereco = [{
-          label: 'Sem registros cadastrados, confira o cadastro de Rotas',
+        this.optionsAno = [{
+          label: 'Sem registros cadastrados, confira o cadastro de Protocolo de Entradas',
           value: ''
         }]
       }
@@ -228,13 +269,11 @@ export default {
       }
     },
     reset () {
-      this.$v.protocoloEntrada.$reset()
-      this.protocoloEntrada = new ProtocoloEntrada()
-      this.protocoloEntrada.rota = this.rota
-      this.botaoSalvarAlterar = 'Gravar'
+      this.$v.buscaProtocoloEntrada.$reset()
+      this.buscaProtocoloEntrada = new BuscaProtocoloEntrada()
     },
     carrega (id) {
-      console.log('vou carregar o protocoloEntrada')
+      console.log('vou carregar o buscaProtocoloEntrada')
       this.$q.loading.show({
         message: 'Localizando o registro',
         messageColor: 'white',
@@ -242,17 +281,16 @@ export default {
         spinnerColor: 'white'
       })
 
-      protocoloEntradaService
+      buscaProtocoloEntradaService
         .seleciona(id)
         .then(result => {
           this.$q.loading.hide()
-          console.log('peguei o protocoloEntrada com sucesso')
-          this.protocoloEntrada = Object.assign({}, this.protocoloEntrada, result.data)
+          console.log('peguei o buscaProtocoloEntrada com sucesso')
+          this.buscaProtocoloEntrada = Object.assign({}, this.buscaProtocoloEntrada, result.data)
           this.botaoSalvarAlterar = 'Alterar'
         })
     },
-    salvarAlterar () {
-      this.protocoloEntrada.rota = this.rota
+    procurar () {
       this.$q.loading.show({
         message: 'Processando sua requisição',
         messageColor: 'white',
@@ -261,8 +299,8 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.protocoloEntrada.$touch()
-        if (this.$v.protocoloEntrada.$error) {
+        this.$v.buscaProtocoloEntrada.$touch()
+        if (this.$v.buscaProtocoloEntrada.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
@@ -270,98 +308,56 @@ export default {
           }).then(() => { }).catch(() => { })
           return
         }
-        if (this.protocoloEntrada.protocoloEntrada && this.possoAlterarProtocoloEntrada) {
-          console.log('estou alterando o form')
-          protocoloEntradaService.altera(this.protocoloEntrada)
-            .then(result => {
-              this.$q.loading.hide()
-              console.log('protocoloEntrada alterado com sucesso')
-              this.listaDocumentos()
-              this.$q.notify({
-                type: 'positive',
-                message: 'Documento do malote alterado com sucesso.',
-                timeout: 5000
-              })
-            })
-        } else if (!this.protocoloEntrada.protocoloEntrada && this.possoGravarProtocoloEntrada) {
-          this.protocoloEntrada.malote = this.malote
-          protocoloEntradaService.grava(this.protocoloEntrada)
-            .then(result => {
-              this.$q.loading.hide()
-              console.log('protocoloEntrada criado com sucesso')
-              this.protocoloEntrada.protocoloEntrada = result.data.protocoloEntrada
-              this.protocoloEntrada.usuarioCriador = result.data.usuarioCriador
-              this.$q.notify({
-                type: 'positive',
-                message: 'Documento do malote criado com sucesso.',
-                timeout: 5000
-              })
 
-              // limpando o form
-              this.reset()
-              this.preencheListaTabela(result.data.protocoloEntrada.lista)
+        if (this.buscaProtocoloEntrada.protocolo) {
+          buscaProtocoloEntradaService.seleciona(this.buscaProtocoloEntrada)
+            .then(result => {
+              this.$q.loading.hide()
+              console.log('buscaProtocoloEntrada alterado com sucesso')
+              // this.listaDocumentos()
+              console.log(result.data)
+              this.registros = result.data
+              this.$q.notify({
+                type: 'positive',
+                message: 'Estes foram os registros encontrados.',
+                timeout: 5000
+              })
             })
         } else {
-          notify.semPermissao()
+          buscaProtocoloEntradaService.procura(this.buscaProtocoloEntrada)
+            .then(result => {
+              this.$q.loading.hide()
+              console.log('buscaProtocoloEntrada alterado com sucesso')
+              // this.listaDocumentos()
+              console.log(result.data)
+              this.$q.notify({
+                type: 'positive',
+                message: 'Estes foram os registros encontrados.',
+                timeout: 5000
+              })
+            })
         }
       }, 2000)
     },
-    excluir (id) {
-      console.log(id)
-
-      if (this.possoExcluirProtocoloEntrada) {
-        this.$q.dialog({
-          title: 'Tem certeza?',
-          message: 'Ao confirmar esta operação, não poderá desfazer.',
-          ok: 'Sim, excluir',
-          cancel: 'Cancelar'
-        }).then(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
-
-          protocoloEntradaService.apaga(this.protocoloEntrada.protocoloEntrada)
-            .then(result => {
-              this.$q.loading.hide()
-              console.log('protocoloEntrada removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'ProtocoloEntrada removido com sucesso.',
-                timeout: 5000
-              })
-              let idRegistro = this.listaDeProtocoloEntradas.filter(registro => registro.id === this.protocoloEntrada.protocoloEntrada)
-              this.listaDeProtocoloEntradas.splice(this.listaDeProtocoloEntradas.indexOf(idRegistro[0]), 1)
-              this.reset()
-            })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
-        })
-      } else {
-        notify.semPermissao()
-      }
-    },
     listaDocumentos () {
       this.carregandoLista = true
-      protocoloEntradaService
+      buscaProtocoloEntradaService
         .lista(this.malote)
         .then(result => {
           this.carregandoLista = false
-          console.log('carreguei a lista de protocoloEntradas')
+          console.log('carreguei a lista de buscaProtocoloEntradas')
           this.preencheListaTabela(result.data.registros)
         })
     },
     preencheListaTabela (registros) {
       let lista = []
-      registros.forEach(protocoloEntrada => {
+      registros.forEach(buscaProtocoloEntrada => {
         lista.push({
-          id: protocoloEntrada.protocoloEntrada,
-          tipoDocumento: protocoloEntrada.tipoDocumentoDescricao,
-          numero: protocoloEntrada.numero,
-          origem: protocoloEntrada.setorDescricao,
-          destino: protocoloEntrada.codigoReduzido
+          id: buscaProtocoloEntrada.buscaProtocoloEntrada,
+          tipoDocumento: buscaProtocoloEntrada.tipoDocumentoDescricao,
+          numero: buscaProtocoloEntrada.numero,
+          origem: buscaProtocoloEntrada.setorDescricao,
+          destino: buscaProtocoloEntrada.codigoReduzido
         })
       })
       this.listaDeProtocoloEntradas = lista
@@ -372,23 +368,18 @@ export default {
     'rota'
   ],
   computed: {
-    possoGravarProtocoloEntrada: () => permissoes.gravar('protocoloEntrada'),
-    possoAbrirProtocoloEntrada: () => permissoes.abrir('protocoloEntrada'),
-    possoExcluirProtocoloEntrada: () => permissoes.excluir('protocoloEntrada'),
-    possoAlterarProtocoloEntrada: () => permissoes.alterar('protocoloEntrada')
+    possoAbrirProtocoloEntrada: () => permissoes.abrir('protocoloEntrada')
   },
   mounted () {
-    console.log('vou carregar a lista de protocoloEntrada')
-    this.listaDocumentos()
+    console.log('vou carregar a lista de buscaProtocoloEntrada')
+    // this.listaDocumentos()
 
-    this.optionsLoading = true
-    this.protocoloEntrada.malote = this.malote
-    protocoloEntradaService.getOptions(this.rota)
+    // this.optionsLoading = true
+    // this.buscaProtocoloEntrada.malote = this.malote
+    buscaProtocoloEntradaService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsRotaEndereco(result.data.rotaEndereco)
-        this.setOptionsTipoDocumento(result.data.tipoDocumento)
-        this.setOptionsSetor(result.data.setor)
+        this.setOptionsAno(result.data.anos)
       })
   }
 }

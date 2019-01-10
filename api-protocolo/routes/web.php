@@ -120,10 +120,23 @@ $app->group(
       function() use ($app) {
         $app->delete('/protocoloentradas/protocoloentrada/{id}', 'ProtocoloEntradaController@apaga');
         $app->get('/protocoloentradas', 'ProtocoloEntradaController@lista');
+        $app->get('/protocoloentradas/anos', 'ProtocoloEntradaController@listaAnos');
         $app->get('/protocoloentradas/options', 'ProtocoloEntradaController@options');
         $app->get('/protocoloentradas/protocoloentrada/{id}', 'ProtocoloEntradaController@seleciona');
         $app->post('/protocoloentradas/protocoloentrada', 'ProtocoloEntradaController@salva');
         $app->put('/protocoloentradas/protocoloentrada/{id}', 'ProtocoloEntradaController@altera');
+
+      }
+    );
+
+    $app->group(
+      ['middleware' => 'protocoloEntrada'],
+      function() use ($app) {
+        $app->get('/busca-protocoloentradas', 'BuscaProtocoloEntradaController@lista');
+        $app->get('/busca-protocoloentradas/protocolo/{id}/ano/{ano}', 'BuscaProtocoloEntradaController@seleciona');
+        $app->get('/busca-protocoloentradas/anos', 'BuscaProtocoloEntradaController@listaAnos');
+        $app->get('/busca-protocoloentradas/options', 'BuscaProtocoloEntradaController@options');
+        $app->get('/busca-protocoloentradas/protocoloentrada/{id}', 'BuscaProtocoloEntradaController@seleciona');
 
       }
     );

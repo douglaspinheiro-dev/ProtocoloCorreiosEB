@@ -74,7 +74,7 @@ export default {
               this.registros = []
             }
             this.registros = this.registros.concat(result.data.registros)
-            this.listaDeRegistros = this.registros
+            this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
             // this.$store.commit('menuRight/setRegistros', listaDeRegistros)
             if (result.data.fim === true) {
               console.log('fim da lista')
@@ -103,24 +103,24 @@ export default {
     this.$root.$on('removeRegistro', (protocoloEntrada) => {
       let idRegistro = this.registros.filter(registro => registro.protocoloEntrada === protocoloEntrada)
       this.registros.splice(this.registros.indexOf(idRegistro[0]), 1)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
-      console.log(novoRegistro)
-
       let idRegistro = this.registros.filter(registro => registro.protocoloEntrada === novoRegistro.protocoloEntrada)
       let id = this.registros.indexOf(idRegistro[0])
       this.registros[id] = new ProtocoloEntrada(novoRegistro)
+      this.registros[id].tipoDocumentoDescricao = novoRegistro.tipoDocumentoDescricao
       this.registros[id].dataDocumento = moment(novoRegistro.dataDocumento).format('L')
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let protocoloEntrada = new ProtocoloEntrada(obj)
       protocoloEntrada.dataDocumento = moment(obj.dataDocumento).format('L')
+      protocoloEntrada.tipoDocumentoDescricao = obj.tipoDocumentoDescricao
       this.registros.push(protocoloEntrada)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
   },
   beforeDestroy () {

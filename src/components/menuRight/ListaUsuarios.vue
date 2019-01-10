@@ -70,7 +70,7 @@ export default {
               this.registros = []
             }
             this.registros = this.registros.concat(result.data.registros)
-            this.listaDeRegistros = this.registros
+            this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
             // this.$store.commit('menuRight/setRegistros', listaDeRegistros)
             if (result.data.fim === true) {
               console.log('fim da lista')
@@ -104,20 +104,20 @@ export default {
     this.$root.$on('removeRegistro', (usuario) => {
       let idRegistro = this.registros.filter(registro => registro.usuario === usuario)
       this.registros.splice(this.registros.indexOf(idRegistro[0]), 1)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('alteraUnicoRegistro', (novoRegistro) => {
       let idRegistro = this.registros.filter(registro => registro.usuario === novoRegistro.usuario)
       let id = this.registros.indexOf(idRegistro[0])
       this.registros[id] = new Usuario(novoRegistro)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let usuario = new Usuario(obj)
       this.registros.push(usuario)
-      this.listaDeRegistros = this.registros
+      this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
   },
   beforeDestroy () {
