@@ -28,16 +28,31 @@
             </div> -->
           </div>
           <div class="row">
+            <div class="col-md-12">
+              <q-field class="form-input"
+                label="Tipo de Consulta"
+                orientation="vertical"
+              >
+                <q-select
+                  v-model="tipoConsulta"
+                  :options="optionsConsulta"
+                  filter
+                  autofocus-filter
+                  filter-placeholder="Selecione a forma de consulta"
+                  name="select"
+                />
+              </q-field>
+            </div>
+          </div>
+          <div class="row" v-show="tipoConsulta === 'protocolo'">
+
             <div class="col-md-3">
               <q-field
                 label="Número de Protocolo"
                 orientation="vertical"
                 class="form-input"
-                helper="Obrigatório"
-                :error="$v.buscaProtocoloEntrada.protocolo.$error"
-                error-label="Obrigatório"
               >
-                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.protocolo" @input="$v.buscaProtocoloEntrada.protocolo.$touch()" name="number"/>
+                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.protocolo" name="number"/>
               </q-field>
             </div>
             <div class="col-md-3">
@@ -56,6 +71,65 @@
               </q-field>
             </div>
           </div>
+
+          <div class="row" v-show="tipoConsulta === 'documento'">
+
+            <div class="col-md-3">
+              <q-field
+                label="Número do Documento"
+                orientation="vertical"
+                class="form-input"
+              >
+                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.numero" name="number"/>
+              </q-field>
+            </div>
+            <div class="col-md-3">
+              <q-field
+                label="Data do Documento"
+                orientation="vertical"
+                class="form-input"
+              >
+                <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataDocumento" name="date"/>
+              </q-field>
+            </div>
+            <div class="col-md-6">
+              <q-field
+                label="Assunto"
+                orientation="vertical"
+                class="form-input"
+              >
+                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.assunto" name="text"/>
+              </q-field>
+            </div>
+            <div class="col-md-6">
+              <q-field class="form-input"
+                label="Origem"
+                orientation="vertical"
+              >
+                <q-input autocomplete="on" type="text" v-model="buscaProtocoloEntrada.origem" name="origem" >
+                  <q-autocomplete
+                    @search="search"
+                    :min-characters="3"
+                  />
+                </q-input>
+              </q-field>
+            </div>
+            <div class="col-md-6">
+              <q-field class="form-input"
+                label="Destino"
+                orientation="vertical"
+              >
+                <q-select
+                  v-model="buscaProtocoloEntrada.setor"
+                  :options="optionsSetor"
+                  filter
+                  autofocus-filter
+                  filter-placeholder="Selecione o setor"
+                  name="select"
+                />
+              </q-field>
+            </div>
+          </div>
         </q-collapsible>
       </div>
     </form>
@@ -65,13 +139,15 @@
       <q-table title="Listagem de Registros"
         :data="registros"
         :columns="tabelaColunas"
-        row-key="id"
+        row-key="protocoloEntrada"
         :loading="carregandoLista"
         :separator="tabelaSeparador"
         no-data-label="Sem registros encontrados"
         no-results-label="Sem registros encontrados"
         rows-per-page-label="Linhas por página"
         loading-label="Carregando"
+        :rows-per-page-options="[50,100,200,0]"
+        :visible-columns="colunasVisiveis"
       >
         <template slot="top-left">
           <q-search
@@ -83,6 +159,13 @@
           />
         </template>
         <template slot="top-right" slot-scope="props">
+          <q-table-columns
+            color="secondary"
+            class="q-mr-sm"
+            v-model="colunasVisiveis"
+            :columns="tabelaColunas"
+            label="Colunas"
+          />
           <q-select
             color="secondary"
             v-model="tabelaSeparador"
@@ -100,9 +183,10 @@
             @click="props.toggleFullscreen"
           />
         </template>
-        <!-- <q-td slot="body-cell-editar" slot-scope="props" :props="props">
-          <q-btn type="button" color="primary" flat round icon="edit" @click="carrega(props.row.id)" />
-        </q-td> -->
+        <q-td slot="body-cell-editar" slot-scope="props" :props="props">
+          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/>
+          <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/> -->
+        </q-td>
       </q-table>
       <!-- <q-inner-loading :visible="carregandoLista">
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
@@ -132,13 +216,14 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+// import { required } from 'vuelidate/lib/validators'
 var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
 import BuscaProtocoloEntrada from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntrada'
 import buscaProtocoloEntradaService from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntradaService'
+import { filter } from 'quasar'
 
 export default {
   name: 'ConsultaProtocoloEntrada',
@@ -150,17 +235,30 @@ export default {
       optionsLoading: false,
       optionsSetor: [],
       optionsAno: [],
-      optionsRotaEndereco: [],
+      optionsEndereco: [],
+      optionsTipoDocumento: [],
       busca: '',
       buscaProtocoloEntrada: new BuscaProtocoloEntrada(),
       carregandoLista: false,
       registros: [],
+      tipoConsulta: '',
+      optionsConsulta: [
+        {
+          label: 'Número do Protocolo',
+          value: 'protocolo'
+        },
+        {
+          label: 'Dados do documento',
+          value: 'documento'
+        }
+      ],
       tabelaSeparador: 'horizontal',
+      colunasVisiveis: ['numero', 'dataDocumento', 'origem', 'assunto', 'destino'],
       tabelaColunas: [
         {
           name: 'protocolo',
           required: true,
-          label: 'Protocolo',
+          label: 'Prot.',
           align: 'left',
           field: 'protocolo',
           sortable: true
@@ -168,20 +266,20 @@ export default {
         {
           name: 'tipoDocumento',
           required: true,
-          label: 'Tipo de Documento',
+          label: 'Tipo Doc.',
           align: 'left',
           field: 'tipoDocumento',
           sortable: true
         },
         {
           name: 'numero',
-          label: 'nº',
+          label: 'Nº',
           align: 'left',
           field: 'numero'
         },
         {
           name: 'dataDocumento',
-          label: 'Data do doc.',
+          label: 'Data Doc.',
           align: 'left',
           field: 'dataDocumento',
           sortable: true
@@ -206,17 +304,56 @@ export default {
           align: 'left',
           field: 'destino',
           sortable: true
+        },
+        {
+          name: 'editar',
+          label: 'Editar',
+          align: 'center',
+          field: 'protocoloEntrada',
+          required: true
         }
       ]
     }
   },
-  validations: {
-    buscaProtocoloEntrada: {
-      ano: { required },
-      protocolo: { required }
-    }
-  },
+  // validations: {
+  //   buscaProtocoloEntrada: {
+  //     ano: { required },
+  //     protocolo: { required }
+  //   }
+  // },
   methods: {
+    parseEnderecos () {
+      return this.optionsEndereco.map(endereco => {
+        // console.log(endereco)
+
+        return {
+          label: endereco.label,
+          value: endereco.value
+        }
+      })
+    },
+    search (terms, done) {
+      setTimeout(() => {
+        done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
+      }, 1000)
+    },
+    setOptionsEndereco (enderecos) {
+      if (enderecos.length > 0) {
+        let optionsEndereco = []
+        enderecos.map(endereco => optionsEndereco.push(
+          {
+            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
+            value: endereco.codigoReduzido
+          }
+        ))
+        this.optionsEndereco = optionsEndereco
+      } else {
+        this.optionsEndereco = [{
+          label: 'Sem registros cadastrados',
+          value: ''
+        }]
+      }
+    },
     setOptionsAno (anos) {
       if (anos.length > 0) {
         let optionsAno = []
@@ -253,7 +390,10 @@ export default {
     },
     setOptionsSetor (setors) {
       if (setors.length > 0) {
-        let optionsSetor = []
+        let optionsSetor = [{
+          label: '----',
+          value: ''
+        }]
         setors.map(setor => optionsSetor.push(
           {
             label: `${setor.codigoReduzido} - ${setor.descricao}`,
@@ -273,22 +413,8 @@ export default {
       this.buscaProtocoloEntrada = new BuscaProtocoloEntrada()
     },
     carrega (id) {
-      console.log('vou carregar o buscaProtocoloEntrada')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
-
-      buscaProtocoloEntradaService
-        .seleciona(id)
-        .then(result => {
-          this.$q.loading.hide()
-          console.log('peguei o buscaProtocoloEntrada com sucesso')
-          this.buscaProtocoloEntrada = Object.assign({}, this.buscaProtocoloEntrada, result.data)
-          this.botaoSalvarAlterar = 'Alterar'
-        })
+      console.log('vou carregar o buscaProtocoloEntrada', id)
+      this.$router.push({ name: 'alterarProtocoloEntrada', params: { id } })
     },
     procurar () {
       this.$q.loading.show({
@@ -299,15 +425,15 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.buscaProtocoloEntrada.$touch()
-        if (this.$v.buscaProtocoloEntrada.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
-          return
-        }
+        // this.$v.buscaProtocoloEntrada.$touch()
+        // if (this.$v.buscaProtocoloEntrada.$error) {
+        //   this.$q.loading.hide()
+        //   this.$q.dialog({
+        //     title: 'Atenção',
+        //     message: 'Alguns campos precisam ser corrigidos.'
+        //   }).then(() => { }).catch(() => { })
+        //   return
+        // }
 
         if (this.buscaProtocoloEntrada.protocolo) {
           buscaProtocoloEntradaService.seleciona(this.buscaProtocoloEntrada)
@@ -324,12 +450,13 @@ export default {
               })
             })
         } else {
-          buscaProtocoloEntradaService.procura(this.buscaProtocoloEntrada)
+          buscaProtocoloEntradaService.procuraDocumento(this.buscaProtocoloEntrada)
             .then(result => {
               this.$q.loading.hide()
               console.log('buscaProtocoloEntrada alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
+              this.registros = result.data
               this.$q.notify({
                 type: 'positive',
                 message: 'Estes foram os registros encontrados.',
@@ -380,6 +507,9 @@ export default {
       .then(result => {
         this.optionsLoading = false
         this.setOptionsAno(result.data.anos)
+        this.setOptionsTipoDocumento(result.data.tipoDocumento)
+        this.setOptionsEndereco(result.data.endereco)
+        this.setOptionsSetor(result.data.setor)
       })
   }
 }

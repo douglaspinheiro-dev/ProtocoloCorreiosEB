@@ -68,6 +68,7 @@ class ProtocoloEntradaDao extends Dao
       return DB::select("
       SELECT
         protocoloEntradas.protocolo,
+        protocoloEntradas.protocoloEntrada,
         protocoloEntradas.numero,
         DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
         protocoloEntradas.origem,
@@ -129,6 +130,32 @@ class ProtocoloEntradaDao extends Dao
 
     public static function listaAnos() {
       return DB::select("select anoCadastro as ano from protocoloEntradas group by ano order by  ano desc");
+    }
+
+    public static function procuraDocumento($obj) {
+      return DB::select("
+        SELECT
+          protocoloEntradas.protocolo,
+          protocoloEntradas.protocoloEntrada,
+          protocoloEntradas.numero,
+          DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
+          protocoloEntradas.origem,
+          protocoloEntradas.assunto,
+          categoriasDocumentos.descricao as tipoDocumento,
+          setores.descricao as destino
+        FROM protocoloEntradas
+        JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = protocoloEntradas.categoriaDocumento
+        JOIN setores ON setores.setor = protocoloEntradas.setor
+        AND
+        (
+          protocoloEntradas.numero LIKE '%{$obj['numero']}%' AND
+          protocoloEntradas.dataDocumento LIKE '%{$obj['dataDocumento']}%' AND
+          protocoloEntradas.assunto LIKE '%{$obj['assunto']}%' AND
+          protocoloEntradas.origem LIKE '%{$obj['origem']}%' AND
+          protocoloEntradas.setor LIKE '%{$obj['setor']}%'
+        )
+        AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT 1000
+        ");
     }
 
     //

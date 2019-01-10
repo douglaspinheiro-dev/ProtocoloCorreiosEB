@@ -133,6 +133,7 @@ $app->group(
       ['middleware' => 'protocoloEntrada'],
       function() use ($app) {
         $app->get('/busca-protocoloentradas', 'BuscaProtocoloEntradaController@lista');
+        $app->get('/busca-protocoloentradas/documento', 'BuscaProtocoloEntradaController@procuraDocumento');
         $app->get('/busca-protocoloentradas/protocolo/{id}/ano/{ano}', 'BuscaProtocoloEntradaController@seleciona');
         $app->get('/busca-protocoloentradas/anos', 'BuscaProtocoloEntradaController@listaAnos');
         $app->get('/busca-protocoloentradas/options', 'BuscaProtocoloEntradaController@options');

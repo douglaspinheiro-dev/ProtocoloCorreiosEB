@@ -22,6 +22,26 @@ export const BuscaProtocoloEntradaService = {
       })
   },
 
+  procuraDocumento (dados) {
+    return http.get('busca-protocoloentradas/documento', { params: dados })
+      .then(response => response)
+      .catch(error => {
+        if (error.response.status === 401) {
+          Notify.semPermissao()
+        } else {
+          Dialog.create({
+            title: 'Atenção',
+            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
+          }).then(() => {
+            // Picked "OK"
+          }).catch(() => {
+            // Picked "Cancel" or dismissed
+          })
+        }
+        throw new Error(error)
+      })
+  },
+
   seleciona (obj) {
     return http.get(`busca-protocoloentradas/protocolo/${obj.protocolo}/ano/${obj.ano}`)
       .then(response => response)

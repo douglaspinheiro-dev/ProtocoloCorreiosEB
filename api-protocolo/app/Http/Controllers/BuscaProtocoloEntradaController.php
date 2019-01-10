@@ -50,13 +50,29 @@ class BuscaProtocoloEntradaController extends Controller
     return response()->json($results, 200);
   }
 
+  public function procuraDocumento()
+  {
+
+    $dados = $this->request->all();
+    ChromePhp::log($dados);
+
+    $results = ProtocoloEntradaDao::procuraDocumento($dados);
+    return response()->json($results, 200);
+  }
+
 
 
   public function options()
   {
+    $tipoDocumento = TipoDocumentoDao::options();
+    $endereco = EnderecoDao::options();
+    $setor = SetorDao::options();
     $anos = ProtocoloEntradaDao::listaAnos();
     return response()->json([
       'anos' => $anos,
+      'tipoDocumento' => $tipoDocumento,
+      'endereco' => $endereco,
+      'setor' => $setor,
     ], 200);
   }
 

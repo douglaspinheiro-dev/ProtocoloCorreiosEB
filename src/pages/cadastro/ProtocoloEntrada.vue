@@ -443,12 +443,13 @@ export default {
       this.possoExcluirProtocoloEntrada = permissoes.excluir('protocoloEntrada', this.protocoloEntrada.usuarioCriador)
     }
   },
-  props: {
-    id: {}
-  },
   watch: {
-    id: function (id) {
-      if (id) { this.carrega(id) }
+    '$route.params.id': {
+      handler: function (id) {
+        if (id) { this.carrega(id) }
+      },
+      deep: true,
+      immediate: true
     }
   },
   computed: {

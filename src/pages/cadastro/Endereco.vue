@@ -436,8 +436,12 @@ export default {
     id: {}
   },
   watch: {
-    id: function (id) {
-      if (id) { this.carrega(id) }
+    '$route.params.id': {
+      handler: function (id) {
+        if (id) { this.carrega(id) }
+      },
+      deep: true,
+      immediate: true
     }
   },
   computed: {
