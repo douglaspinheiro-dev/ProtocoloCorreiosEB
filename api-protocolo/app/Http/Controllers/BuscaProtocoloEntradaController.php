@@ -56,11 +56,51 @@ class BuscaProtocoloEntradaController extends Controller
     $dados = $this->request->all();
     ChromePhp::log($dados);
 
+
+    if ($dados['tipoData'] === 'data') {
+      $dados['consultaData'] = "protocoloEntradas.dataDocumento LIKE '%".$dados['dataDocumento']."%' AND ";
+    } elseif ($dados['tipoData'] === 'periodo') {
+      $dados['consultaData'] = "(DATE(protocoloEntradas.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataInicial']."') AND ";
+    } elseif ($dados['tipoData'] === 'mes') {
+      $data = explode("-", $dados['mesCadastro']);
+      $dados['consultaData'] = "(YEAR(protocoloEntradas.dataCadastro) = '".$data[0]."' AND MONTH(protocoloEntradas.dataCadastro) = '".$data[1]."' ) AND ";
+    }
+
+
     $results = ProtocoloEntradaDao::procuraDocumento($dados);
     return response()->json($results, 200);
   }
 
+  public function relatorio()
+  {
+    $results;
+    $dados = $this->request->all();
+    if ($dados['protocolo']) {
+      // gera relatorio de um doc
+      $obj = [
+        'id' => $dados['protocolo'],
+        'ano' => $dados['ano']
+      ];
+      $results = ProtocoloEntradaDao::selecionaPorAno($dados);
+    } else {
+      // pesquisa o doc e tras os dados
 
+      if ($dados['tipoData'] === 'data') {
+        $dados['consultaData'] = "protocoloEntradas.dataDocumento LIKE '%".$dados['dataDocumento']."%' AND ";
+      } elseif ($dados['tipoData'] === 'periodo') {
+        $dados['consultaData'] = "(DATE(protocoloEntradas.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataInicial']."') AND ";
+      } elseif ($dados['tipoData'] === 'mes') {
+        $data = explode("-", $dados['mesCadastro']);
+        $dados['consultaData'] = "(YEAR(protocoloEntradas.dataCadastro) = '".$data[0]."' AND MONTH(protocoloEntradas.dataCadastro) = '".$data[1]."' ) AND ";
+      }
+      $results = ProtocoloEntradaDao::procuraDocumento($dados);
+    }
+
+    // gera o pdf com os results
+
+
+    return response()->json($results, 200);
+  }
 
   public function options()
   {

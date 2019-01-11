@@ -11,9 +11,9 @@
     <q-tabs position="top" no-pane-border inverted>
       <!-- Tabs - notice slot="title" -->
       <q-tab default slot="title" name="tab-1" icon="" label="Inicio" />
-      <q-tab slot="title" name="tab-2" icon="list" label="Correspondências"/>
-      <q-tab slot="title" name="tab-3" icon="list" label="Entradas"/>
-      <q-tab slot="title" name="tab-4" icon="list" label="Malotes"/>
+      <q-tab slot="title" name="tab-2" icon="mail_outline" label="Correspondências"/>
+      <q-tab slot="title" name="tab-3" icon="fas fa-file-alt" label="Entradas"/>
+      <q-tab slot="title" name="tab-4" icon="move_to_inbox" label="Malotes"/>
 
       <!-- Targets -->
       <q-tab-pane name="tab-1">

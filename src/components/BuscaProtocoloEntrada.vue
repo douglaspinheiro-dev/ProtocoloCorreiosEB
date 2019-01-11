@@ -5,6 +5,7 @@
         <div class="col-md-6 linhaBotoes">
           <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
           <q-btn small type="submit" icon="search">Procurar</q-btn>
+          <q-btn small type="button" @click="gerarRelatorio" icon="search">Imprimir</q-btn>
         </div>
       </div>
       <div>
@@ -63,73 +64,118 @@
                 <q-select
                   v-model="buscaProtocoloEntrada.ano"
                   :options="optionsAno"
-                  filter
-                  autofocus-filter
-                  filter-placeholder="Selecione o ano"
+                  placeholder="Selecione o ano"
                   name="select"
                 />
               </q-field>
             </div>
           </div>
+          <div v-show="tipoConsulta === 'documento'">
 
-          <div class="row" v-show="tipoConsulta === 'documento'">
+            <div class="row" >
 
-            <div class="col-md-3">
-              <q-field
-                label="Número do Documento"
-                orientation="vertical"
-                class="form-input"
-              >
-                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.numero" name="number"/>
-              </q-field>
+              <div class="col-md-6">
+                <q-field
+                  label="Número do Documento"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.numero" name="number"/>
+                </q-field>
+              </div>
+
+              <div class="col-md-6">
+                <q-field
+                  label="Assunto"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.assunto" name="text"/>
+                </q-field>
+              </div>
             </div>
-            <div class="col-md-3">
-              <q-field
-                label="Data do Documento"
-                orientation="vertical"
-                class="form-input"
-              >
-                <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataDocumento" name="date"/>
-              </q-field>
+            <div class="row">
+              <div class="col-md-4">
+                <q-field
+                  label="Data ou Período?"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="data" label="Data do Documento" />
+                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="periodo" label="Período do Cadastro" />
+                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="mes" label="Mês do Cadastro" />
+                </q-field>
+              </div>
+              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'data'">
+                <q-field
+                  label="Data do Documento"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataDocumento" name="date"/>
+                </q-field>
+              </div>
+              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+                <q-field
+                  label="Data inicial"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataInicial" name="date"/>
+                </q-field>
+              </div>
+              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+                <q-field
+                  label="Data Final"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataFinal" name="date"/>
+                </q-field>
+              </div>
+              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'mes'">
+                <q-field
+                  label="Mês do cadastro"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="month" v-model="buscaProtocoloEntrada.mesCadastro" name="date"/>
+                </q-field>
+              </div>
             </div>
-            <div class="col-md-6">
-              <q-field
-                label="Assunto"
-                orientation="vertical"
-                class="form-input"
-              >
-                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.assunto" name="text"/>
-              </q-field>
-            </div>
-            <div class="col-md-6">
-              <q-field class="form-input"
-                label="Origem"
-                orientation="vertical"
-              >
-                <q-input autocomplete="on" type="text" v-model="buscaProtocoloEntrada.origem" name="origem" >
-                  <q-autocomplete
-                    @search="search"
-                    :min-characters="3"
+            <div class="row">
+              <div class="col-md-6">
+                <q-field class="form-input"
+                  label="Origem"
+                  orientation="vertical"
+                >
+                  <q-input autocomplete="on" type="text" v-model="buscaProtocoloEntrada.origem" name="origem" >
+                    <q-autocomplete
+                      @search="search"
+                      :min-characters="3"
+                    />
+                  </q-input>
+                </q-field>
+              </div>
+              <div class="col-md-6">
+                <q-field class="form-input"
+                  label="Destino"
+                  orientation="vertical"
+                >
+                  <q-select
+                    v-model="buscaProtocoloEntrada.setor"
+                    :options="optionsSetor"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o setor"
+                    name="select"
                   />
-                </q-input>
-              </q-field>
+                </q-field>
+              </div>
             </div>
-            <div class="col-md-6">
-              <q-field class="form-input"
-                label="Destino"
-                orientation="vertical"
-              >
-                <q-select
-                  v-model="buscaProtocoloEntrada.setor"
-                  :options="optionsSetor"
-                  filter
-                  autofocus-filter
-                  filter-placeholder="Selecione o setor"
-                  name="select"
-                />
-              </q-field>
-            </div>
+
           </div>
+
         </q-collapsible>
       </div>
     </form>
@@ -230,6 +276,8 @@ export default {
   directives: {
     mask
   },
+  components: {
+  },
   data () {
     return {
       optionsLoading: false,
@@ -303,6 +351,13 @@ export default {
           label: 'Destino',
           align: 'left',
           field: 'destino',
+          sortable: true
+        },
+        {
+          name: 'dataCadastro',
+          label: 'Data do Cadastro',
+          align: 'left',
+          field: 'dataCadastro',
           sortable: true
         },
         {
@@ -466,6 +521,29 @@ export default {
         }
       }, 2000)
     },
+    gerarRelatorio () {
+      this.$q.loading.show({
+        message: 'Processando sua requisição',
+        messageColor: 'white',
+        spinnerSize: 250, // in pixels
+        spinnerColor: 'white'
+      })
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        buscaProtocoloEntradaService.relatorio(this.buscaProtocoloEntrada)
+          .then(result => {
+            this.$q.loading.hide()
+            console.log('buscaProtocoloEntrada alterado com sucesso')
+            // this.listaDocumentos()
+            console.log(result.data)
+            this.$q.notify({
+              type: 'positive',
+              message: 'Estes foram os registros encontrados.',
+              timeout: 5000
+            })
+          })
+      }, 2000)
+    },
     listaDocumentos () {
       this.carregandoLista = true
       buscaProtocoloEntradaService
@@ -498,7 +576,6 @@ export default {
     possoAbrirProtocoloEntrada: () => permissoes.abrir('protocoloEntrada')
   },
   mounted () {
-    console.log('vou carregar a lista de buscaProtocoloEntrada')
     // this.listaDocumentos()
 
     // this.optionsLoading = true

@@ -3,6 +3,7 @@
 namespace App\Http\Dao;
 use App\Http\Dao\Dao;
 use Illuminate\Support\Facades\DB;
+use App\ChromePhp;
 
 class ProtocoloEntradaDao extends Dao
 {
@@ -133,12 +134,14 @@ class ProtocoloEntradaDao extends Dao
     }
 
     public static function procuraDocumento($obj) {
+
       return DB::select("
         SELECT
           protocoloEntradas.protocolo,
           protocoloEntradas.protocoloEntrada,
           protocoloEntradas.numero,
           DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
+          DATE_FORMAT(protocoloEntradas.dataCadastro, '%d/%m/%Y') as dataCadastro,
           protocoloEntradas.origem,
           protocoloEntradas.assunto,
           categoriasDocumentos.codigo as tipoDocumento,
@@ -149,7 +152,7 @@ class ProtocoloEntradaDao extends Dao
         AND
         (
           protocoloEntradas.numero LIKE '%{$obj['numero']}%' AND
-          protocoloEntradas.dataDocumento LIKE '%{$obj['dataDocumento']}%' AND
+          {$obj['consultaData']}
           protocoloEntradas.assunto LIKE '%{$obj['assunto']}%' AND
           protocoloEntradas.origem LIKE '%{$obj['origem']}%' AND
           protocoloEntradas.setor LIKE '%{$obj['setor']}%'

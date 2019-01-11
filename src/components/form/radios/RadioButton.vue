@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'Radio2Button',
+  name: 'RadioButton',
   methods: {
     radioButton () {
       this.$emit('toggleRadioButton')
