@@ -6,4 +6,22 @@ export default class TipoDocumento {
     this.codigo = obj.codigo || ''
     this.usuarioCriador = obj.usuarioCriador || ''
   }
+
+  setOptions (tipoDocumentos) {
+    let optionsTipoDocumento = []
+    if (tipoDocumentos.length > 0) {
+      tipoDocumentos.map(option => optionsTipoDocumento.push(
+        {
+          label: option.descricao,
+          value: option.tipoDocumento
+        }
+      ))
+    } else {
+      optionsTipoDocumento = [{
+        label: 'Sem registros cadastrados',
+        value: ''
+      }]
+    }
+    return optionsTipoDocumento
+  }
 }

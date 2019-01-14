@@ -269,6 +269,9 @@ import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import {mask} from 'vue-the-mask'
 import BuscaProtocoloEntrada from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntrada'
 import buscaProtocoloEntradaService from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntradaService'
+import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
+import Endereco from 'src/services/endereco/Endereco'
+import Setor from 'src/services/setor/Setor'
 import { filter } from 'quasar'
 
 export default {
@@ -280,6 +283,9 @@ export default {
   },
   data () {
     return {
+      tipoDocumento: new TipoDocumento(),
+      endereco: new Endereco(),
+      setor: new Setor(),
       optionsLoading: false,
       optionsSetor: [],
       optionsAno: [],
@@ -392,23 +398,6 @@ export default {
         done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
       }, 1000)
     },
-    setOptionsEndereco (enderecos) {
-      if (enderecos.length > 0) {
-        let optionsEndereco = []
-        enderecos.map(endereco => optionsEndereco.push(
-          {
-            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.codigoReduzido
-          }
-        ))
-        this.optionsEndereco = optionsEndereco
-      } else {
-        this.optionsEndereco = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
     setOptionsAno (anos) {
       if (anos.length > 0) {
         let optionsAno = []
@@ -426,43 +415,7 @@ export default {
         }]
       }
     },
-    setOptionsTipoDocumento (tipoDocumentos) {
-      if (tipoDocumentos.length > 0) {
-        let optionsTipoDocumento = []
-        tipoDocumentos.map(tipoDocumento => optionsTipoDocumento.push(
-          {
-            label: `${tipoDocumento.codigo}`,
-            value: tipoDocumento.tipoDocumento
-          }
-        ))
-        this.optionsTipoDocumento = optionsTipoDocumento
-      } else {
-        this.optionsTipoDocumento = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsSetor (setors) {
-      if (setors.length > 0) {
-        let optionsSetor = [{
-          label: '----',
-          value: ''
-        }]
-        setors.map(setor => optionsSetor.push(
-          {
-            label: `${setor.codigoReduzido} - ${setor.descricao}`,
-            value: setor.setor
-          }
-        ))
-        this.optionsSetor = optionsSetor
-      } else {
-        this.optionsSetor = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
+
     reset () {
       this.$v.buscaProtocoloEntrada.$reset()
       this.buscaProtocoloEntrada = new BuscaProtocoloEntrada()
@@ -584,9 +537,9 @@ export default {
       .then(result => {
         this.optionsLoading = false
         this.setOptionsAno(result.data.anos)
-        this.setOptionsTipoDocumento(result.data.tipoDocumento)
-        this.setOptionsEndereco(result.data.endereco)
-        this.setOptionsSetor(result.data.setor)
+        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+        this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
+        this.optionsSetor = this.setor.setOptions(result.data.setor)
       })
   }
 }

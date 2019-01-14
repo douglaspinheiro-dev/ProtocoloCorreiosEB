@@ -336,7 +336,11 @@ import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
 import VMoney from 'src/tools/money'
 import enderecoService from 'src/services/endereco/EnderecoService'
-
+import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
+import Endereco from 'src/services/endereco/Endereco'
+import TipoCorrespondencia from 'src/services/tipoCorrespondencia/TipoCorrespondencia'
+import Setor from 'src/services/setor/Setor'
+import TipoCobranca from 'src/services/tipoCobranca/TipoCobranca'
 var timer
 
 export default {
@@ -355,6 +359,11 @@ export default {
   data () {
     return {
       correspondencia: new Correspondencia(),
+      tipoDocumento: new TipoDocumento(),
+      tipoCorrespondencia: new TipoCorrespondencia(),
+      tipoCobranca: new TipoCobranca(),
+      endereco: new Endereco(),
+      setor: new Setor(),
       errorDescricao: 'Preencha a descrição',
       possoAlterarCorrespondencia: false,
       possoExcluirCorrespondencia: false,
@@ -480,7 +489,7 @@ export default {
           .buscaEnderecoPorCodigo(this.correspondencia.destino)
           .then(result => {
             console.log('peguei o correspondencia com sucesso')
-            this.setOptionsEndereco(result.data)
+            this.optionsEndereco = this.endereco.setOptions(result.data)
             done(this.optionsEndereco)
           })
       }, 300)
@@ -491,110 +500,6 @@ export default {
       console.log('procurando no select')
     },
 
-    setOptionsTipoDocumento (tipoDocumentos) {
-      if (tipoDocumentos.length > 0) {
-        let optionsTipoDocumento = []
-        tipoDocumentos.map(tipoDocumento => optionsTipoDocumento.push(
-          {
-            label: tipoDocumento.descricao,
-            value: tipoDocumento.tipoDocumento
-          }
-        ))
-        this.optionsTipoDocumento = optionsTipoDocumento
-      } else {
-        this.optionsTipoDocumento = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsEndereco (enderecos) {
-      if (enderecos.length > 0) {
-        let optionsEndereco = []
-        enderecos.map(endereco => optionsEndereco.push(
-          {
-            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.codigoReduzido,
-            logradouro: endereco.logradouro,
-            numero: endereco.numero,
-            complemento: endereco.complemento,
-            bairro: endereco.bairro,
-            cidade: endereco.cidade,
-            uf: endereco.uf,
-            cep: endereco.cep,
-            referencia: endereco.referencia
-
-          }
-        ))
-        this.optionsEndereco = optionsEndereco
-      } else {
-        this.optionsEndereco = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsSetor (setores) {
-      if (setores.length > 0) {
-        let optionsSetor = []
-        setores.map(setor => optionsSetor.push(
-          {
-            label: `${setor.codigoReduzido} - ${setor.descricao}`,
-            value: setor.setor
-          }
-        ))
-        this.optionsSetor = optionsSetor
-      } else {
-        this.optionsSetor = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsTipoCorrespondencia (tiposCorrespondencias) {
-      if (tiposCorrespondencias.length > 0) {
-        let optionsTipoCorrespondencia = []
-
-        tiposCorrespondencias.map(tipoCorrespondencia => optionsTipoCorrespondencia.push(
-          {
-            label: `${tipoCorrespondencia.descricao} - R$ ${tipoCorrespondencia.valor} `,
-            value: tipoCorrespondencia.tipoCorrespondencia,
-            valor: tipoCorrespondencia.valor
-          }
-        ))
-        this.optionsTipoCorrespondencia = optionsTipoCorrespondencia
-      } else {
-        this.optionsTipoCorrespondencia = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsTipoCobranca (tiposCobrancas) {
-      if (tiposCobrancas.length > 0) {
-        let optionsTipoCobranca = []
-        optionsTipoCobranca.push(
-          {
-            label: `-------`,
-            value: '',
-            valor: 0.00
-          }
-        )
-        tiposCobrancas.map(tipoCobranca => optionsTipoCobranca.push(
-          {
-            label: `${tipoCobranca.descricao} - R$ ${tipoCobranca.valor} `,
-            value: tipoCobranca.tipoCobranca,
-            valor: tipoCobranca.valor
-          }
-        ))
-        this.optionsTipoCobranca = optionsTipoCobranca
-      } else {
-        this.optionsTipoCobranca = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
     toggleRadioButton () {
       this.correspondencia.status = !this.correspondencia.status
     },
@@ -744,11 +649,11 @@ export default {
     correspondenciaService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsTipoDocumento(result.data.tipoDocumento)
-        this.setOptionsEndereco(result.data.endereco)
-        this.setOptionsSetor(result.data.setor)
-        this.setOptionsTipoCorrespondencia(result.data.tipoCorrespondencia)
-        this.setOptionsTipoCobranca(result.data.tipoCobranca)
+        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+        this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
+        this.optionsSetor = this.setor.setOptions(result.data.setor)
+        this.optionsTipoCorrespondencia = this.tipoCorrespondencia.setOptions(result.data.tipoCorrespondencia)
+        this.optionsTipoCobranca = this.tipoCobranca.setOptions(result.data.tipoCobranca)
       })
   }
 }

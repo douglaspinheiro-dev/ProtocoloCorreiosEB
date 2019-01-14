@@ -136,6 +136,7 @@ import notify from '../../tools/Notify'
 // import RadioButton from 'src/components/form/radios/RadioButton'
 import {mask} from 'vue-the-mask'
 import botaoMobile from 'src/components/QFab/QFab'
+import Rota from 'src/services/rota/Rota'
 
 export default {
   name: 'Malote',
@@ -151,6 +152,7 @@ export default {
   data () {
     return {
       malote: new Malote(),
+      rota: new Rota(),
       errorLacre: 'Preencha a lacre do malote',
       possoAlterarMalote: false,
       possoExcluirMalote: false,
@@ -201,23 +203,6 @@ export default {
     }
   },
   methods: {
-    setOptionsRota (rotas) {
-      if (rotas.length > 0) {
-        let optionsRota = []
-        rotas.map(rota => optionsRota.push(
-          {
-            label: rota.descricao,
-            value: rota.rota
-          }
-        ))
-        this.optionsRota = optionsRota
-      } else {
-        this.optionsRota = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
     reset () {
       this.$v.malote.$reset()
       this.malote = new Malote()
@@ -352,7 +337,7 @@ export default {
     maloteService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsRota(result.data.rotas)
+        this.optionsRota = this.rota.setOptions(result.data.rotas)
       })
   },
   props: {

@@ -6,4 +6,22 @@ export default class Setor {
     this.codigo = obj.codigo || ''
     this.usuarioCriador = obj.usuarioCriador || ''
   }
+
+  setOptions (setores) {
+    let optionsSetor = []
+    if (setores.length > 0) {
+      setores.map(option => optionsSetor.push(
+        {
+          label: `${option.codigoReduzido} - ${option.descricao}`,
+          value: option.setor
+        }
+      ))
+    } else {
+      optionsSetor = [{
+        label: 'Sem registros cadastrados',
+        value: ''
+      }]
+    }
+    return optionsSetor
+  }
 }

@@ -195,6 +195,7 @@ import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
 import botaoMobile from 'src/components/QFab/QFab'
+import Rota from 'src/services/rota/Rota'
 var timer
 
 export default {
@@ -212,6 +213,7 @@ export default {
   data () {
     return {
       endereco: new Endereco(),
+      rota: new Rota(),
       errorDescricao: 'Preencha a descrição',
       optionsEstados: optionsEstados,
       cepLoading: false,
@@ -413,24 +415,8 @@ export default {
     confereAlterarExcluir () {
       this.possoAlterarEndereco = permissoes.alterar('endereco', this.endereco.usuarioCriador)
       this.possoExcluirEndereco = permissoes.excluir('endereco', this.endereco.usuarioCriador)
-    },
-    setOptionsRota (rotas) {
-      if (rotas.length > 0) {
-        let optionsRota = []
-        rotas.map(rota => optionsRota.push(
-          {
-            label: rota.descricao,
-            value: rota.rota
-          }
-        ))
-        this.optionsRota = optionsRota
-      } else {
-        this.optionsRota = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
     }
+
   },
   props: {
     id: {}
@@ -452,7 +438,7 @@ export default {
     enderecoService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsRota(result.data.rotas)
+        this.optionsRota = this.rota.setOptions(result.data.rotas)
       })
   }
 }

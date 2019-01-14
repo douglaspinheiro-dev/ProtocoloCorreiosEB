@@ -210,6 +210,9 @@ import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
 import notify from '../../tools/Notify'
 import { filter } from 'quasar'
+import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
+import Endereco from 'src/services/endereco/Endereco'
+import Setor from 'src/services/setor/Setor'
 var timer
 
 export default {
@@ -224,6 +227,9 @@ export default {
   data () {
     return {
       protocoloEntrada: new ProtocoloEntrada(),
+      tipoDocumento: new TipoDocumento(),
+      endereco: new Endereco(),
+      setor: new Setor(),
       errorDescricao: 'Preencha a descrição',
       possoAlterarProtocoloEntrada: false,
       possoExcluirProtocoloEntrada: false,
@@ -269,57 +275,6 @@ export default {
       console.log('procurando no select')
     },
 
-    setOptionsTipoDocumento (tipoDocumentos) {
-      if (tipoDocumentos.length > 0) {
-        let optionsTipoDocumento = []
-        tipoDocumentos.map(tipoDocumento => optionsTipoDocumento.push(
-          {
-            label: tipoDocumento.descricao,
-            value: tipoDocumento.tipoDocumento
-          }
-        ))
-        this.optionsTipoDocumento = optionsTipoDocumento
-      } else {
-        this.optionsTipoDocumento = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsEndereco (enderecos) {
-      if (enderecos.length > 0) {
-        let optionsEndereco = []
-        enderecos.map(endereco => optionsEndereco.push(
-          {
-            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.codigoReduzido
-          }
-        ))
-        this.optionsEndereco = optionsEndereco
-      } else {
-        this.optionsEndereco = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsSetor (setores) {
-      if (setores.length > 0) {
-        let optionsSetor = []
-        setores.map(setor => optionsSetor.push(
-          {
-            label: `${setor.codigoReduzido} - ${setor.descricao}`,
-            value: setor.setor
-          }
-        ))
-        this.optionsSetor = optionsSetor
-      } else {
-        this.optionsSetor = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
     toggleRadioButton () {
       this.protocoloEntrada.status = !this.protocoloEntrada.status
     },
@@ -460,9 +415,9 @@ export default {
     protocoloEntradaService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsTipoDocumento(result.data.tipoDocumento)
-        this.setOptionsEndereco(result.data.endereco)
-        this.setOptionsSetor(result.data.setor)
+        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+        this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
+        this.optionsSetor = this.setor.setOptions(result.data.setor)
       })
   }
 }

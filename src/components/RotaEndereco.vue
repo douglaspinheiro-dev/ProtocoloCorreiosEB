@@ -127,6 +127,7 @@ import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
 import RotaEndereco from 'src/services/rotaEndereco/RotaEndereco'
 import rotaEnderecoService from 'src/services/rotaEndereco/RotaEnderecoService'
+import Endereco from 'src/services/endereco/Endereco'
 
 export default {
   name: 'RotaEndereco',
@@ -138,6 +139,7 @@ export default {
       buscaRotaEndereco: '',
       optionsLoading: false,
       optionsEndereco: [],
+      endereco: new Endereco(),
       rotaEndereco: new RotaEndereco(),
       botaoSalvarAlterar: 'Salvar',
       carregandoLista: false,
@@ -232,23 +234,6 @@ export default {
     }
   },
   methods: {
-    setOptionsEndereco (enderecos) {
-      if (enderecos.length > 0) {
-        let optionsEndereco = []
-        enderecos.map(endereco => optionsEndereco.push(
-          {
-            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.endereco
-          }
-        ))
-        this.optionsEndereco = optionsEndereco
-      } else {
-        this.optionsEndereco = [{
-          label: 'Nenhum endereço foi marcado como rota, confira o cadastro de endereços',
-          value: ''
-        }]
-      }
-    },
     reset () {
       this.$v.rotaEndereco.$reset()
       this.rotaEndereco = new RotaEndereco()
@@ -398,7 +383,7 @@ export default {
     rotaEnderecoService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsEndereco(result.data.endereco)
+        this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
       })
   }
 }

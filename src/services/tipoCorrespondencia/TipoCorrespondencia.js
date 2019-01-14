@@ -6,4 +6,23 @@ export default class TipoCorrespondencia {
     this.usuarioCriador = obj.usuarioCriador || ''
     this.valor = obj.valor || 0.00
   }
+
+  optionsTipoCorrespondencia (tiposCorrespondencias) {
+    let optionsTipoCorrespondencia = []
+    if (tiposCorrespondencias.length > 0) {
+      tiposCorrespondencias.map(option => optionsTipoCorrespondencia.push(
+        {
+          label: `${option.descricao} - R$ ${option.valor} `,
+          value: option.tipoCorrespondencia,
+          valor: option.valor
+        }
+      ))
+    } else {
+      optionsTipoCorrespondencia = [{
+        label: 'Sem registros cadastrados',
+        value: ''
+      }]
+    }
+    return optionsTipoCorrespondencia
+  }
 }

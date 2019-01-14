@@ -173,7 +173,9 @@ import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
 import MaloteDocumento from 'src/services/maloteDocumento/MaloteDocumento'
 import maloteDocumentoService from 'src/services/maloteDocumento/MaloteDocumentoService'
-
+import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
+import Setor from 'src/services/setor/Setor'
+import RotaEndereco from 'src/services/rotaEndereco/RotaEndereco'
 export default {
   name: 'MaloteDocumento',
   directives: {
@@ -181,6 +183,9 @@ export default {
   },
   data () {
     return {
+      tipoDocumento: new TipoDocumento(),
+      setor: new Setor(),
+      rotaEndereco: new RotaEndereco(),
       buscaMaloteDocumento: '',
       optionsLoading: false,
       optionsTipoDocumento: [],
@@ -240,57 +245,7 @@ export default {
     }
   },
   methods: {
-    setOptionsRotaEndereco (enderecos) {
-      if (enderecos.length > 0) {
-        let optionsRotaEndereco = []
-        enderecos.map(endereco => optionsRotaEndereco.push(
-          {
-            label: `${endereco.codigoReduzido} - ${endereco.descricao}`,
-            value: endereco.rotaEndereco
-          }
-        ))
-        this.optionsRotaEndereco = optionsRotaEndereco
-      } else {
-        this.optionsRotaEndereco = [{
-          label: 'Sem registros cadastrados, confira o cadastro de Rotas',
-          value: ''
-        }]
-      }
-    },
-    setOptionsTipoDocumento (tipoDocumentos) {
-      if (tipoDocumentos.length > 0) {
-        let optionsTipoDocumento = []
-        tipoDocumentos.map(tipoDocumento => optionsTipoDocumento.push(
-          {
-            label: `${tipoDocumento.codigo}`,
-            value: tipoDocumento.tipoDocumento
-          }
-        ))
-        this.optionsTipoDocumento = optionsTipoDocumento
-      } else {
-        this.optionsTipoDocumento = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
-    setOptionsSetor (setors) {
-      if (setors.length > 0) {
-        let optionsSetor = []
-        setors.map(setor => optionsSetor.push(
-          {
-            label: `${setor.codigoReduzido} - ${setor.descricao}`,
-            value: setor.setor
-          }
-        ))
-        this.optionsSetor = optionsSetor
-      } else {
-        this.optionsSetor = [{
-          label: 'Sem registros cadastrados',
-          value: ''
-        }]
-      }
-    },
+
     reset () {
       this.$v.maloteDocumento.$reset()
       this.maloteDocumento = new MaloteDocumento()
@@ -450,9 +405,9 @@ export default {
     maloteDocumentoService.getOptions(this.rota)
       .then(result => {
         this.optionsLoading = false
-        this.setOptionsRotaEndereco(result.data.rotaEndereco)
-        this.setOptionsTipoDocumento(result.data.tipoDocumento)
-        this.setOptionsSetor(result.data.setor)
+        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+        this.optionsRotaEndereco = this.rotaEndereco.setOptions(result.data.rotaEndereco)
+        this.optionsSetor = this.setor.setOptions(result.data.setor)
       })
   }
 }

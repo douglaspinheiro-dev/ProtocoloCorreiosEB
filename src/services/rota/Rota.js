@@ -6,4 +6,22 @@ export default class Rota {
     this.codigo = obj.codigo || ''
     this.usuarioCriador = obj.usuarioCriador || ''
   }
+
+  setOptions (rotas) {
+    let optionsRota = []
+    if (rotas.length > 0) {
+      rotas.map(option => optionsRota.push(
+        {
+          label: option.descricao,
+          value: option.rota
+        }
+      ))
+    } else {
+      optionsRota = [{
+        label: 'Sem registros cadastrados',
+        value: ''
+      }]
+    }
+    return optionsRota
+  }
 }

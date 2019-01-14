@@ -16,4 +16,31 @@ export default class Endereco {
     this.malote = obj.malote || false
     this.rota = obj.rota || ''
   }
+
+  setOptions (enderecos) {
+    let optionsEndereco = []
+    if (enderecos.length > 0) {
+      enderecos.map(option => optionsEndereco.push(
+        {
+          label: `${option.codigoReduzido} - ${option.descricao}`,
+          value: option.codigoReduzido,
+          logradouro: option.logradouro,
+          numero: option.numero,
+          complemento: option.complemento,
+          bairro: option.bairro,
+          cidade: option.cidade,
+          uf: option.uf,
+          cep: option.cep,
+          referencia: option.referencia
+
+        }
+      ))
+    } else {
+      optionsEndereco = [{
+        label: 'Sem registros cadastrados',
+        value: ''
+      }]
+    }
+    return optionsEndereco
+  }
 }

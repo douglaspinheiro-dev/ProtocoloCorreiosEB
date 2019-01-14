@@ -6,4 +6,30 @@ export default class TipoCobranca {
     this.usuarioCriador = obj.usuarioCriador || ''
     this.valor = obj.valor || 0.00
   }
+
+  setOptions (tiposCobrancas) {
+    let optionsTipoCobranca = []
+    if (tiposCobrancas.length > 0) {
+      optionsTipoCobranca.push(
+        {
+          label: `-------`,
+          value: '',
+          valor: 0.00
+        }
+      )
+      tiposCobrancas.map(option => optionsTipoCobranca.push(
+        {
+          label: `${option.descricao} - R$ ${option.valor} `,
+          value: option.tipoCobranca,
+          valor: option.valor
+        }
+      ))
+    } else {
+      optionsTipoCobranca = [{
+        label: 'Sem registros cadastrados',
+        value: ''
+      }]
+    }
+    return optionsTipoCobranca
+  }
 }
