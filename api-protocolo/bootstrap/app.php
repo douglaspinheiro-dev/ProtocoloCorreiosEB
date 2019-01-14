@@ -95,8 +95,12 @@ $app->routeMiddleware([
 
 // $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
-$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
-$app->configure('dompdf');
+// $app->register(Elibyy\TCPDF\ServiceProvider::class);
+$app->register(Barryvdh\DomPDF\ServiceProvider::class);
+// class_alias('Elibyy\TCPDF\Facades\TCPDF', 'PDF');
+class_alias('Barryvdh\DomPDF\Facade', 'PDF');
+// $app->register('tibonilab\Pdf\PdfServiceProvider');
+// class_alias('tibonilab\Pdf\PdfFacade', 'PDF');
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*

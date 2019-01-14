@@ -8,7 +8,7 @@ use App\Http\Dao\EnderecoDao;
 use App\Http\Dao\SetorDao;
 use Illuminate\Http\Request;
 use App\ChromePhp;
-
+use \PDF;
 
 class BuscaProtocoloEntradaController extends Controller
 {
@@ -98,8 +98,11 @@ class BuscaProtocoloEntradaController extends Controller
 
     // gera o pdf com os results
 
+    $pdf = PDF::loadHTML('<h1>Tessssst</h1>');;
+    $pdf->save('../public/pdf/relatorio.pdf');
+    $url = env('URL', '');
 
-    return response()->json($results, 200);
+    return response()->json(['link' => $url.'/pdf/relatorio.pdf'], 200);
   }
 
   public function options()

@@ -258,6 +258,29 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky> -->
+    <q-modal ref="modalRelatorio" maximized v-model="modalRelatorio">
+        <q-modal-layout
+          header-style="min-height: 100px"
+          content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
+          footer-class="bg-primary some-class"
+          footer-style="{fontSize: '24px', fontWeight: 'bold'}"
+        >
+          <q-toolbar class="primary">
+            <q-btn flat @click="modalRelatorio = false">
+              <q-icon name="keyboard_arrow_left" />
+            </q-btn>
+            <div class="q-toolbar-title">
+              Relatório
+            </div>
+          </q-toolbar>
+          <iframe class="full-width full-height"
+            :src="linkRelatorio"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </q-modal-layout>
+      </q-modal>
+
   </q-page>
 </template>
 
@@ -283,6 +306,8 @@ export default {
   },
   data () {
     return {
+      modalRelatorio: false,
+      linkRelatorio: '',
       tipoDocumento: new TipoDocumento(),
       endereco: new Endereco(),
       setor: new Setor(),
@@ -489,6 +514,8 @@ export default {
             console.log('buscaProtocoloEntrada alterado com sucesso')
             // this.listaDocumentos()
             console.log(result.data)
+            this.linkRelatorio = result.data.link
+            this.modalRelatorio = true
             this.$q.notify({
               type: 'positive',
               message: 'Estes foram os registros encontrados.',
