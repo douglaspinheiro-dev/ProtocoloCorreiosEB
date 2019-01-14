@@ -295,7 +295,7 @@ export default {
       buscaProtocoloEntrada: new BuscaProtocoloEntrada(),
       carregandoLista: false,
       registros: [],
-      tipoConsulta: '',
+      tipoConsulta: 'documento',
       optionsConsulta: [
         {
           label: 'Número do Protocolo',
@@ -307,7 +307,7 @@ export default {
         }
       ],
       tabelaSeparador: 'horizontal',
-      colunasVisiveis: ['numero', 'dataDocumento', 'origem', 'assunto', 'destino'],
+      colunasVisiveis: ['numero', 'dataDocumento', 'origem', 'assunto', 'destino', 'dataCadastro'],
       tabelaColunas: [
         {
           name: 'protocolo',

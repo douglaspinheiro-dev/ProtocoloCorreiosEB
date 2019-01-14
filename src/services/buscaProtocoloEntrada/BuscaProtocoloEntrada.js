@@ -12,5 +12,6 @@ export default class BuscaProtocoloEntrada {
     this.dataInicial = obj.dataInicial || null
     this.dataFinal = obj.dataFinal || null
     this.mesCadastro = obj.mesCadastro || null
+    this.protocolo = obj.protocolo || ''
   }
 }
