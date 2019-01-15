@@ -98,11 +98,12 @@ class BuscaProtocoloEntradaController extends Controller
 
     // gera o pdf com os results
 
-    $pdf = PDF::loadHTML('<h1>Tessssst</h1>');;
+    $pdf = PDF::loadHTML(view('ListagemProtocoloEntrada', ['dados' => $results]));
     $pdf->save('../public/pdf/relatorio.pdf');
     $url = env('URL', '');
 
     return response()->json(['link' => $url.'/pdf/relatorio.pdf'], 200);
+    // return view('ListagemProtocoloEntrada', ['dados' => $results]);
   }
 
   public function options()

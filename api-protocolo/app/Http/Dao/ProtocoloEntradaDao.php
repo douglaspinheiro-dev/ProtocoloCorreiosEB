@@ -145,7 +145,7 @@ class ProtocoloEntradaDao extends Dao
           protocoloEntradas.origem,
           protocoloEntradas.assunto,
           categoriasDocumentos.codigo as tipoDocumento,
-          setores.descricao as destino
+          setores.codigo as destino
         FROM protocoloEntradas
         JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = protocoloEntradas.categoriaDocumento
         JOIN setores ON setores.setor = protocoloEntradas.setor
