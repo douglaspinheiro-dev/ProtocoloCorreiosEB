@@ -3,6 +3,7 @@
 namespace App\Http\Dao;
 use App\Http\Dao\Dao;
 use Illuminate\Support\Facades\DB;
+use App\ChromePhp;
 
 class CorrespondenciaDao extends Dao
 {
@@ -75,7 +76,7 @@ class CorrespondenciaDao extends Dao
         numero,
         referencia,
         uf,
-        remetente,
+        remetente
       ) values
       (
         '{$dados['correspondencia']}',
@@ -101,6 +102,10 @@ class CorrespondenciaDao extends Dao
         '{$dados['uf']}',
         '{$dados['remetente']}'
       )");
+    }
+
+    public static function listaAnos() {
+      return DB::select("select anoCadastro as ano from correspondencias group by ano order by  ano desc");
     }
 
     public static function altera($dados) {
@@ -129,5 +134,60 @@ class CorrespondenciaDao extends Dao
       where correspondencia = '{$dados['correspondencia']}'");
     }
 
+    public static function procuraCorrespondencia($obj) {
+      return DB::select("
+        SELECT
+          correspondencias.protocolo,
+          correspondencias.correspondencia,
+          correspondencias.numeroDocumento,
+          correspondencias.destino,
+          DATE_FORMAT(correspondencias.dataCadastro, '%d/%m/%Y') as dataCadastro,
+          correspondencias.setor,
+          correspondencias.logradouro,
+          correspondencias.cidade,
+          correspondencias.uf,
+          correspondencias.valorTotal,
+          categoriasDocumentos.codigo as tipoDocumento,
+          categoriasCorrespondencias.descricao as tipoCorrespondencia,
+          CONCAT(setores.codigo, ' - ', correspondencias.remetente) as origemRemetente
+        FROM correspondencias
+        JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = correspondencias.categoriaDocumento
+        JOIN categoriasCorrespondencias ON categoriasCorrespondencias.categoriaCorrespondencia = correspondencias.categoriaCorrespondencia
+        JOIN setores ON setores.setor = correspondencias.setor
+        AND
+        (
+          correspondencias.numero LIKE '%{$obj['numero']}%' AND
+          {$obj['consultaData']}
+          correspondencias.setor LIKE '%{$obj['setor']}%' AND
+          correspondencias.destino LIKE '%{$obj['destino']}%'
+        )
+        AND correspondencias.ativo = 1 ORDER BY correspondencias.dataCadastro desc LIMIT 1000
+        ");
+    }
+
+    public static function selecionaPorAno($dados) {
+      return DB::select("
+      SELECT
+      correspondencias.protocolo,
+      correspondencias.correspondencia,
+      correspondencias.numeroDocumento,
+      correspondencias.destino,
+      DATE_FORMAT(correspondencias.dataCadastro, '%d/%m/%Y') as dataCadastro,
+      correspondencias.setor,
+      correspondencias.logradouro,
+      correspondencias.cidade,
+      correspondencias.uf,
+      correspondencias.valorTotal,
+      categoriasDocumentos.codigo as tipoDocumento,
+      categoriasCorrespondencias.descricao as tipoCorrespondencia,
+      CONCAT(setores.codigo, ' - ', correspondencias.remetente) as origemRemetente
+    FROM correspondencias
+    JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = correspondencias.categoriaDocumento
+    JOIN categoriasCorrespondencias ON categoriasCorrespondencias.categoriaCorrespondencia = correspondencias.categoriaCorrespondencia
+    JOIN setores ON setores.setor = correspondencias.setor
+      AND correspondencias.protocolo = '{$dados['id']}'
+      AND correspondencias.anoCadastro = '{$dados['ano']}'
+      AND correspondencias.ativo = 1;");
+    }
     //
 }

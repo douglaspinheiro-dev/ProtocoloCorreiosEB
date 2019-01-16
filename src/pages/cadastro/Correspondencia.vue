@@ -392,7 +392,6 @@ export default {
     correspondencia: {
       tipoDocumento: {required},
       numeroDocumento: {required},
-      numero: {required},
       valorTotal: {required},
       dataCadastro: {required},
       destino: {required},

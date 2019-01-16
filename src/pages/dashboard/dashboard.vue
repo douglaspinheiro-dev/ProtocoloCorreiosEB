@@ -20,6 +20,10 @@
         <h2> {{ getLogin }} </h2>
       </q-tab-pane>
 
+      <q-tab-pane name="tab-2">
+        <consulta-correspondencia></consulta-correspondencia>
+      </q-tab-pane>
+
       <q-tab-pane name="tab-3">
         <consulta-protocolo-entrada></consulta-protocolo-entrada>
       </q-tab-pane>
@@ -79,11 +83,13 @@ import {
   minLength
 } from 'vuelidate/lib/validators'
 import usuarioService from 'src/services/usuario/UsuarioService'
+import consultaCorrespondencia from 'src/components/BuscaCorrespondencia'
 import consultaProtocoloEntrada from 'src/components/BuscaProtocoloEntrada'
 export default {
   name: 'Dashboard',
   components: {
     BotaoMenuLeft,
+    consultaCorrespondencia,
     consultaProtocoloEntrada
   },
   data () {

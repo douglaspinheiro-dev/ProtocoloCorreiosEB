@@ -7,7 +7,7 @@ export default class TipoCorrespondencia {
     this.valor = obj.valor || 0.00
   }
 
-  optionsTipoCorrespondencia (tiposCorrespondencias) {
+  setOptions (tiposCorrespondencias) {
     let optionsTipoCorrespondencia = []
     if (tiposCorrespondencias.length > 0) {
       tiposCorrespondencias.map(option => optionsTipoCorrespondencia.push(

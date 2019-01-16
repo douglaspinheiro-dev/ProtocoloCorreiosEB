@@ -18,7 +18,7 @@
                 orientation="vertical"
               >
                 <q-select
-                  v-model="consultaProtocoloEntrada.tipoBusca"
+                  v-model="consultaCorrespondencia.tipoBusca"
                   :options="optionsTipoBusca"
                   filter
                   autofocus-filter
@@ -38,9 +38,9 @@
                   v-model="tipoConsulta"
                   :options="optionsConsulta"
                   filter
-                  @input="reset"
                   autofocus-filter
                   filter-placeholder="Selecione a forma de consulta"
+                  @input="reset"
                   name="select"
                 />
               </q-field>
@@ -54,7 +54,7 @@
                 orientation="vertical"
                 class="form-input"
               >
-                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.protocolo" name="number"/>
+                <q-input autocomplete="off" type="text" v-model="buscaCorrespondencia.protocolo" name="number"/>
               </q-field>
             </div>
             <div class="col-md-3">
@@ -63,7 +63,7 @@
                 orientation="vertical"
               >
                 <q-select
-                  v-model="buscaProtocoloEntrada.ano"
+                  v-model="buscaCorrespondencia.ano"
                   :options="optionsAno"
                   placeholder="Selecione o ano"
                   name="select"
@@ -75,25 +75,34 @@
 
             <div class="row" >
 
-              <div class="col-md-6">
+              <div class="col-md-4">
+                <q-field
+                  label="Código de Rastreio"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="text" v-model="buscaCorrespondencia.codigoRastreio" name="text"/>
+                </q-field>
+              </div>
+              <div class="col-md-4">
+                <q-field
+                  label="Remetente"
+                  orientation="vertical"
+                  class="form-input"
+                >
+                  <q-input autocomplete="off" type="text" v-model="buscaCorrespondencia.remetente" name="text"/>
+                </q-field>
+              </div>
+              <div class="col-md-4">
                 <q-field
                   label="Número do Documento"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.numero" name="number"/>
+                  <q-input autocomplete="off" type="text" v-model="buscaCorrespondencia.numero" name="number"/>
                 </q-field>
               </div>
 
-              <div class="col-md-6">
-                <q-field
-                  label="Assunto"
-                  orientation="vertical"
-                  class="form-input"
-                >
-                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.assunto" name="text"/>
-                </q-field>
-              </div>
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -102,45 +111,44 @@
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="data" label="Data do Documento" />
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="periodo" label="Período do Cadastro" />
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="mes" label="Mês do Cadastro" />
+                  <q-radio v-model="buscaCorrespondencia.tipoData" val="periodo" label="Período do Cadastro" />
+                  <q-radio v-model="buscaCorrespondencia.tipoData" val="mes" label="Mês do Cadastro" />
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'data'">
+              <!-- <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'data'">
                 <q-field
                   label="Data do Documento"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataDocumento" name="date"/>
+                  <q-input autocomplete="off" type="date" v-model="buscaCorrespondencia.dataCadastro" name="date"/>
                 </q-field>
-              </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+              </div> -->
+              <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'periodo'">
                 <q-field
                   label="Data inicial"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataInicial" name="date"/>
+                  <q-input autocomplete="off" type="date" v-model="buscaCorrespondencia.dataInicial" name="date"/>
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+              <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'periodo'">
                 <q-field
                   label="Data Final"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataFinal" name="date"/>
+                  <q-input autocomplete="off" type="date" v-model="buscaCorrespondencia.dataFinal" name="date"/>
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'mes'">
+              <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'mes'">
                 <q-field
                   label="Mês do cadastro"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="month" v-model="buscaProtocoloEntrada.mesCadastro" name="date"/>
+                  <q-input autocomplete="off" type="month" v-model="buscaCorrespondencia.mesCadastro" name="date"/>
                 </q-field>
               </div>
             </div>
@@ -150,12 +158,14 @@
                   label="Origem"
                   orientation="vertical"
                 >
-                  <q-input autocomplete="on" type="text" v-model="buscaProtocoloEntrada.origem" name="origem" >
-                    <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                    />
-                  </q-input>
+                  <q-select
+                    v-model="buscaCorrespondencia.setor"
+                    :options="optionsSetor"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o setor"
+                    name="select"
+                  />
                 </q-field>
               </div>
               <div class="col-md-6">
@@ -163,14 +173,13 @@
                   label="Destino"
                   orientation="vertical"
                 >
-                  <q-select
-                    v-model="buscaProtocoloEntrada.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o setor"
-                    name="select"
-                  />
+
+                  <q-input autocomplete="on" type="text" v-model="buscaCorrespondencia.destino" name="origem" >
+                    <q-autocomplete
+                      @search="search"
+                      :min-characters="3"
+                    />
+                  </q-input>
                 </q-field>
               </div>
             </div>
@@ -186,7 +195,7 @@
       <q-table title="Listagem de Registros"
         :data="registros"
         :columns="tabelaColunas"
-        row-key="protocoloEntrada"
+        row-key="correspondencia"
         :loading="carregandoLista"
         :separator="tabelaSeparador"
         no-data-label="Sem registros encontrados"
@@ -231,9 +240,15 @@
           />
         </template>
         <q-td slot="body-cell-editar" slot-scope="props" :props="props">
-          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/>
-          <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/> -->
+          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarCorrespondencia', params: { id: props.row.correspondencia} }"/>
+          <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarCorrespondencia', params: { id: props.row.correspondencia} }"/> -->
         </q-td>
+
+        <q-tr slot="bottom-row" slot-scope="props">
+          <q-td colspan="100%">
+            <strong class="float-right">Valor Total R$: {{ valorTotal }}</strong>
+          </q-td>
+        </q-tr>
       </q-table>
       <!-- <q-inner-loading :visible="carregandoLista">
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
@@ -241,20 +256,20 @@
     </div>
 
     <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
-      possoGravarProtocoloEntrada ||
-      possoExcluirProtocoloEntrada
+      possoGravarCorrespondencia ||
+      possoExcluirCorrespondencia
     ">
       <q-fab color="primary" active-icon="close" direction="up" icon="expand less">
         <q-tooltip slot="tooltip" anchor="center left" self="center right" :offset="[20, 0]">
           Botões de ação
         </q-tooltip>
-        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarProtocoloEntrada || possoAlterarProtocoloEntrada">
+        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarCorrespondencia || possoAlterarCorrespondencia">
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">{{ botaoSalvarAlterar }}</q-tooltip>
         </q-fab-action>
-        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarProtocoloEntrada">
+        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarCorrespondencia">
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Novo</q-tooltip>
         </q-fab-action>
-        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirProtocoloEntrada">
+        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirCorrespondencia">
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Excluir</q-tooltip>
         </q-fab-action>
       </q-fab>
@@ -291,15 +306,15 @@ var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
-import BuscaProtocoloEntrada from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntrada'
-import buscaProtocoloEntradaService from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntradaService'
+import BuscaCorrespondencia from 'src/services/buscaCorrespondencia/BuscaCorrespondencia'
+import buscaCorrespondenciaService from 'src/services/buscaCorrespondencia/BuscaCorrespondenciaService'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
 import Endereco from 'src/services/endereco/Endereco'
 import Setor from 'src/services/setor/Setor'
 import { filter } from 'quasar'
 
 export default {
-  name: 'ConsultaProtocoloEntrada',
+  name: 'ConsultaCorrespondencia',
   directives: {
     mask
   },
@@ -309,6 +324,7 @@ export default {
     return {
       modalRelatorio: false,
       linkRelatorio: '',
+      valorTotal: 0,
       tipoDocumento: new TipoDocumento(),
       endereco: new Endereco(),
       setor: new Setor(),
@@ -318,7 +334,7 @@ export default {
       optionsEndereco: [],
       optionsTipoDocumento: [],
       busca: '',
-      buscaProtocoloEntrada: new BuscaProtocoloEntrada(),
+      buscaCorrespondencia: new BuscaCorrespondencia(),
       carregandoLista: false,
       registros: [],
       tipoConsulta: 'documento',
@@ -333,7 +349,7 @@ export default {
         }
       ],
       tabelaSeparador: 'horizontal',
-      colunasVisiveis: ['numero', 'dataDocumento', 'origem', 'assunto', 'destino', 'dataCadastro'],
+      colunasVisiveis: ['numeroDocumento', 'tipoDocumento', 'numero', 'origem', 'destino', 'uf', 'tipoCorrespondencia', 'valorTotal', 'dataCadastro'],
       tabelaColunas: [
         {
           name: 'protocolo',
@@ -352,30 +368,16 @@ export default {
           sortable: true
         },
         {
-          name: 'numero',
+          name: 'numeroDocumento',
           label: 'Nº',
           align: 'left',
-          field: 'numero'
-        },
-        {
-          name: 'dataDocumento',
-          label: 'Data Doc.',
-          align: 'left',
-          field: 'dataDocumento',
-          sortable: true
+          field: 'numeroDocumento'
         },
         {
           name: 'origem',
-          label: 'Origem',
+          label: 'Origem - Remetente',
           align: 'left',
-          field: 'origem',
-          sortable: true
-        },
-        {
-          name: 'assunto',
-          label: 'Assunto',
-          align: 'left',
-          field: 'assunto',
+          field: 'origemRemetente',
           sortable: true
         },
         {
@@ -386,6 +388,28 @@ export default {
           sortable: true
         },
         {
+          name: 'logradouro',
+          label: 'Endereco',
+          align: 'left',
+          field: 'logradouro',
+          sortable: true
+        },
+        {
+          name: 'cidade',
+          label: 'Cidade',
+          align: 'left',
+          field: 'cidade',
+          sortable: true
+        },
+        {
+          name: 'uf',
+          label: 'UF',
+          align: 'left',
+          field: 'uf',
+          sortable: true
+        },
+
+        {
           name: 'dataCadastro',
           label: 'Data do Cadastro',
           align: 'left',
@@ -393,17 +417,31 @@ export default {
           sortable: true
         },
         {
+          name: 'tipoCorrespondencia',
+          label: 'Tipo de Cor.',
+          align: 'left',
+          field: 'tipoCorrespondencia',
+          sortable: true
+        },
+        {
+          name: 'valorTotal',
+          label: 'R$',
+          align: 'left',
+          field: 'valorTotal',
+          sortable: true
+        },
+        {
           name: 'editar',
           label: 'Editar',
           align: 'center',
-          field: 'protocoloEntrada',
+          field: 'correspondencia',
           required: true
         }
       ]
     }
   },
   // validations: {
-  //   buscaProtocoloEntrada: {
+  //   buscaCorrespondencia: {
   //     ano: { required },
   //     protocolo: { required }
   //   }
@@ -436,18 +474,18 @@ export default {
         this.optionsAno = optionsAno
       } else {
         this.optionsAno = [{
-          label: 'Sem registros cadastrados, confira o cadastro de Protocolo de Entradas',
+          label: 'Sem registros cadastrados, confira o cadastro de Correspondencias',
           value: ''
         }]
       }
     },
 
     reset () {
-      this.buscaProtocoloEntrada = new BuscaProtocoloEntrada()
+      this.buscaCorrespondencia = new BuscaCorrespondencia()
     },
     carrega (id) {
-      console.log('vou carregar o buscaProtocoloEntrada', id)
-      this.$router.push({ name: 'alterarProtocoloEntrada', params: { id } })
+      console.log('vou carregar o buscaCorrespondencia', id)
+      this.$router.push({ name: 'alterarCorrespondencia', params: { id } })
     },
     procurar () {
       this.$q.loading.show({
@@ -458,8 +496,8 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        // this.$v.buscaProtocoloEntrada.$touch()
-        // if (this.$v.buscaProtocoloEntrada.$error) {
+        // this.$v.buscaCorrespondencia.$touch()
+        // if (this.$v.buscaCorrespondencia.$error) {
         //   this.$q.loading.hide()
         //   this.$q.dialog({
         //     title: 'Atenção',
@@ -468,14 +506,16 @@ export default {
         //   return
         // }
 
-        if (this.buscaProtocoloEntrada.protocolo) {
-          buscaProtocoloEntradaService.seleciona(this.buscaProtocoloEntrada)
+        if (this.buscaCorrespondencia.protocolo) {
+          buscaCorrespondenciaService.seleciona(this.buscaCorrespondencia)
             .then(result => {
               this.$q.loading.hide()
-              console.log('buscaProtocoloEntrada alterado com sucesso')
+              console.log('buscaCorrespondencia alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data
+              this.valorTotal = result.data[0].valorTotal
+
               this.$q.notify({
                 type: 'positive',
                 message: 'Estes foram os registros encontrados.',
@@ -483,13 +523,14 @@ export default {
               })
             })
         } else {
-          buscaProtocoloEntradaService.procuraDocumento(this.buscaProtocoloEntrada)
+          buscaCorrespondenciaService.procuraDocumento(this.buscaCorrespondencia)
             .then(result => {
               this.$q.loading.hide()
-              console.log('buscaProtocoloEntrada alterado com sucesso')
+              console.log('buscaCorrespondencia alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
-              this.registros = result.data
+              this.registros = result.data.correspondencias
+              this.valorTotal = result.data.valorTotal
               this.$q.notify({
                 type: 'positive',
                 message: 'Estes foram os registros encontrados.',
@@ -508,10 +549,10 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        buscaProtocoloEntradaService.relatorio(this.buscaProtocoloEntrada)
+        buscaCorrespondenciaService.relatorio(this.buscaCorrespondencia)
           .then(result => {
             this.$q.loading.hide()
-            console.log('buscaProtocoloEntrada alterado com sucesso')
+            console.log('buscaCorrespondencia alterado com sucesso')
             // this.listaDocumentos()
             console.log(result.data)
             this.linkRelatorio = result.data.link
@@ -526,26 +567,26 @@ export default {
     },
     listaDocumentos () {
       this.carregandoLista = true
-      buscaProtocoloEntradaService
+      buscaCorrespondenciaService
         .lista(this.malote)
         .then(result => {
           this.carregandoLista = false
-          console.log('carreguei a lista de buscaProtocoloEntradas')
+          console.log('carreguei a lista de buscaCorrespondencias')
           this.preencheListaTabela(result.data.registros)
         })
     },
     preencheListaTabela (registros) {
       let lista = []
-      registros.forEach(buscaProtocoloEntrada => {
+      registros.forEach(buscaCorrespondencia => {
         lista.push({
-          id: buscaProtocoloEntrada.buscaProtocoloEntrada,
-          tipoDocumento: buscaProtocoloEntrada.tipoDocumentoDescricao,
-          numero: buscaProtocoloEntrada.numero,
-          origem: buscaProtocoloEntrada.setorDescricao,
-          destino: buscaProtocoloEntrada.codigoReduzido
+          id: buscaCorrespondencia.buscaCorrespondencia,
+          tipoDocumento: buscaCorrespondencia.tipoDocumentoDescricao,
+          numero: buscaCorrespondencia.numero,
+          origem: buscaCorrespondencia.setorDescricao,
+          destino: buscaCorrespondencia.codigoReduzido
         })
       })
-      this.listaDeProtocoloEntradas = lista
+      this.listaDeCorrespondencias = lista
     }
   },
   props: [
@@ -553,14 +594,14 @@ export default {
     'rota'
   ],
   computed: {
-    possoAbrirProtocoloEntrada: () => permissoes.abrir('protocoloEntrada')
+    possoAbrirCorrespondencia: () => permissoes.abrir('correspondencia')
   },
   mounted () {
     // this.listaDocumentos()
 
     // this.optionsLoading = true
-    // this.buscaProtocoloEntrada.malote = this.malote
-    buscaProtocoloEntradaService.getOptions()
+    // this.buscaCorrespondencia.malote = this.malote
+    buscaCorrespondenciaService.getOptions()
       .then(result => {
         this.optionsLoading = false
         this.setOptionsAno(result.data.anos)

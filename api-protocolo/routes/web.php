@@ -146,6 +146,20 @@ $app->group(
     $app->group(
       ['middleware' => 'correspondencia'],
       function() use ($app) {
+        $app->get('/busca-correspondencias', 'BuscaCorrespondenciaController@lista');
+        $app->get('/busca-correspondencias/correspondencia', 'BuscaCorrespondenciaController@procuraCorrespondencia');
+        $app->get('/busca-correspondencias/relatorio', 'BuscaCorrespondenciaController@relatorio');
+        $app->get('/busca-correspondencias/protocolo/{id}/ano/{ano}', 'BuscaCorrespondenciaController@seleciona');
+        $app->get('/busca-correspondencias/anos', 'BuscaCorrespondenciaController@listaAnos');
+        $app->get('/busca-correspondencias/options', 'BuscaCorrespondenciaController@options');
+        $app->get('/busca-correspondencias/protocoloentrada/{id}', 'BuscaCorrespondenciaController@seleciona');
+
+      }
+    );
+
+    $app->group(
+      ['middleware' => 'correspondencia'],
+      function() use ($app) {
         $app->delete('/correspondencias/correspondencia/{id}', 'CorrespondenciaController@apaga');
         $app->get('/correspondencias', 'CorrespondenciaController@lista');
         $app->get('/correspondencias/options', 'CorrespondenciaController@options');

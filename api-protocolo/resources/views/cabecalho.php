@@ -14,19 +14,19 @@
       position: fixed;
       left: 0;
       right: 0;
-      color: #aaa;
+      color: #000;
       font-size: 0.9em;
     }
 
     #header {
       top: 0;
       border-top: initial;
-      border-bottom: 0.1pt solid #aaa;
+      border-bottom: 0.1pt solid #000;
     }
 
     #footer {
       bottom: 0;
-      border-top: 0.1pt solid #aaa;
+      border-top: 0.1pt solid #000;
     }
 
     #header table,
@@ -56,7 +56,7 @@
     }
 
     tr:nth-child(even) {
-      background-color: #f6f6f6;
+      background-color: #dedada;
       border-bottom: 0.9px solid #ddd;
     }
 
