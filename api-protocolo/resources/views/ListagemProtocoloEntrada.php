@@ -1,110 +1,44 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<?php require_once('cabecalho.php'); ?>
 
-<head>
-  <link rel="STYLESHEET" href="../../public/css/print_static.css" type="text/css" />
-</head>
+    <!-- fim cabecalho -->
+    <div class="page" style="font-size: 7pt">
 
-<body>
-  <div id="body">
-    <div id="section_header">
-    </div>
-    <div id="content">
+      <table style="width: 100%; font-size: 8pt;">
 
-      <div class="page" style="font-size: 7pt">
-        <table style="width: 100%;" class="header">
+        <tr>
+          <td colspan="6">
+            <h2>Listagem de Documentos de Entrada:</h2>
+          </td>
+        </tr>
+
+        <tbody>
           <tr>
-            <td>
-              <h1 style="text-align: left">Serviço de Correios</h1>
-            </td>
-            <td>
-              <h1 style="text-align: right">1ª RM</h1>
-            </td>
-          </tr>
-        </table>
-
-        <!-- <table style="width: 100%; font-size: 8pt;">
-          <tr>
-            <td>Job: <strong>132-003</strong></td>
-            <td>Purchasers(s): <strong>Palmer</strong></td>
+            <th>Protocolo</th>
+            <th>Tipo</th>
+            <th>Nº</th>
+            <th>Data do Documento</th>
+            <th>Origem</th>
+            <th>Assunto</th>
+            <th>Destino</th>
+            <th>Data do Cadastro</th>
           </tr>
 
-          <tr>
-            <td>Created: <strong>2004-08-13</strong></td>
-            <td>Last Change: <strong>2004-08-16 9:28 AM</strong></td>
-          </tr>
+          <?php foreach ($dados as $row) { ?>
 
-          <tr>
-            <td>Address: <strong>667 Pine Lodge Dr.</strong></td>
-            <td>Legal: <strong>N/A</strong></td>
-          </tr>
-        </table>
-
-        <table style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black; font-size: 8pt;">
-
-          <tr>
-            <td>Model: <strong>Franklin</strong></td>
-            <td>Elevation: <strong>B</strong></td>
-            <td>Size: <strong>1160 Cu. Ft.</strong></td>
-            <td>Style: <strong>Reciprocating</strong></td>
-          </tr>
-
-        </table> -->
-
-      <!-- fim cabecalho -->
-
-
-        <table class="change_order_items" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black; font-size: 8pt;">
-
-          <tr>
-            <td colspan="6">
-              <h2>Listagem de Documentos de Entrada:</h2>
-            </td>
-          </tr>
-
-          <tbody>
-            <tr>
-              <th>Protocolo</th>
-              <th>Tipo</th>
-              <th>Nº</th>
-              <th>Data do Documento</th>
-              <th>Origem</th>
-              <th>Assunto</th>
-              <th>Destino</th>
-              <th>Data do Cadastro</th>
+            <tr class="tableRows">
+              <td><?= $row->protocolo; ?></td>
+              <td><?= $row->tipoDocumento; ?></td>
+              <td><?= $row->numero; ?></td>
+              <td><?= $row->dataDocumento; ?></td>
+              <td><?= $row->origem; ?></td>
+              <td><?= $row->assunto; ?></td>
+              <td><?= $row->destino; ?></td>
+              <td><?= $row->dataCadastro; ?></td>
             </tr>
-
-            <?php
-              $x = true;
-              foreach ($dados as $row) {
-                if ($x) {
-                  $class = 'even_row';
-                } else {
-                  $class = 'odd_row';
-                }
-            ?>
-
-              <tr class="<?= $class; ?>">
-                <td><?= $row->protocolo; ?></td>
-                <td><?= $row->tipoDocumento; ?></td>
-                <td><?= $row->numero; ?></td>
-                <td><?= $row->dataDocumento; ?></td>
-                <td><?= $row->origem; ?></td>
-                <td><?= $row->assunto; ?></td>
-                <td><?= $row->destino; ?></td>
-                <td><?= $row->dataCadastro; ?></td>
-              </tr>
-            <?php
-              $x = !$x;
-              }
-            ?>
-          </tbody>
-        </table>
-      </div>
-
+          <?php } ?>
+        </tbody>
+      </table>
     </div>
-  </div>
-
 </body>
 
 </html>

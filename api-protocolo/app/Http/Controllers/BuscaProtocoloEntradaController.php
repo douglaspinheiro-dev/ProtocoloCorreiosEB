@@ -54,8 +54,6 @@ class BuscaProtocoloEntradaController extends Controller
   {
 
     $dados = $this->request->all();
-    ChromePhp::log($dados);
-
 
     if ($dados['tipoData'] === 'data') {
       $dados['consultaData'] = "protocoloEntradas.dataDocumento LIKE '%".$dados['dataDocumento']."%' AND ";
@@ -99,10 +97,10 @@ class BuscaProtocoloEntradaController extends Controller
     // gera o pdf com os results
 
     $pdf = PDF::loadHTML(view('ListagemProtocoloEntrada', ['dados' => $results]));
-    $pdf->save('../public/pdf/relatorio.pdf');
+    $pdf->save('../public/pdf/relatorio-protocolo-entrada.pdf');
     $url = env('URL', '');
 
-    return response()->json(['link' => $url.'/pdf/relatorio.pdf'], 200);
+    return response()->json(['link' => $url.'/pdf/relatorio-protocolo-entrada.pdf'], 200);
     // return view('ListagemProtocoloEntrada', ['dados' => $results]);
   }
 
