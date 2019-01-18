@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-  <link rel="STYLESHEET" href="../../public/css/print_static.css" type="text/css" />
+
   <style type="text/css">
 
     @page {
-      margin: 2cm;
+      margin: 1cm;
     }
 
     #header,

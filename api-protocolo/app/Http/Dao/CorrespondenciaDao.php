@@ -135,6 +135,34 @@ class CorrespondenciaDao extends Dao
     }
 
     public static function procuraCorrespondencia($obj) {
+      ChromePhp::log("SELECT
+      correspondencias.protocolo,
+      correspondencias.correspondencia,
+      correspondencias.numeroDocumento,
+      correspondencias.destino,
+      DATE_FORMAT(correspondencias.dataCadastro, '%d/%m/%Y') as dataCadastro,
+      correspondencias.setor,
+      correspondencias.logradouro,
+      correspondencias.cidade,
+      correspondencias.cep,
+      correspondencias.codigoRastreio,
+      correspondencias.valorTotal,
+      categoriasDocumentos.codigo as tipoDocumento,
+      categoriasCorrespondencias.descricao as tipoCorrespondencia,
+      CONCAT(setores.codigo, ' - ', correspondencias.remetente) as origemRemetente
+    FROM correspondencias
+    JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = correspondencias.categoriaDocumento
+    JOIN categoriasCorrespondencias ON categoriasCorrespondencias.categoriaCorrespondencia = correspondencias.categoriaCorrespondencia
+    JOIN setores ON setores.setor = correspondencias.setor
+    AND
+    (
+      correspondencias.numero LIKE '%{$obj['numero']}%' AND
+      {$obj['consultaData']}
+      correspondencias.setor LIKE '%{$obj['setor']}%' AND
+      correspondencias.destino LIKE '%{$obj['destino']}%'
+    )
+    AND correspondencias.ativo = 1 ORDER BY correspondencias.dataCadastro desc LIMIT 1000");
+
       return DB::select("
         SELECT
           correspondencias.protocolo,
@@ -145,7 +173,8 @@ class CorrespondenciaDao extends Dao
           correspondencias.setor,
           correspondencias.logradouro,
           correspondencias.cidade,
-          correspondencias.uf,
+          correspondencias.cep,
+          correspondencias.codigoRastreio,
           correspondencias.valorTotal,
           categoriasDocumentos.codigo as tipoDocumento,
           categoriasCorrespondencias.descricao as tipoCorrespondencia,
@@ -176,7 +205,8 @@ class CorrespondenciaDao extends Dao
       correspondencias.setor,
       correspondencias.logradouro,
       correspondencias.cidade,
-      correspondencias.uf,
+      correspondencias.cep,
+      correspondencias.codigoRastreio,
       correspondencias.valorTotal,
       categoriasDocumentos.codigo as tipoDocumento,
       categoriasCorrespondencias.descricao as tipoCorrespondencia,

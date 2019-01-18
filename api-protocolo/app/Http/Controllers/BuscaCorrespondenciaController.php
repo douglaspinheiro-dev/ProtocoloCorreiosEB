@@ -55,19 +55,15 @@ class BuscaCorrespondenciaController extends Controller
 
     $dados = $this->request->all();
 
-    if (($dados['dataInicial'] !== '' and $dados['dataFinal'] !== '') or $dados['mesCadastro'] !== ''  ) {
-      if ($dados['tipoData'] === 'data') {
-        // $dados['consultaData'] = "correspondencias.dataDocumento LIKE '%".$dados['dataDocumento']."%' AND ";
-      } elseif ($dados['tipoData'] === 'periodo') {
-        $dados['consultaData'] = "(DATE(correspondencias.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataInicial']."') AND ";
-      } elseif ($dados['tipoData'] === 'mes') {
-        $data = explode("-", $dados['mesCadastro']);
-        $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
-      }
-    } else {
-      $dados['consultaData'] = '';
+    $dados['consultaData'] = '';
+    if ($dados['tipoData'] === 'data')  {
+      // $dados['consultaData'] = "correspondencias.dataDocumento LIKE '%".$dados['dataDocumento']."%' AND ";
+    } elseif ($dados['tipoData'] === 'periodo' and ($dados['dataInicial'] !== '' and $dados['dataFinal'] !== '')) {
+      $dados['consultaData'] = "(DATE(correspondencias.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataFinal']."') AND ";
+    } elseif ($dados['tipoData'] === 'mes' and $dados['mesCadastro'] !== '' ) {
+      $data = explode("-", $dados['mesCadastro']);
+      $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
     }
-
 
     $results = CorrespondenciaDao::procuraCorrespondencia($dados);
 
@@ -84,6 +80,7 @@ class BuscaCorrespondenciaController extends Controller
   public function relatorio()
   {
     $results;
+    $periodo = '';
     $dados = $this->request->all();
     if ($dados['protocolo']) {
       // gera relatorio de um doc
@@ -94,29 +91,60 @@ class BuscaCorrespondenciaController extends Controller
       $results = CorrespondenciaDao::selecionaPorAno($dados);
     } else {
       // pesquisa o doc e tras os dados
+      $dados['consultaData'] = '';
 
-      if (($dados['dataInicial'] !== '' and $dados['dataFinal'] !== '') or $dados['mesCadastro'] !== ''  ) {
-        if ($dados['tipoData'] === 'data') {
-          // $dados['consultaData'] = "correspondencias.dataDocumento LIKE '%".$dados['dataDocumento']."%' AND ";
-        } elseif ($dados['tipoData'] === 'periodo') {
-          $dados['consultaData'] = "(DATE(correspondencias.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataInicial']."') AND ";
-        } elseif ($dados['tipoData'] === 'mes') {
-          $data = explode("-", $dados['mesCadastro']);
-          $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
-        }
-      } else {
-        $dados['consultaData'] = '';
+      if ($dados['tipoData'] === 'data') {
+        $dados['consultaData'] = "correspondencias.dataCadastro LIKE '%".$dados['dataCadastro']."%' AND ";
+        $inicio = explode("-", $dados['dataCadastro']);
+        $periodo = $inicio[2].'/'.$inicio[1].'/'.$inicio[0];
+
+      } elseif ($dados['tipoData'] === 'periodo' and ($dados['dataInicial'] !== '' and $dados['dataFinal'] !== '')) {
+        $inicio = explode("-", $dados['dataInicial']);
+        $inicio = $inicio[2].'/'.$inicio[1].'/'.$inicio[0];
+
+        $fim = explode("-", $dados['dataFinal']);
+        $fim = $fim[2].'/'.$fim[1].'/'.$fim[0];
+
+        $periodo = $inicio.' - '.$fim;
+        $dados['consultaData'] = "(DATE(correspondencias.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataFinal']."') AND ";
+      } elseif ($dados['tipoData'] === 'mes' and $dados['mesCadastro'] !== '') {
+
+        $temp = explode("-", $dados['mesCadastro']);
+        $periodo = $temp[1].'/'.$temp[0];
+
+        $data = explode("-", $dados['mesCadastro']);
+        $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
       }
       $results = CorrespondenciaDao::procuraCorrespondencia($dados);
     }
 
-    // gera o pdf com os results
-
-    $pdf = PDF::loadHTML(view('ListagemCorrespondencia', ['dados' => $results]));
-    $pdf->save('../public/pdf/relatorio-correspondencia.pdf');
+    $relatorioView;
+    $relatorioTitulo;
     $url = env('URL', '');
 
-    return response()->json(['link' => $url.'/pdf/relatorio-correspondencia.pdf'], 200);
+    // gera o pdf com os results
+    if ($dados['tipoRelatorio'] === 'listagemDeCorrespondencia') {
+      $relatorioView = 'ListagemCorrespondencia';
+      $relatorioTitulo = 'relatorio-correspondencia';
+    } else if ($dados['tipoRelatorio'] === 'controleDeRegistroDePostagem') {
+      $relatorioView = 'ControleRegistroPostagem';
+      $relatorioTitulo = 'relatorio-registro-postagem';
+    }
+
+    ChromePhp::log($dados);
+    ChromePhp::log([
+      'dados' => $results,
+      'periodo' => $periodo
+    ]);
+
+
+    $pdf = PDF::loadHTML(view($relatorioView, [
+      'dados' => $results,
+      'periodo' => $periodo
+      ]));
+    $pdf->save('../public/pdf/'.$relatorioTitulo.'.pdf');
+
+    return response()->json(['link' => $url."/pdf/".$relatorioTitulo.'.pdf'], 200);
     // return view('ListagemCorrespondencia', ['dados' => $results]);
   }
 

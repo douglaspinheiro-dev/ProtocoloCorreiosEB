@@ -29,7 +29,21 @@
             </div> -->
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+              <q-field class="form-input"
+                label="Tipo de Relatório"
+                orientation="vertical"
+              >
+                <q-select
+                  v-model="buscaCorrespondencia.tipoRelatorio"
+                  :options="optionsTipoRelatorio"
+                  filter-placeholder="Selecione a Tipo de Relatório"
+                  @input="trocaRelatorio"
+
+                />
+              </q-field>
+            </div>
+            <div class="col-md-6">
               <q-field class="form-input"
                 label="Tipo de Consulta"
                 orientation="vertical"
@@ -111,11 +125,12 @@
                   orientation="vertical"
                   class="form-input"
                 >
+                  <q-radio v-model="buscaCorrespondencia.tipoData" val="data" label="Data do Cadastro" />
                   <q-radio v-model="buscaCorrespondencia.tipoData" val="periodo" label="Período do Cadastro" />
                   <q-radio v-model="buscaCorrespondencia.tipoData" val="mes" label="Mês do Cadastro" />
                 </q-field>
               </div>
-              <!-- <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'data'">
+              <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'data'">
                 <q-field
                   label="Data do Documento"
                   orientation="vertical"
@@ -123,7 +138,7 @@
                 >
                   <q-input autocomplete="off" type="date" v-model="buscaCorrespondencia.dataCadastro" name="date"/>
                 </q-field>
-              </div> -->
+              </div>
               <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'periodo'">
                 <q-field
                   label="Data inicial"
@@ -244,7 +259,7 @@
           <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarCorrespondencia', params: { id: props.row.correspondencia} }"/> -->
         </q-td>
 
-        <q-tr slot="bottom-row" slot-scope="props">
+        <q-tr slot="bottom-row" slot-scope="props" v-show="buscaCorrespondencia.tipoRelatorio === 'listagemDeCorrespondencia'">
           <q-td colspan="100%">
             <strong class="float-right">Valor Total R$: {{ valorTotal }}</strong>
           </q-td>
@@ -338,6 +353,16 @@ export default {
       carregandoLista: false,
       registros: [],
       tipoConsulta: 'documento',
+      optionsTipoRelatorio: [
+        {
+          label: 'Listagem de Correspondências',
+          value: 'listagemDeCorrespondencia'
+        },
+        {
+          label: 'Controle de Registro de Postagem',
+          value: 'controleDeRegistroDePostagem'
+        }
+      ],
       optionsConsulta: [
         {
           label: 'Número do Protocolo',
@@ -349,95 +374,9 @@ export default {
         }
       ],
       tabelaSeparador: 'horizontal',
-      colunasVisiveis: ['numeroDocumento', 'tipoDocumento', 'numero', 'origem', 'destino', 'uf', 'tipoCorrespondencia', 'valorTotal', 'dataCadastro'],
-      tabelaColunas: [
-        {
-          name: 'protocolo',
-          required: true,
-          label: 'Prot.',
-          align: 'left',
-          field: 'protocolo',
-          sortable: true
-        },
-        {
-          name: 'tipoDocumento',
-          required: true,
-          label: 'Tipo Doc.',
-          align: 'left',
-          field: 'tipoDocumento',
-          sortable: true
-        },
-        {
-          name: 'numeroDocumento',
-          label: 'Nº',
-          align: 'left',
-          field: 'numeroDocumento'
-        },
-        {
-          name: 'origem',
-          label: 'Origem - Remetente',
-          align: 'left',
-          field: 'origemRemetente',
-          sortable: true
-        },
-        {
-          name: 'destino',
-          label: 'Destino',
-          align: 'left',
-          field: 'destino',
-          sortable: true
-        },
-        {
-          name: 'logradouro',
-          label: 'Endereco',
-          align: 'left',
-          field: 'logradouro',
-          sortable: true
-        },
-        {
-          name: 'cidade',
-          label: 'Cidade',
-          align: 'left',
-          field: 'cidade',
-          sortable: true
-        },
-        {
-          name: 'uf',
-          label: 'UF',
-          align: 'left',
-          field: 'uf',
-          sortable: true
-        },
+      colunasVisiveis: new BuscaCorrespondencia().setColunasVisiveisListagemCorrespondencias(),
+      tabelaColunas: new BuscaCorrespondencia().setTabelaColunasListagemCorrespondencias()
 
-        {
-          name: 'dataCadastro',
-          label: 'Data do Cadastro',
-          align: 'left',
-          field: 'dataCadastro',
-          sortable: true
-        },
-        {
-          name: 'tipoCorrespondencia',
-          label: 'Tipo de Cor.',
-          align: 'left',
-          field: 'tipoCorrespondencia',
-          sortable: true
-        },
-        {
-          name: 'valorTotal',
-          label: 'R$',
-          align: 'left',
-          field: 'valorTotal',
-          sortable: true
-        },
-        {
-          name: 'editar',
-          label: 'Editar',
-          align: 'center',
-          field: 'correspondencia',
-          required: true
-        }
-      ]
     }
   },
   // validations: {
@@ -482,6 +421,18 @@ export default {
 
     reset () {
       this.buscaCorrespondencia = new BuscaCorrespondencia()
+      this.registros = []
+      this.tabelaColunas = this.buscaCorrespondencia.setTabelaColunasListagemCorrespondencias()
+      this.colunasVisiveis = this.buscaCorrespondencia.setColunasVisiveisListagemCorrespondencias()
+    },
+    trocaRelatorio () {
+      if (this.buscaCorrespondencia.tipoRelatorio === 'controleDeRegistroDePostagem') {
+        this.tabelaColunas = this.buscaCorrespondencia.setTabelaColunasControleDeRegistroDePostagem()
+        this.colunasVisiveis = this.buscaCorrespondencia.setColunasVisiveisControleDeRegistroDePostagem()
+      } else if (this.buscaCorrespondencia.tipoRelatorio === 'listagemDeCorrespondencia') {
+        this.tabelaColunas = this.buscaCorrespondencia.setTabelaColunasListagemCorrespondencias()
+        this.colunasVisiveis = this.buscaCorrespondencia.setColunasVisiveisListagemCorrespondencias()
+      }
     },
     carrega (id) {
       console.log('vou carregar o buscaCorrespondencia', id)
