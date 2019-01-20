@@ -7,11 +7,11 @@ export default class BuscaProtocoloEntrada {
     this.setor = obj.setor || ''
     this.assunto = obj.assunto || ''
     this.numero = obj.numero || ''
-    this.dataDocumento = obj.dataDocumento || ''
+    this.dataDocumento = obj.dataDocumento || dayjs().format('YYYY-MM-DD')
     this.tipoData = obj.tipoData || 'data'
-    this.dataInicial = obj.dataInicial || null
-    this.dataFinal = obj.dataFinal || null
-    this.mesCadastro = obj.mesCadastro || null
+    this.dataInicial = obj.dataInicial || dayjs().startOf('month').format('YYYY-MM-DD')
+    this.dataFinal = obj.dataFinal || dayjs().endOf('month').format('YYYY-MM-DD')
+    this.mesCadastro = obj.mesCadastro || dayjs().format('YYYY-MM')
     this.protocolo = obj.protocolo || ''
   }
 }

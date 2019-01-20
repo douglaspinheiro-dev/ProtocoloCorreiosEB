@@ -5,20 +5,20 @@
         <div class="col-md-6 linhaBotoes">
           <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
           <q-btn small type="submit" icon="search">Procurar</q-btn>
-          <q-btn small type="button" @click="gerarRelatorio" icon="search">Imprimir</q-btn>
+          <q-btn small type="button" @click="gerarRelatorio" icon="search" v-show="tipoConsulta === 'protocolo'">Imprimir</q-btn>
         </div>
       </div>
       <div>
 
         <q-collapsible label="Consulta" opened>
-          <div class="row">
-            <!-- <div class="col-md-3">
+          <!-- <div class="row">
+            <div class="col-md-3">
               <q-field class="form-input"
                 label="Tipo do Documento"
                 orientation="vertical"
               >
                 <q-select
-                  v-model="consultaProtocoloEntrada.tipoBusca"
+                  v-model="consultaMalote.tipoBusca"
                   :options="optionsTipoBusca"
                   filter
                   autofocus-filter
@@ -26,9 +26,23 @@
                   name="select"
                 />
               </q-field>
-            </div> -->
-          </div>
+            </div>
+          </div> -->
           <div class="row">
+            <!-- <div class="col-md-6">
+              <q-field class="form-input"
+                label="Tipo de Relatório"
+                orientation="vertical"
+              >
+                <q-select
+                  v-model="buscaMalote.tipoRelatorio"
+                  :options="optionsTipoRelatorio"
+                  filter-placeholder="Selecione a Tipo de Relatório"
+                  @input="trocaRelatorio"
+
+                />
+              </q-field>
+            </div> -->
             <div class="col-md-12">
               <q-field class="form-input"
                 label="Tipo de Consulta"
@@ -38,9 +52,9 @@
                   v-model="tipoConsulta"
                   :options="optionsConsulta"
                   filter
-                  @input="reset"
                   autofocus-filter
                   filter-placeholder="Selecione a forma de consulta"
+                  @input="trocaRelatorio"
                   name="select"
                 />
               </q-field>
@@ -53,8 +67,17 @@
                 label="Número de Protocolo"
                 orientation="vertical"
                 class="form-input"
+                :error="$v.buscaMalote.protocolo.$error"
+                error-label="Obrigatório"
+                helper="Obrigatório"
               >
-                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.protocolo" name="number"/>
+                <q-input
+                  autocomplete="off"
+                  type="text"
+                  v-model="buscaMalote.protocolo"
+                  name="number"
+                  @input="$v.buscaMalote.protocolo.$touch()"
+                />
               </q-field>
             </div>
             <div class="col-md-3">
@@ -63,7 +86,7 @@
                 orientation="vertical"
               >
                 <q-select
-                  v-model="buscaProtocoloEntrada.ano"
+                  v-model="buscaMalote.ano"
                   :options="optionsAno"
                   placeholder="Selecione o ano"
                   name="select"
@@ -74,101 +97,107 @@
           <div v-show="tipoConsulta === 'documento'">
 
             <div class="row" >
+              <div class="col-md-3">
+                <q-field class="form-input"
+                  label="Tipo do Documento"
+                  orientation="vertical"
+                >
+                  <q-select
+                    v-model="buscaMalote.tipoDocumento"
+                    :options="optionsTipoDocumento"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o tipo do documento"
+                    name="select"
+                  />
+                </q-field>
+              </div>
 
-              <div class="col-md-6">
+              <div class="col-md-3">
                 <q-field
                   label="Número do Documento"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.numero" name="number"/>
+                  <q-input autocomplete="off" type="text" v-model="buscaMalote.numero" name="number"/>
                 </q-field>
               </div>
 
-              <div class="col-md-6">
-                <q-field
-                  label="Assunto"
-                  orientation="vertical"
-                  class="form-input"
-                >
-                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.assunto" name="text"/>
-                </q-field>
-              </div>
-            </div>
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-4">
                 <q-field
                   label="Data ou Período?"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="data" label="Data do Documento" />
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="periodo" label="Período do Cadastro" />
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="mes" label="Mês do Cadastro" />
+                  <q-radio v-model="buscaMalote.tipoData" val="data" label="Data do Cadastro" />
+                  <q-radio v-model="buscaMalote.tipoData" val="periodo" label="Período do Cadastro" />
+                  <q-radio v-model="buscaMalote.tipoData" val="mes" label="Mês do Cadastro" />
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'data'">
+              <div class="col-md-4" v-show="buscaMalote.tipoData === 'data'">
                 <q-field
-                  label="Data do Documento"
+                  label="Data do Cadastro"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataDocumento" name="date"/>
+                  <q-input autocomplete="off" type="date" v-model="buscaMalote.dataCadastro" name="date"/>
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+              <div class="col-md-4" v-show="buscaMalote.tipoData === 'periodo'">
                 <q-field
                   label="Data inicial"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataInicial" name="date"/>
+                  <q-input autocomplete="off" type="date" v-model="buscaMalote.dataInicial" name="date"/>
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+              <div class="col-md-4" v-show="buscaMalote.tipoData === 'periodo'">
                 <q-field
                   label="Data Final"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataFinal" name="date"/>
+                  <q-input autocomplete="off" type="date" v-model="buscaMalote.dataFinal" name="date"/>
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'mes'">
+              <div class="col-md-4" v-show="buscaMalote.tipoData === 'mes'">
                 <q-field
                   label="Mês do cadastro"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="month" v-model="buscaProtocoloEntrada.mesCadastro" name="date"/>
+                  <q-input autocomplete="off" type="month" v-model="buscaMalote.mesCadastro" name="date"/>
                 </q-field>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
+            </div> -->
+              <div class="col-md-3">
                 <q-field class="form-input"
                   label="Origem"
                   orientation="vertical"
                 >
-                  <q-input autocomplete="on" type="text" v-model="buscaProtocoloEntrada.origem" name="origem" >
-                    <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                    />
-                  </q-input>
+                  <q-select
+                    v-model="buscaMalote.setor"
+                    :options="optionsSetor"
+                    filter
+                    autofocus-filter
+                    filter-placeholder="Selecione o setor"
+                    name="select"
+                  />
                 </q-field>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-3">
                 <q-field class="form-input"
                   label="Destino"
                   orientation="vertical"
                 >
                   <q-select
-                    v-model="buscaProtocoloEntrada.setor"
-                    :options="optionsSetor"
+                    v-model="buscaMalote.rotaEndereco"
+                    :options="optionsRotaEndereco"
                     filter
                     autofocus-filter
-                    filter-placeholder="Selecione o setor"
+                    filter-placeholder="Selecione o Endereço"
                     name="select"
                   />
                 </q-field>
@@ -181,12 +210,27 @@
       </div>
     </form>
     <br>
+    <q-card v-show="malote.protocolo">
+      <q-card-title>
+        <strong>Malote nº {{malote.protocolo}}</strong>
+      </q-card-title>
+      <q-card-separator />
+      <q-card-main>
+        <div class="row">
+          <div class="col-3"><strong>Data:</strong> {{malote.data}}</div>
+          <div class="col-3"><strong>Lacre:</strong> {{malote.lacre}}</div>
+          <div class="col-3"><strong>Bolsa:</strong> {{malote.numeroBolsa}}</div>
+          <div class="col-3"><strong>Rota:</strong> {{malote.rotaDescricao}}</div>
+        </div>
+      </q-card-main>
+    </q-card>
+    <br>
     <div>
 
-      <q-table title="Listagem de Registros"
+      <q-table title="Listagem de Documentos"
         :data="registros"
         :columns="tabelaColunas"
-        row-key="protocoloEntrada"
+        row-key="maloteDocumento"
         :loading="carregandoLista"
         :separator="tabelaSeparador"
         no-data-label="Sem registros encontrados"
@@ -231,9 +275,10 @@
           />
         </template>
         <q-td slot="body-cell-editar" slot-scope="props" :props="props">
-          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/>
-          <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/> -->
+          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"/>
+          <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"/> -->
         </q-td>
+
       </q-table>
       <!-- <q-inner-loading :visible="carregandoLista">
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
@@ -241,20 +286,20 @@
     </div>
 
     <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
-      possoGravarProtocoloEntrada ||
-      possoExcluirProtocoloEntrada
+      possoGravarMalote ||
+      possoExcluirMalote
     ">
       <q-fab color="primary" active-icon="close" direction="up" icon="expand less">
         <q-tooltip slot="tooltip" anchor="center left" self="center right" :offset="[20, 0]">
           Botões de ação
         </q-tooltip>
-        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarProtocoloEntrada || possoAlterarProtocoloEntrada">
+        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarMalote || possoAlterarMalote">
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">{{ botaoSalvarAlterar }}</q-tooltip>
         </q-fab-action>
-        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarProtocoloEntrada">
+        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarMalote">
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Novo</q-tooltip>
         </q-fab-action>
-        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirProtocoloEntrada">
+        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirMalote">
           <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Excluir</q-tooltip>
         </q-fab-action>
       </q-fab>
@@ -286,20 +331,22 @@
 </template>
 
 <script>
-// import { required } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
-import BuscaProtocoloEntrada from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntrada'
-import buscaProtocoloEntradaService from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntradaService'
+import BuscaMalote from 'src/services/buscaMalote/BuscaMalote'
+import buscaMaloteService from 'src/services/buscaMalote/BuscaMaloteService'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
+import Malote from 'src/services/malote/Malote'
 import Endereco from 'src/services/endereco/Endereco'
+import RotaEndereco from 'src/services/rotaEndereco/RotaEndereco'
 import Setor from 'src/services/setor/Setor'
 import { filter } from 'quasar'
 
 export default {
-  name: 'ConsultaProtocoloEntrada',
+  name: 'ConsultaMalote',
   directives: {
     mask
   },
@@ -309,19 +356,28 @@ export default {
     return {
       modalRelatorio: false,
       linkRelatorio: '',
+      valorTotal: 0,
       tipoDocumento: new TipoDocumento(),
       endereco: new Endereco(),
+      rotaEndereco: new RotaEndereco(),
       setor: new Setor(),
+      malote: new Malote(),
       optionsLoading: false,
       optionsSetor: [],
       optionsAno: [],
-      optionsEndereco: [],
+      optionsRotaEndereco: [],
       optionsTipoDocumento: [],
       busca: '',
-      buscaProtocoloEntrada: new BuscaProtocoloEntrada(),
+      buscaMalote: new BuscaMalote(),
       carregandoLista: false,
       registros: [],
-      tipoConsulta: 'documento',
+      tipoConsulta: 'protocolo',
+      optionsTipoRelatorio: [
+        {
+          label: 'Listagem de Malote',
+          value: 'listagemDeMalote'
+        }
+      ],
       optionsConsulta: [
         {
           label: 'Número do Protocolo',
@@ -333,84 +389,20 @@ export default {
         }
       ],
       tabelaSeparador: 'horizontal',
-      colunasVisiveis: ['numero', 'dataDocumento', 'origem', 'assunto', 'destino', 'dataCadastro'],
-      tabelaColunas: [
-        {
-          name: 'protocolo',
-          required: true,
-          label: 'Prot.',
-          align: 'left',
-          field: 'protocolo',
-          sortable: true
-        },
-        {
-          name: 'tipoDocumento',
-          required: true,
-          label: 'Tipo Doc.',
-          align: 'left',
-          field: 'tipoDocumento',
-          sortable: true
-        },
-        {
-          name: 'numero',
-          label: 'Nº',
-          align: 'left',
-          field: 'numero'
-        },
-        {
-          name: 'dataDocumento',
-          label: 'Data Doc.',
-          align: 'left',
-          field: 'dataDocumento',
-          sortable: true
-        },
-        {
-          name: 'origem',
-          label: 'Origem',
-          align: 'left',
-          field: 'origem',
-          sortable: true
-        },
-        {
-          name: 'assunto',
-          label: 'Assunto',
-          align: 'left',
-          field: 'assunto',
-          sortable: true
-        },
-        {
-          name: 'destino',
-          label: 'Destino',
-          align: 'left',
-          field: 'destino',
-          sortable: true
-        },
-        {
-          name: 'dataCadastro',
-          label: 'Data do Cadastro',
-          align: 'left',
-          field: 'dataCadastro',
-          sortable: true
-        },
-        {
-          name: 'editar',
-          label: 'Editar',
-          align: 'center',
-          field: 'protocoloEntrada',
-          required: true
-        }
-      ]
+      colunasVisiveis: new BuscaMalote().setColunasVisiveisListagemMalotes(),
+      tabelaColunas: new BuscaMalote().setTabelaColunasListagemMalotes()
+
     }
   },
-  // validations: {
-  //   buscaProtocoloEntrada: {
-  //     ano: { required },
-  //     protocolo: { required }
-  //   }
-  // },
+  validations: {
+    buscaMalote: {
+      ano: { required },
+      protocolo: { required }
+    }
+  },
   methods: {
     parseEnderecos () {
-      return this.optionsEndereco.map(endereco => {
+      return this.optionsRotaEndereco.map(endereco => {
         // console.log(endereco)
 
         return {
@@ -436,18 +428,35 @@ export default {
         this.optionsAno = optionsAno
       } else {
         this.optionsAno = [{
-          label: 'Sem registros cadastrados, confira o cadastro de Protocolo de Entradas',
+          label: 'Sem registros cadastrados, confira o cadastro de Malotes',
           value: ''
         }]
       }
     },
 
     reset () {
-      this.buscaProtocoloEntrada = new BuscaProtocoloEntrada()
+      this.$v.buscaMalote.$reset()
+      this.buscaMalote = new BuscaMalote()
+      this.malote = new Malote()
+      this.registros = []
+      this.tabelaColunas = this.buscaMalote.setTabelaColunasListagemMalotes()
+      this.colunasVisiveis = this.buscaMalote.setColunasVisiveisListagemMalotes()
+    },
+    trocaRelatorio () {
+      this.buscaMalote = new BuscaMalote()
+      this.malote = new Malote()
+      this.registros = []
+      if (this.tipoConsulta === 'protocolo') {
+        this.tabelaColunas = this.buscaMalote.setTabelaColunasListagemMalotes()
+        this.colunasVisiveis = this.buscaMalote.setColunasVisiveisListagemMalotes()
+      } else if (this.tipoConsulta === 'documento') {
+        this.tabelaColunas = this.buscaMalote.setTabelaColunasDocumentosMalotes()
+        this.colunasVisiveis = this.buscaMalote.setColunasVisiveisDocumentosMalotes()
+      }
     },
     carrega (id) {
-      console.log('vou carregar o buscaProtocoloEntrada', id)
-      this.$router.push({ name: 'alterarProtocoloEntrada', params: { id } })
+      console.log('vou carregar o buscaMalote', id)
+      this.$router.push({ name: 'alterarMalote', params: { id } })
     },
     procurar () {
       this.$q.loading.show({
@@ -458,24 +467,26 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        // this.$v.buscaProtocoloEntrada.$touch()
-        // if (this.$v.buscaProtocoloEntrada.$error) {
-        //   this.$q.loading.hide()
-        //   this.$q.dialog({
-        //     title: 'Atenção',
-        //     message: 'Alguns campos precisam ser corrigidos.'
-        //   }).then(() => { }).catch(() => { })
-        //   return
-        // }
+        this.$v.buscaMalote.$touch()
+        if (this.$v.buscaMalote.$error) {
+          this.$q.loading.hide()
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Alguns campos precisam ser corrigidos.'
+          }).then(() => { }).catch(() => { })
+          return
+        }
 
-        if (this.buscaProtocoloEntrada.protocolo) {
-          buscaProtocoloEntradaService.seleciona(this.buscaProtocoloEntrada)
+        if (this.tipoConsulta === 'protocolo') {
+          buscaMaloteService.seleciona(this.buscaMalote)
             .then(result => {
               this.$q.loading.hide()
-              console.log('buscaProtocoloEntrada alterado com sucesso')
+              console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
-              this.registros = result.data
+              this.registros = result.data.maloteDocumentos
+              this.malote = result.data.malote
+
               this.$q.notify({
                 type: 'positive',
                 message: 'Estes foram os registros encontrados.',
@@ -483,10 +494,10 @@ export default {
               })
             })
         } else {
-          buscaProtocoloEntradaService.procuraDocumento(this.buscaProtocoloEntrada)
+          buscaMaloteService.procuraDocumento(this.buscaMalote)
             .then(result => {
               this.$q.loading.hide()
-              console.log('buscaProtocoloEntrada alterado com sucesso')
+              console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data
@@ -508,10 +519,10 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        buscaProtocoloEntradaService.relatorio(this.buscaProtocoloEntrada)
+        buscaMaloteService.relatorio(this.buscaMalote)
           .then(result => {
             this.$q.loading.hide()
-            console.log('buscaProtocoloEntrada alterado com sucesso')
+            console.log('buscaMalote alterado com sucesso')
             // this.listaDocumentos()
             console.log(result.data)
             this.linkRelatorio = result.data.link
@@ -526,43 +537,44 @@ export default {
     },
     listaDocumentos () {
       this.carregandoLista = true
-      buscaProtocoloEntradaService
+      buscaMaloteService
         .lista(this.malote)
         .then(result => {
           this.carregandoLista = false
-          console.log('carreguei a lista de buscaProtocoloEntradas')
+          console.log('carreguei a lista de buscaMalotes')
           this.preencheListaTabela(result.data.registros)
         })
     },
     preencheListaTabela (registros) {
       let lista = []
-      registros.forEach(buscaProtocoloEntrada => {
+      registros.forEach(buscaMalote => {
         lista.push({
-          id: buscaProtocoloEntrada.buscaProtocoloEntrada,
-          tipoDocumento: buscaProtocoloEntrada.tipoDocumentoDescricao,
-          numero: buscaProtocoloEntrada.numero,
-          origem: buscaProtocoloEntrada.setorDescricao,
-          destino: buscaProtocoloEntrada.codigoReduzido
+          id: buscaMalote.buscaMalote,
+          tipoDocumento: buscaMalote.tipoDocumentoDescricao,
+          numero: buscaMalote.numero,
+          origem: buscaMalote.setorDescricao,
+          destino: buscaMalote.codigoReduzido
         })
       })
-      this.listaDeProtocoloEntradas = lista
+      this.listaDeMalotes = lista
     }
   },
   computed: {
-    possoAbrirProtocoloEntrada: () => permissoes.abrir('protocoloEntrada')
+    possoAbrirMalote: () => permissoes.abrir('malote')
   },
   mounted () {
     // this.listaDocumentos()
 
     // this.optionsLoading = true
-    // this.buscaProtocoloEntrada.malote = this.malote
-    buscaProtocoloEntradaService.getOptions()
+    // this.buscaMalote.malote = this.malote
+    buscaMaloteService.getOptions()
       .then(result => {
         this.optionsLoading = false
         this.setOptionsAno(result.data.anos)
         this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
-        this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
+        this.optionsRotaEndereco = this.rotaEndereco.setOptions(result.data.rotaEndereco)
         this.optionsSetor = this.setor.setOptions(result.data.setor)
+        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
       })
   }
 }

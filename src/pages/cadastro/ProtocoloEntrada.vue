@@ -300,6 +300,8 @@ export default {
           this.$q.loading.hide()
           console.log('peguei o protocoloEntrada com sucesso')
           this.protocoloEntrada = Object.assign({}, this.protocoloEntrada, result.data)
+          this.$root.$emit('alteraUnicoRegistro', this.protocoloEntrada)
+
           this.confereAlterarExcluir()
         })
     },
@@ -341,6 +343,8 @@ export default {
           protocoloEntradaService.grava(this.protocoloEntrada)
             .then(result => {
               console.log('protocoloEntrada criado com sucesso')
+              console.log(result.data)
+
               this.protocoloEntrada.protocoloEntrada = result.data.protocoloEntrada.protocoloEntrada
               this.protocoloEntrada.usuarioCriador = result.data.protocoloEntrada.usuarioCriador
               this.$router.push('/protocoloEntradas/protocoloEntrada/' + result.data.protocoloEntrada.protocoloEntrada)

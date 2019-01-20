@@ -259,7 +259,7 @@
           <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarCorrespondencia', params: { id: props.row.correspondencia} }"/> -->
         </q-td>
 
-        <q-tr slot="bottom-row" slot-scope="props" v-show="buscaCorrespondencia.tipoRelatorio === 'listagemDeCorrespondencia'">
+        <q-tr slot="bottom-row" slot-scope="props" :props="props" v-show="buscaCorrespondencia.tipoRelatorio === 'listagemDeCorrespondencia'">
           <q-td colspan="100%">
             <strong class="float-right">Valor Total R$: {{ valorTotal }}</strong>
           </q-td>
@@ -540,10 +540,6 @@ export default {
       this.listaDeCorrespondencias = lista
     }
   },
-  props: [
-    'malote',
-    'rota'
-  ],
   computed: {
     possoAbrirCorrespondencia: () => permissoes.abrir('correspondencia')
   },

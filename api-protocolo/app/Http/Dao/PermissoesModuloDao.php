@@ -28,17 +28,17 @@ class PermissoesModuloDao
   }
 
   public static function lista($id) {
-    return DB::select("SELECT permissoesModulos.*, modulos.nomeHtml FROM permissoesModulos join modulos on modulos.modulo = permissoesModulos.modulo and permissoesModulos.categoriaUsuario = {$id}");
+    return DB::select("SELECT permissoesModulos.*, modulos.nomeHtml FROM permissoesModulos join modulos on modulos.modulo = permissoesModulos.modulo and permissoesModulos.categoriaUsuario = '{$id}'");
   }
 
   public static function apaga($id) {
-    return DB::update("DELETE from permissoesModulos where categoriaUsuario = {$id}");
+    return DB::update("DELETE from permissoesModulos where categoriaUsuario = '{$id}'");
   }
 
   public static function verificaPermissoes($dados) {
     return DB::select("SELECT permissoesModulos.* from permissoesModulos
-     JOIN modulos on modulos.modulo = permissoesModulos.modulo and modulos.nomeHtml = '${dados.modulo}'
-     join categoriasModulos on categoriasModulos.categoriaModulo = modulos.categoriaModulo
+      JOIN modulos on modulos.modulo = permissoesModulos.modulo and modulos.nomeHtml = '${dados.modulo}'
+      join categoriasModulos on categoriasModulos.categoriaModulo = modulos.categoriaModulo
       and categoriaUsuario = (select categoriaUsuario from usuarios where usuario = '{$dados['usuario']}')");
   }
 

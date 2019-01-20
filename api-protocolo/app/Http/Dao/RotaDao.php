@@ -24,7 +24,7 @@ class RotaDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT rota, codigo, descricao, usuarioCriador FROM rotas WHERE rota = {$id} AND ativo = 1");
+      return DB::select("SELECT rota, codigo, descricao, usuarioCriador FROM rotas WHERE rota = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {

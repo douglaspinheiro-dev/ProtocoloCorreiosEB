@@ -6,7 +6,10 @@ export default class RotaEndereco {
   }
 
   setOptions (enderecos) {
-    let optionsRotaEndereco = []
+    let optionsRotaEndereco = [{
+      label: '-------',
+      value: ''
+    }]
     if (enderecos.length > 0) {
       enderecos.map(option => optionsRotaEndereco.push(
         {

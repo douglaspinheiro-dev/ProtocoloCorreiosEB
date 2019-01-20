@@ -7,7 +7,7 @@
 
         <tr>
           <td colspan="6">
-            <h2>Listagem de Documentos de Entrada:</h2>
+            <h1>Listagem de Documentos de Entrada:</h1>
           </td>
         </tr>
 

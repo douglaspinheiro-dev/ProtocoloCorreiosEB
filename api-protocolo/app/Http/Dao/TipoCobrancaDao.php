@@ -23,7 +23,7 @@ class TipoCobrancaDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT categoriaCobranca as tipoCobranca, descricao, valor, usuarioCriador FROM categoriasCobrancas WHERE categoriaCobranca = {$id} AND ativo = 1");
+      return DB::select("SELECT categoriaCobranca as tipoCobranca, descricao, valor, usuarioCriador FROM categoriasCobrancas WHERE categoriaCobranca = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {

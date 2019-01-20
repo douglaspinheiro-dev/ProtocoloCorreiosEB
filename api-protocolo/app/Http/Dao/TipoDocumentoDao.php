@@ -24,7 +24,7 @@ class TipoDocumentoDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT categoriaDocumento as tipoDocumento, codigo, descricao, usuarioCriador FROM categoriasDocumentos WHERE categoriaDocumento = {$id} AND ativo = 1");
+      return DB::select("SELECT categoriaDocumento as tipoDocumento, codigo, descricao, usuarioCriador FROM categoriasDocumentos WHERE categoriaDocumento = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {

@@ -27,7 +27,7 @@ class SetorDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT * FROM setores WHERE setor = {$id} AND ativo = 1");
+      return DB::select("SELECT * FROM setores WHERE setor = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {

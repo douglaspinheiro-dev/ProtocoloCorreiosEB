@@ -3,29 +3,28 @@
     <q-layout-header>
       <q-toolbar>
         <botao-menu-left/>
-        <q-toolbar-title>Dashboard</q-toolbar-title>
+        <q-toolbar-title>Consultas</q-toolbar-title>
       </q-toolbar>
 
     </q-layout-header>
     <!-- content -->
     <q-tabs position="top" no-pane-border inverted>
       <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="" label="Inicio" />
       <q-tab slot="title" name="tab-2" icon="mail_outline" label="Correspondências"/>
       <q-tab slot="title" name="tab-3" icon="fas fa-file-alt" label="Entradas"/>
       <q-tab slot="title" name="tab-4" icon="move_to_inbox" label="Malotes"/>
 
       <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <h2> {{ getLogin }} </h2>
-      </q-tab-pane>
-
       <q-tab-pane name="tab-2">
         <consulta-correspondencia></consulta-correspondencia>
       </q-tab-pane>
 
       <q-tab-pane name="tab-3">
         <consulta-protocolo-entrada></consulta-protocolo-entrada>
+      </q-tab-pane>
+
+      <q-tab-pane name="tab-4">
+        <consulta-malote></consulta-malote>
       </q-tab-pane>
 
     </q-tabs>
@@ -84,12 +83,14 @@ import {
 } from 'vuelidate/lib/validators'
 import usuarioService from 'src/services/usuario/UsuarioService'
 import consultaCorrespondencia from 'src/components/BuscaCorrespondencia'
+import consultaMalote from 'src/components/BuscaMalote'
 import consultaProtocoloEntrada from 'src/components/BuscaProtocoloEntrada'
 export default {
   name: 'Dashboard',
   components: {
     BotaoMenuLeft,
     consultaCorrespondencia,
+    consultaMalote,
     consultaProtocoloEntrada
   },
   data () {

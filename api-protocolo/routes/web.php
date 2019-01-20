@@ -158,6 +158,20 @@ $app->group(
     );
 
     $app->group(
+      ['middleware' => 'malote'],
+      function() use ($app) {
+        $app->get('/busca-malotes', 'BuscaMaloteController@lista');
+        $app->get('/busca-malotes/documento', 'BuscaMaloteController@procuraDocumento');
+        $app->get('/busca-malotes/relatorio', 'BuscaMaloteController@relatorio');
+        $app->get('/busca-malotes/protocolo/{id}/ano/{ano}', 'BuscaMaloteController@seleciona');
+        $app->get('/busca-malotes/anos', 'BuscaMaloteController@listaAnos');
+        $app->get('/busca-malotes/options', 'BuscaMaloteController@options');
+        $app->get('/busca-malotes/protocoloentrada/{id}', 'BuscaMaloteController@seleciona');
+
+      }
+    );
+
+    $app->group(
       ['middleware' => 'correspondencia'],
       function() use ($app) {
         $app->delete('/correspondencias/correspondencia/{id}', 'CorrespondenciaController@apaga');

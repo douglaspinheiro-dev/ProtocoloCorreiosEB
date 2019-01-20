@@ -21,7 +21,7 @@ class GrupoUsuarioDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT categoriaUsuario as grupoUsuario, codigo, descricao FROM categoriasUsuarios WHERE categoriaUsuario = {$id} AND ativo = 1");
+      return DB::select("SELECT categoriaUsuario as grupoUsuario, codigo, descricao FROM categoriasUsuarios WHERE categoriaUsuario = '{$id}' AND ativo = 1");
     }
 
     public static function salva($dados) {
@@ -48,7 +48,7 @@ class GrupoUsuarioDao extends Dao
       from permissoesModulos
       JOIN modulos on modulos.modulo = permissoesModulos.modulo
       join categoriasUsuarios on permissoesModulos.categoriaUsuario = categoriasUsuarios.categoriaUsuario and categoriasUsuarios.ativo = 1
-      join categoriasModulos on categoriasModulos.categoriamodulo = modulos.categoriamodulo and permissoesModulos.categoriaUsuario = {$id}");
+      join categoriasModulos on categoriasModulos.categoriamodulo = modulos.categoriamodulo and permissoesModulos.categoriaUsuario = '{$id}'");
     }
 
     //

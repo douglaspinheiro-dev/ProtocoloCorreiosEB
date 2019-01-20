@@ -27,7 +27,7 @@ class EnderecoDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT * FROM enderecos WHERE endereco = {$id} AND ativo = 1");
+      return DB::select("SELECT * FROM enderecos WHERE endereco = '{$id}' AND ativo = 1");
     }
 
     public static function selecionaEnderecoPorCodigo($id) {

@@ -29,7 +29,7 @@
 
         <q-item link :to="{name: 'dashboard'}">
           <q-item-side icon="dashboard" />
-          <q-item-main label="Dashboard" sublabel="Graficos, estatisticas" />
+          <q-item-main label="Consultas" sublabel="Procurar documentos, imprimir Relatórios" />
         </q-item>
 
         <q-collapsible group="menuLinks" icon="settings" label="Sistema">

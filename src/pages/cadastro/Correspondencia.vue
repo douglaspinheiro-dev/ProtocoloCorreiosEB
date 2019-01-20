@@ -524,6 +524,8 @@ export default {
           this.$q.loading.hide()
           console.log('peguei o correspondencia com sucesso')
           this.correspondencia = Object.assign({}, this.correspondencia, result.data)
+          this.$root.$emit('alteraUnicoRegistro', this.correspondencia)
+
           this.confereAlterarExcluir()
         })
     },
@@ -559,7 +561,7 @@ export default {
               this.$root.$emit('alteraUnicoRegistro', this.correspondencia)
               this.$q.notify({
                 type: 'positive',
-                message: 'Protocolo de Entrada alterado com sucesso.',
+                message: 'Correspondência alterada com sucesso.',
                 timeout: 5000
               })
             })
@@ -572,7 +574,7 @@ export default {
               this.$router.push('/correspondencias/correspondencia/' + result.data.correspondencia.correspondencia)
               this.$q.notify({
                 type: 'positive',
-                message: 'Protocolo de Entrada criado com sucesso.',
+                message: 'Correspondência criada com sucesso.',
                 timeout: 5000
               })
               let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
@@ -610,7 +612,7 @@ export default {
               console.log('correspondencia removido com sucesso')
               this.$q.notify({
                 type: 'negative',
-                message: 'Protocolo de Entrada removido com sucesso.',
+                message: 'Correspondência removida com sucesso.',
                 timeout: 5000
               })
               this.$root.$emit('removeRegistro', this.correspondencia.correspondencia)

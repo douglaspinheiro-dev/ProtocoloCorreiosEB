@@ -16,9 +16,9 @@
           <!-- Content, in this case some <p> tags -->
           <q-item exact separator link highlight multiline v-for="(malote, index) in listaDeRegistros"  item :to="{ name: 'alterarMalote', params: { id: malote.malote} }" :key="index">
               <q-item-main>
-                <q-item-tile label> {{ `${malote.data} | ${malote.descricao}` }}</q-item-tile>
+                <q-item-tile label> {{ `${malote.data} | ${malote.rotaDescricao}` }}</q-item-tile>
               </q-item-main>
-              <q-item-side right :stamp="`Prot: ${malote.malote}`" />
+              <q-item-side right :stamp="`Prot: ${malote.protocolo}`" />
             <div slot="message" class="row justify-center" style="margin-bottom: 50px;">
               <q-spinner-dots :size="40" />
             </div>
@@ -104,11 +104,14 @@ export default {
       let idRegistro = this.registros.filter(registro => registro.malote === novoRegistro.malote)
       let id = this.registros.indexOf(idRegistro[0])
       this.registros[id] = new Malote(novoRegistro)
+      this.registros[id].rotaDescricao = novoRegistro.rotaDescricao
+
       this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
       let malote = new Malote(obj)
+      malote.rotaDescricao = obj.rotaDescricao
       this.registros.push(malote)
       this.listaDeRegistros = Object.assign({}, this.listaDeRegistros, this.registros)
     })

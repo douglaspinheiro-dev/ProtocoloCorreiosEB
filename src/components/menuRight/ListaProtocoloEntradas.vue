@@ -116,6 +116,8 @@ export default {
     })
 
     this.$root.$on('adicionaRegistroNaLista', (obj) => {
+      console.log(obj)
+
       let protocoloEntrada = new ProtocoloEntrada(obj)
       protocoloEntrada.dataDocumento = moment(obj.dataDocumento).format('L')
       protocoloEntrada.tipoDocumentoDescricao = obj.tipoDocumentoDescricao

@@ -2,7 +2,7 @@
 
     <!-- fim cabecalho -->
     <div class="page" style="font-size: 7pt">
-      <h1 style="text-align: center;">Controle de Registros de Postagens - <?= $periodo; ?><</h2>
+      <h1 style="text-align: center;">Controle de Registros de Postagens - <?= $periodo; ?><</h1>
 
       <table style="width: 100%; font-size: 8pt;">
         <tbody>

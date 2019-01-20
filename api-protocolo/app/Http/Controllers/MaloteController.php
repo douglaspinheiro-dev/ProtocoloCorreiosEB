@@ -59,9 +59,10 @@ class MaloteController extends Controller
     );
 
     $malote = $this->request->all();
+    $malote['anoCadastro'] = date( 'Y', strtotime($malote['data']) );
+    $malote['malote'] = md5(uniqid(rand(), true));
     $malote['usuarioCriador'] = $this->getUsuario();
     $results = MaloteDao::salva($malote);
-    $malote['malote'] = MaloteDao::last()->id;
     return response()->json(['malote' =>$malote], 201);
   }
 

@@ -8,7 +8,10 @@ export default class Setor {
   }
 
   setOptions (setores) {
-    let optionsSetor = []
+    let optionsSetor = [{
+      label: '-------',
+      value: ''
+    }]
     if (setores.length > 0) {
       setores.map(option => optionsSetor.push(
         {

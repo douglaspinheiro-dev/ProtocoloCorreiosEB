@@ -25,7 +25,7 @@ class UsuarioDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT usuario,nome,login, categoriaUsuario as grupoUsuario, usuarioCriador FROM usuarios WHERE usuario = {$id} AND ativo = 1");
+      return DB::select("SELECT usuario,nome,login, categoriaUsuario as grupoUsuario, usuarioCriador FROM usuarios WHERE usuario = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {

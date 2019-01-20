@@ -23,7 +23,7 @@ class TipoCorrespondenciaDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, descricao, valor, usuarioCriador FROM categoriasCorrespondencias WHERE categoriaCorrespondencia = {$id} AND ativo = 1");
+      return DB::select("SELECT categoriaCorrespondencia as tipoCorrespondencia, descricao, valor, usuarioCriador FROM categoriasCorrespondencias WHERE categoriaCorrespondencia = '{$id}' AND ativo = 1");
     }
 
     public static function apaga($dados) {

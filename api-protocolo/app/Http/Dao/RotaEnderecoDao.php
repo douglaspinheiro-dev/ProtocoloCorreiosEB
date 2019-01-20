@@ -19,23 +19,28 @@ class RotaEnderecoDao extends Dao
     public static function lista($id) {
       return DB::select("SELECT rotasEnderecos.*, enderecos.* FROM rotasEnderecos
       JOIN enderecos ON rotasEnderecos.endereco = enderecos.endereco AND
-      rotasEnderecos.rota = {$id} ORDER BY rotasEnderecos.endereco");
+      rotasEnderecos.rota = '{$id}' ORDER BY rotasEnderecos.endereco");
+    }
+
+    public static function listaRotasEnderecos() {
+      return DB::select("SELECT rotasEnderecos.*, enderecos.* FROM rotasEnderecos
+      JOIN enderecos ON rotasEnderecos.endereco = enderecos.endereco ORDER BY rotasEnderecos.endereco");
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT * FROM rotasEnderecos WHERE rota = {$id}");
+      return DB::select("SELECT * FROM rotasEnderecos WHERE rota = '{$id}'");
     }
 
     public static function selecionaEndereco($id) {
-      return DB::select("SELECT * FROM rotasEnderecos WHERE endereco = {$id}");
+      return DB::select("SELECT * FROM rotasEnderecos WHERE endereco = '{$id}'");
     }
 
     public static function apaga($id) {
-      return DB::delete("DELETE FROM rotasEnderecos WHERE rotaEndereco = {$id}");
+      return DB::delete("DELETE FROM rotasEnderecos WHERE rotaEndereco = '{$id}'");
     }
 
     public static function apagaEndereco($id) {
-      return DB::delete("DELETE FROM rotasEnderecos WHERE endereco = {$id}");
+      return DB::delete("DELETE FROM rotasEnderecos WHERE endereco = '{$id}'");
     }
 
     public static function salva($dados) {

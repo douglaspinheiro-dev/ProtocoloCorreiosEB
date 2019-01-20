@@ -8,7 +8,10 @@ export default class TipoDocumento {
   }
 
   setOptions (tipoDocumentos) {
-    let optionsTipoDocumento = []
+    let optionsTipoDocumento = [{
+      label: '-------',
+      value: ''
+    }]
     if (tipoDocumentos.length > 0) {
       tipoDocumentos.map(option => optionsTipoDocumento.push(
         {

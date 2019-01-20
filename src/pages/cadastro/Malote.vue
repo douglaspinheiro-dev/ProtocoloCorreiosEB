@@ -33,7 +33,7 @@
                 <div class="row">
                   <div class="col-md-2">
                     <q-field label="Nº" orientation="vertical" class="form-input">
-                      {{malote.malote}}
+                      {{malote.protocolo}}
                     </q-field>
                   </div>
                   <div class="col-md-4">
@@ -227,6 +227,8 @@ export default {
           this.$q.loading.hide()
           console.log('peguei o malote com sucesso')
           this.malote = Object.assign({}, this.malote, result.data)
+          this.$root.$emit('alteraUnicoRegistro', this.malote)
+
           this.confereAlterarExcluir()
           this.selectedTab = 'tab-1'
         })
