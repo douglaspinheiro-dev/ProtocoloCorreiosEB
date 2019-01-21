@@ -34,7 +34,9 @@ class MaloteDao extends Dao
   }
 
   public static function seleciona($id) {
-    return DB::select("SELECT * FROM malotes WHERE malote = '{$id}' AND ativo = 1");
+    return DB::select("SELECT malotes.* , rotas.descricao as rotaDescricao FROM malotes
+    JOIN rotas ON rotas.rota = malotes.rota
+    AND malotes.malote = '{$id}' AND malotes.ativo = 1");
   }
 
   public static function apaga($dados) {

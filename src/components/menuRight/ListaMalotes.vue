@@ -58,8 +58,9 @@ export default {
             console.log('sem registros')
             this.listaDeRegistros = [{
               data: '',
-              descricao: 'Sem registros encontrados',
-              malote: ''
+              rotaDescricao: 'Sem registros encontrados',
+              malote: '',
+              protocolo: ''
             }]
             this.registros = []
             this.$refs.infiniteScroll.stop()

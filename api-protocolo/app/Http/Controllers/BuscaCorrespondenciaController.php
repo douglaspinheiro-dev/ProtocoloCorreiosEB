@@ -46,7 +46,11 @@ class BuscaCorrespondenciaController extends Controller
       'id' => $id,
       'ano' => $ano
     ];
-    $results = CorrespondenciaDao::selecionaPorAno($dados);
+    if ($dados['tipoRelatorio'] === 'listagemDeCorrespondencia') {
+      $results = CorrespondenciaDao::selecionaPorAno($dados);
+    } else {
+      $results = CorrespondenciaDao::selecionaPorAnoComRastreio($dados);
+    }
     return response()->json($results, 200);
   }
 
@@ -65,7 +69,11 @@ class BuscaCorrespondenciaController extends Controller
       $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
     }
 
-    $results = CorrespondenciaDao::procuraCorrespondencia($dados);
+    if ($dados['tipoRelatorio'] === 'listagemDeCorrespondencia') {
+      $results = CorrespondenciaDao::procuraCorrespondencia($dados);
+    } else {
+      $results = CorrespondenciaDao::procuraCorrespondenciaComRastreio($dados);
+    }
 
     $valorTotal = 0;
     foreach ($results as $row) {
@@ -88,7 +96,11 @@ class BuscaCorrespondenciaController extends Controller
         'id' => $dados['protocolo'],
         'ano' => $dados['ano']
       ];
-      $results = CorrespondenciaDao::selecionaPorAno($dados);
+      if ($dados['tipoRelatorio'] === 'listagemDeCorrespondencia') {
+        $results = CorrespondenciaDao::selecionaPorAno($dados);
+      } else {
+        $results = CorrespondenciaDao::selecionaPorAnoComRastreio($dados);
+      }
     } else {
       // pesquisa o doc e tras os dados
       $dados['consultaData'] = '';
@@ -115,7 +127,11 @@ class BuscaCorrespondenciaController extends Controller
         $data = explode("-", $dados['mesCadastro']);
         $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
       }
-      $results = CorrespondenciaDao::procuraCorrespondencia($dados);
+      if ($dados['tipoRelatorio'] === 'listagemDeCorrespondencia') {
+        $results = CorrespondenciaDao::procuraCorrespondencia($dados);
+      } else {
+        $results = CorrespondenciaDao::procuraCorrespondenciaComRastreio($dados);
+      }
     }
 
     $relatorioView;

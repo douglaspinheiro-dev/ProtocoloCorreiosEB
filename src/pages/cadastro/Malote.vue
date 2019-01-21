@@ -227,6 +227,8 @@ export default {
           this.$q.loading.hide()
           console.log('peguei o malote com sucesso')
           this.malote = Object.assign({}, this.malote, result.data)
+          console.log(result.data)
+
           this.$root.$emit('alteraUnicoRegistro', this.malote)
 
           this.confereAlterarExcluir()

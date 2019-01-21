@@ -41,11 +41,16 @@ class CorrespondenciaDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT *,
-        categoriaDocumento as tipoDocumento,
-        categoriaCorrespondencia as tipoCorrespondencia,
-        categoriaCobranca as tipoCobranca
-        FROM correspondencias WHERE correspondencia = '{$id}' AND ativo = 1");
+      return DB::select("SELECT correspondencias.*,
+        correspondencias.categoriaDocumento as tipoDocumento,
+        correspondencias.categoriaCorrespondencia as tipoCorrespondencia,
+        correspondencias.categoriaCobranca as tipoCobranca,
+        setores.codigo as setorDescricao,
+        categoriasDocumentos.codigo as tipoDocumentoDescricao
+        FROM correspondencias
+        JOIN setores on correspondencias.setor = setores.setor
+        JOIN categoriasDocumentos on correspondencias.categoriaDocumento = categoriasDocumentos.categoriaDocumento
+        AND correspondencias.correspondencia = '{$id}' AND correspondencias.ativo = 1");
     }
 
     public static function apaga($dados) {
@@ -167,6 +172,72 @@ class CorrespondenciaDao extends Dao
         ");
     }
 
+    public static function procuraCorrespondenciaComRastreio($obj) {
+      ChromePhp::log("
+      SELECT
+        correspondencias.protocolo,
+        correspondencias.correspondencia,
+        correspondencias.numeroDocumento,
+        correspondencias.destino,
+        DATE_FORMAT(correspondencias.dataCadastro, '%d/%m/%Y') as dataCadastro,
+        correspondencias.setor,
+        correspondencias.logradouro,
+        correspondencias.cidade,
+        correspondencias.cep,
+        correspondencias.codigoRastreio,
+        correspondencias.valorTotal,
+        categoriasDocumentos.codigo as tipoDocumento,
+        categoriasCorrespondencias.descricao as tipoCorrespondencia,
+        CONCAT(setores.codigo, ' - ', correspondencias.remetente) as origemRemetente
+      FROM correspondencias
+      JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = correspondencias.categoriaDocumento
+      JOIN categoriasCorrespondencias ON categoriasCorrespondencias.categoriaCorrespondencia = correspondencias.categoriaCorrespondencia
+      JOIN setores ON setores.setor = correspondencias.setor
+      AND
+      (
+        correspondencias.numero LIKE '%{$obj['numero']}%' AND
+        {$obj['consultaData']}
+        correspondencias.setor LIKE '%{$obj['setor']}%' AND
+        correspondencias.destino LIKE '%{$obj['destino']}%'
+      )
+      AND correspondencias.ativo = 1
+      AND correspondencias.codigoRastreio <> ''
+      ORDER BY correspondencias.dataCadastro desc LIMIT 1000
+      ");
+
+      return DB::select("
+        SELECT
+          correspondencias.protocolo,
+          correspondencias.correspondencia,
+          correspondencias.numeroDocumento,
+          correspondencias.destino,
+          DATE_FORMAT(correspondencias.dataCadastro, '%d/%m/%Y') as dataCadastro,
+          correspondencias.setor,
+          correspondencias.logradouro,
+          correspondencias.cidade,
+          correspondencias.cep,
+          correspondencias.codigoRastreio,
+          correspondencias.valorTotal,
+          categoriasDocumentos.codigo as tipoDocumento,
+          categoriasCorrespondencias.descricao as tipoCorrespondencia,
+          CONCAT(setores.codigo, ' - ', correspondencias.remetente) as origemRemetente
+        FROM correspondencias
+        JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = correspondencias.categoriaDocumento
+        JOIN categoriasCorrespondencias ON categoriasCorrespondencias.categoriaCorrespondencia = correspondencias.categoriaCorrespondencia
+        JOIN setores ON setores.setor = correspondencias.setor
+        AND
+        (
+          correspondencias.numero LIKE '%{$obj['numero']}%' AND
+          {$obj['consultaData']}
+          correspondencias.setor LIKE '%{$obj['setor']}%' AND
+          correspondencias.destino LIKE '%{$obj['destino']}%'
+        )
+        AND correspondencias.ativo = 1
+        AND correspondencias.codigoRastreio <> ''
+        ORDER BY correspondencias.dataCadastro desc LIMIT 1000
+        ");
+    }
+
     public static function selecionaPorAno($dados) {
       return DB::select("
       SELECT
@@ -190,6 +261,33 @@ class CorrespondenciaDao extends Dao
     JOIN setores ON setores.setor = correspondencias.setor
       AND correspondencias.protocolo = '{$dados['id']}'
       AND correspondencias.anoCadastro = '{$dados['ano']}'
+      AND correspondencias.ativo = 1;");
+    }
+
+    public static function selecionaPorAnoComRastreio($dados) {
+      return DB::select("
+      SELECT
+      correspondencias.protocolo,
+      correspondencias.correspondencia,
+      correspondencias.numeroDocumento,
+      correspondencias.destino,
+      DATE_FORMAT(correspondencias.dataCadastro, '%d/%m/%Y') as dataCadastro,
+      correspondencias.setor,
+      correspondencias.logradouro,
+      correspondencias.cidade,
+      correspondencias.cep,
+      correspondencias.codigoRastreio,
+      correspondencias.valorTotal,
+      categoriasDocumentos.codigo as tipoDocumento,
+      categoriasCorrespondencias.descricao as tipoCorrespondencia,
+      CONCAT(setores.codigo, ' - ', correspondencias.remetente) as origemRemetente
+    FROM correspondencias
+    JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = correspondencias.categoriaDocumento
+    JOIN categoriasCorrespondencias ON categoriasCorrespondencias.categoriaCorrespondencia = correspondencias.categoriaCorrespondencia
+    JOIN setores ON setores.setor = correspondencias.setor
+      AND correspondencias.protocolo = '{$dados['id']}'
+      AND correspondencias.anoCadastro = '{$dados['ano']}'
+      AND correspondencias.codigoRastreio <> ''
       AND correspondencias.ativo = 1;");
     }
     //

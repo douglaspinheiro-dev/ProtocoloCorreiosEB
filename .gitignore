@@ -21,3 +21,7 @@ yarn-error.log*
 apiEventos/logs/*
 
 *.log
+
+api-protocolo/api-protocolo\.tar
+
+api-protocolo/vendor\.tar

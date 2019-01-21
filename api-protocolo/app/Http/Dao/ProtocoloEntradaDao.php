@@ -62,7 +62,13 @@ class ProtocoloEntradaDao extends Dao
     }
 
     public static function seleciona($id) {
-      return DB::select("SELECT *, categoriaDocumento as tipoDocumento FROM protocoloEntradas WHERE protocoloEntrada = '{$id}' AND ativo = 1");
+      return DB::select("SELECT
+        protocoloEntradas.*,
+        protocoloEntradas.categoriaDocumento as tipoDocumento,
+        categoriasDocumentos.codigo as tipoDocumentoDescricao
+        FROM protocoloEntradas
+        JOIN categoriasDocumentos on protocoloEntradas.categoriaDocumento = categoriasDocumentos.categoriaDocumento
+        AND protocoloEntradas.protocoloEntrada = '{$id}' AND protocoloEntradas.ativo = 1");
     }
 
     public static function selecionaPorAno($dados) {
