@@ -161,6 +161,13 @@ export default class BuscaCorrespondencia {
         label: 'Nº',
         align: 'left',
         field: 'numeroDocumento'
+      },
+      {
+        name: 'editar',
+        label: 'Editar',
+        align: 'center',
+        field: 'correspondencia',
+        required: true
       }
     ]
   }

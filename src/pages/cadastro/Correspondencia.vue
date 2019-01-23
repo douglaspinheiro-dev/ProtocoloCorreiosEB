@@ -71,7 +71,7 @@
                   :error="$v.correspondencia.numeroDocumento.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="off" type="text" v-model="correspondencia.numeroDocumento" @input="$v.correspondencia.numeroDocumento.$touch()" name="numero"/>
+                  <q-input type="text" v-model="correspondencia.numeroDocumento" @input="$v.correspondencia.numeroDocumento.$touch()" name="numero"/>
                 </q-field>
               </div>
 
@@ -82,7 +82,7 @@
                   label="Codigo de Rastreio"
                   orientation="vertical"
                 >
-                  <q-input autocomplete="off" type="text" v-model="correspondencia.codigoRastreio" name="text" />
+                  <q-input type="text" v-model="correspondencia.codigoRastreio" name="text" />
                 </q-field>
               </div>
               <div class="col-md-4">
