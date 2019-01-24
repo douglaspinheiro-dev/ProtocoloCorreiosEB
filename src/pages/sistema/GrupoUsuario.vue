@@ -118,9 +118,9 @@
 
             </q-collapsible>
 
-            <q-collapsible icon="settings" label="Cadastros">
+            <q-collapsible icon="folder shared" label="Cadastros">
 
-              <q-collapsible icon="person" label="Tipos de Documentos">
+              <q-collapsible icon="fas fa-file-contract" label="Tipos de Documentos">
                 <div class="row">
                   <div class="col-3">
                     <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoDocumento" val="abrir" label="Abrir" />
@@ -133,6 +133,40 @@
                   </div>
                   <div class="col-3">
                     <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoDocumento" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="fas fa-envelope" label="Tipos de Correspondências">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCorrespondencia" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCorrespondencia" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCorrespondencia" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCorrespondencia" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="attach_money" label="Tipos de Cobranças">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCobranca" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCobranca" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCobranca" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.tipoCobranca" val="excluir" label="Excluir" />
                   </div>
                 </div>
               </q-collapsible>
@@ -150,6 +184,91 @@
                   </div>
                   <div class="col-3">
                     <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.endereco" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="work_outline" label="Setores Internos">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.setor" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.setor" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.setor" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.setor" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="fas fa-file-alt" label="Protocolo de Entrada">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.protocoloEntrada" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.protocoloEntrada" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.protocoloEntrada" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.protocoloEntrada" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="fas fa-map-marked-alt" label="Rotas">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.rota" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.rota" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.rota" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.rota" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="move_to_inbox" label="Malotes">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.malote" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.malote" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.malote" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.malote" val="excluir" label="Excluir" />
+                  </div>
+                </div>
+              </q-collapsible>
+
+              <q-collapsible icon="mail_outline" label="Correspondências">
+                <div class="row">
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.correspondencia" val="abrir" label="Abrir" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.correspondencia" val="inserir" label="Salvar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.correspondencia" val="alterar" label="Alterar" />
+                  </div>
+                  <div class="col-3">
+                    <q-toggle class="toggleGrupoUsuario" v-model="grupoUsuario.permissoes.correspondencia" val="excluir" label="Excluir" />
                   </div>
                 </div>
               </q-collapsible>
