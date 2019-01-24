@@ -3,14 +3,32 @@
     <form @submit.prevent="procurar">
       <div class="row barraBotoes">
         <div class="col-md-6 linhaBotoes">
-          <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
-          <q-btn small type="submit" icon="search">Procurar</q-btn>
-          <q-btn small type="button" @click="gerarRelatorio" icon="search" v-show="tipoConsulta === 'protocolo'">Imprimir</q-btn>
+          <q-btn
+            small
+            type="reset"
+            @click="reset"
+            icon="add"
+          >Novo</q-btn>
+          <q-btn
+            small
+            type="submit"
+            icon="search"
+          >Procurar</q-btn>
+          <q-btn
+            small
+            type="button"
+            @click="gerarRelatorio"
+            icon="print"
+            v-show="tipoConsulta === 'protocolo'"
+          >Imprimir</q-btn>
         </div>
       </div>
       <div>
 
-        <q-collapsible label="Consulta" opened>
+        <q-collapsible
+          label="Consulta"
+          opened
+        >
           <!-- <div class="row">
             <div class="col-md-3">
               <q-field class="form-input"
@@ -44,7 +62,8 @@
               </q-field>
             </div> -->
             <div class="col-md-12">
-              <q-field class="form-input"
+              <q-field
+                class="form-input"
                 label="Tipo de Consulta"
                 orientation="vertical"
               >
@@ -60,7 +79,10 @@
               </q-field>
             </div>
           </div>
-          <div class="row" v-show="tipoConsulta === 'protocolo'">
+          <div
+            class="row"
+            v-show="tipoConsulta === 'protocolo'"
+          >
 
             <div class="col-md-3">
               <q-field
@@ -81,7 +103,8 @@
               </q-field>
             </div>
             <div class="col-md-3">
-              <q-field class="form-input"
+              <q-field
+                class="form-input"
                 label="Ano"
                 orientation="vertical"
               >
@@ -96,9 +119,10 @@
           </div>
           <div v-show="tipoConsulta === 'documento'">
 
-            <div class="row" >
+            <div class="row">
               <div class="col-md-3">
-                <q-field class="form-input"
+                <q-field
+                  class="form-input"
                   label="Tipo do Documento"
                   orientation="vertical"
                 >
@@ -119,11 +143,16 @@
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="text" v-model="buscaMalote.numero" name="number"/>
+                  <q-input
+                    autocomplete="off"
+                    type="text"
+                    v-model="buscaMalote.numero"
+                    name="number"
+                  />
                 </q-field>
               </div>
 
-            <!-- <div class="row">
+              <!-- <div class="row">
               <div class="col-md-4">
                 <q-field
                   label="Data ou Período?"
@@ -173,7 +202,8 @@
               </div>
             </div> -->
               <div class="col-md-3">
-                <q-field class="form-input"
+                <q-field
+                  class="form-input"
                   label="Origem"
                   orientation="vertical"
                 >
@@ -188,7 +218,8 @@
                 </q-field>
               </div>
               <div class="col-md-3">
-                <q-field class="form-input"
+                <q-field
+                  class="form-input"
                   label="Destino"
                   orientation="vertical"
                 >
@@ -227,7 +258,8 @@
     <br>
     <div>
 
-      <q-table title="Listagem de Documentos"
+      <q-table
+        title="Listagem de Documentos"
         :data="registros"
         :columns="tabelaColunas"
         row-key="maloteDocumento"
@@ -249,7 +281,10 @@
             class="col-6"
           />
         </template>
-        <template slot="top-right" slot-scope="props">
+        <template
+          slot="top-right"
+          slot-scope="props"
+        >
           <q-table-columns
             color="secondary"
             class="q-mr-sm"
@@ -269,13 +304,26 @@
             hide-underline
           />
           <q-btn
-            flat round dense
+            flat
+            round
+            dense
             :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             @click="props.toggleFullscreen"
           />
         </template>
-        <q-td slot="body-cell-editar" slot-scope="props" :props="props">
-          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"/>
+        <q-td
+          slot="body-cell-editar"
+          slot-scope="props"
+          :props="props"
+        >
+          <q-btn
+            type="button"
+            color="primary"
+            flat
+            round
+            icon="edit"
+            :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"
+          />
           <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"/> -->
         </q-td>
 
@@ -304,28 +352,36 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky> -->
-    <q-modal ref="modalRelatorio" maximized v-model="modalRelatorio">
-        <q-modal-layout
-          header-style="min-height: 100px"
-          content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
-          footer-class="bg-primary some-class"
-          footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-        >
-          <q-toolbar class="primary">
-            <q-btn flat @click="modalRelatorio = false">
-              <q-icon name="keyboard_arrow_left" />
-            </q-btn>
-            <div class="q-toolbar-title">
-              Relatório
-            </div>
-          </q-toolbar>
-          <iframe class="full-width full-height"
-            :src="linkRelatorio"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-        </q-modal-layout>
-      </q-modal>
+    <q-modal
+      ref="modalRelatorio"
+      maximized
+      v-model="modalRelatorio"
+    >
+      <q-modal-layout
+        header-style="min-height: 100px"
+        content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
+        footer-class="bg-primary some-class"
+        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
+      >
+        <q-toolbar class="primary">
+          <q-btn
+            flat
+            @click="modalRelatorio = false"
+          >
+            <q-icon name="keyboard_arrow_left" />
+          </q-btn>
+          <div class="q-toolbar-title">
+            Relatório
+          </div>
+        </q-toolbar>
+        <iframe
+          class="full-width full-height"
+          :src="linkRelatorio"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </q-modal-layout>
+    </q-modal>
 
   </q-page>
 </template>
@@ -335,7 +391,7 @@ import { required } from 'vuelidate/lib/validators'
 var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
-import {mask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
 import BuscaMalote from 'src/services/buscaMalote/BuscaMalote'
 import buscaMaloteService from 'src/services/buscaMalote/BuscaMaloteService'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
@@ -413,7 +469,7 @@ export default {
     },
     search (terms, done) {
       setTimeout(() => {
-        done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
+        done(filter(terms, { field: 'value', list: this.parseEnderecos() }))
       }, 1000)
     },
     setOptionsAno (anos) {

@@ -54,6 +54,15 @@ export default class Permissoes {
       'relatorios'
     ]
 
+    // Rotas
+    this.rota = [
+      'abrir',
+      'inserir',
+      'alterar',
+      'excluir',
+      'relatorios'
+    ]
+
     // SETORES INTERNOS
     this.setor = [
       'abrir',

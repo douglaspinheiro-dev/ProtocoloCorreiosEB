@@ -29,7 +29,7 @@ class UsuarioController extends Controller
   public function lista()
   {
 
-    $this->validate($this->request,['inicio' => 'required', 'fim' => 'required']);
+    $this->validate($this->request, ['inicio' => 'required', 'fim' => 'required']);
 
     $dados = $this->request->all();
     $results = UsuarioDao::lista($dados);
@@ -39,14 +39,14 @@ class UsuarioController extends Controller
       $fimDaLista = true;
     }
     return response()->json([
-      'fim'       => $fimDaLista,
+      'fim' => $fimDaLista,
       'registros' => $results,
     ], 200);
   }
 
   public function confereLogin()
   {
-    $this->validate($this->request,['login' => 'required']);
+    $this->validate($this->request, ['login' => 'required']);
     $login = $this->request->input('login');
     $results = UsuarioDao::confereLogin($login);
     return response()->json($results, 200);
@@ -60,7 +60,8 @@ class UsuarioController extends Controller
 
   public function salva()
   {
-    $this->validate($this->request,
+    $this->validate(
+      $this->request,
       [
         'nome' => 'required',
         'login' => 'required',
@@ -72,12 +73,13 @@ class UsuarioController extends Controller
     $usuario['usuarioCriador'] = $this->getUsuario();
     $results = UsuarioDao::salva($usuario);
     $usuario['usuario'] = UsuarioDao::last()->id;
-    return response()->json(['usuario' =>$usuario], 201);
+    return response()->json(['usuario' => $usuario], 201);
   }
 
   public function altera()
   {
-    $this->validate($this->request,
+    $this->validate(
+      $this->request,
       [
         'usuario' => 'required',
         'nome' => 'required',
@@ -89,12 +91,13 @@ class UsuarioController extends Controller
     $usuario = $this->request->all();
     $usuario['usuarioAlterador'] = $this->getUsuario();
     $results = UsuarioDao::altera($usuario);
-    return response()->json(['usuario' =>$usuario], 202);
+    return response()->json(['usuario' => $usuario], 202);
   }
 
   public function alteraSenha()
   {
-    $this->validate($this->request,
+    $this->validate(
+      $this->request,
       [
         'senhaAtual' => 'required',
         'senhaNova' => 'required'
@@ -118,7 +121,7 @@ class UsuarioController extends Controller
       ];
       return response()->json($response, 202);
     } else {
-      return response()->json(["message"=> 'dados inválidos'], 401);
+      return response()->json(["message" => 'dados inválidos'], 401);
     }
 
     $results = UsuarioDao::salva($usuario);
@@ -127,10 +130,11 @@ class UsuarioController extends Controller
 
   public function alteraSenhaOutroUsuario()
   {
-    $this->validate($this->request,
+    $this->validate(
+      $this->request,
       [
         'id' => 'required',
-        'senha' => 'required',
+        'password' => 'required',
         'usuarioCriador' => 'required'
       ]
     );

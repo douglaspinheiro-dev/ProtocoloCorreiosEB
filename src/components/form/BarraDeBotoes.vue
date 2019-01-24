@@ -24,7 +24,7 @@ export default {
       this.$emit('submit')
     },
     excluir () {
-      this.$emit('delete')
+      this.$emit('excluir')
     }
   }
 }

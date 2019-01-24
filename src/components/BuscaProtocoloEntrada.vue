@@ -3,14 +3,31 @@
     <form @submit.prevent="procurar">
       <div class="row barraBotoes">
         <div class="col-md-6 linhaBotoes">
-          <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
-          <q-btn small type="submit" icon="search">Procurar</q-btn>
-          <q-btn small type="button" @click="gerarRelatorio" icon="search">Imprimir</q-btn>
+          <q-btn
+            small
+            type="reset"
+            @click="reset"
+            icon="add"
+          >Novo</q-btn>
+          <q-btn
+            small
+            type="submit"
+            icon="search"
+          >Procurar</q-btn>
+          <q-btn
+            small
+            type="button"
+            @click="gerarRelatorio"
+            icon="print"
+          >Imprimir</q-btn>
         </div>
       </div>
       <div>
 
-        <q-collapsible label="Consulta" opened>
+        <q-collapsible
+          label="Consulta"
+          opened
+        >
           <div class="row">
             <!-- <div class="col-md-3">
               <q-field class="form-input"
@@ -30,7 +47,8 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <q-field class="form-input"
+              <q-field
+                class="form-input"
                 label="Tipo de Consulta"
                 orientation="vertical"
               >
@@ -46,7 +64,10 @@
               </q-field>
             </div>
           </div>
-          <div class="row" v-show="tipoConsulta === 'protocolo'">
+          <div
+            class="row"
+            v-show="tipoConsulta === 'protocolo'"
+          >
 
             <div class="col-md-3">
               <q-field
@@ -54,11 +75,17 @@
                 orientation="vertical"
                 class="form-input"
               >
-                <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.protocolo" name="number"/>
+                <q-input
+                  autocomplete="off"
+                  type="text"
+                  v-model="buscaProtocoloEntrada.protocolo"
+                  name="number"
+                />
               </q-field>
             </div>
             <div class="col-md-3">
-              <q-field class="form-input"
+              <q-field
+                class="form-input"
                 label="Ano"
                 orientation="vertical"
               >
@@ -73,7 +100,7 @@
           </div>
           <div v-show="tipoConsulta === 'documento'">
 
-            <div class="row" >
+            <div class="row">
 
               <div class="col-md-6">
                 <q-field
@@ -81,7 +108,12 @@
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.numero" name="number"/>
+                  <q-input
+                    autocomplete="off"
+                    type="text"
+                    v-model="buscaProtocoloEntrada.numero"
+                    name="number"
+                  />
                 </q-field>
               </div>
 
@@ -91,7 +123,12 @@
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="text" v-model="buscaProtocoloEntrada.assunto" name="text"/>
+                  <q-input
+                    autocomplete="off"
+                    type="text"
+                    v-model="buscaProtocoloEntrada.assunto"
+                    name="text"
+                  />
                 </q-field>
               </div>
             </div>
@@ -102,55 +139,105 @@
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="data" label="Data do Documento" />
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="periodo" label="Período do Cadastro" />
-                  <q-radio v-model="buscaProtocoloEntrada.tipoData" val="mes" label="Mês do Cadastro" />
+                  <q-radio
+                    v-model="buscaProtocoloEntrada.tipoData"
+                    val="data"
+                    label="Data do Documento"
+                  />
+                  <q-radio
+                    v-model="buscaProtocoloEntrada.tipoData"
+                    val="periodo"
+                    label="Período do Cadastro"
+                  />
+                  <q-radio
+                    v-model="buscaProtocoloEntrada.tipoData"
+                    val="mes"
+                    label="Mês do Cadastro"
+                  />
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'data'">
+              <div
+                class="col-md-4"
+                v-show="buscaProtocoloEntrada.tipoData === 'data'"
+              >
                 <q-field
                   label="Data do Documento"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataDocumento" name="date"/>
+                  <q-input
+                    autocomplete="off"
+                    type="date"
+                    v-model="buscaProtocoloEntrada.dataDocumento"
+                    name="date"
+                  />
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+              <div
+                class="col-md-4"
+                v-show="buscaProtocoloEntrada.tipoData === 'periodo'"
+              >
                 <q-field
                   label="Data inicial"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataInicial" name="date"/>
+                  <q-input
+                    autocomplete="off"
+                    type="date"
+                    v-model="buscaProtocoloEntrada.dataInicial"
+                    name="date"
+                  />
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'periodo'">
+              <div
+                class="col-md-4"
+                v-show="buscaProtocoloEntrada.tipoData === 'periodo'"
+              >
                 <q-field
                   label="Data Final"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="date" v-model="buscaProtocoloEntrada.dataFinal" name="date"/>
+                  <q-input
+                    autocomplete="off"
+                    type="date"
+                    v-model="buscaProtocoloEntrada.dataFinal"
+                    name="date"
+                  />
                 </q-field>
               </div>
-              <div class="col-md-4" v-show="buscaProtocoloEntrada.tipoData === 'mes'">
+              <div
+                class="col-md-4"
+                v-show="buscaProtocoloEntrada.tipoData === 'mes'"
+              >
                 <q-field
                   label="Mês do cadastro"
                   orientation="vertical"
                   class="form-input"
                 >
-                  <q-input autocomplete="off" type="month" v-model="buscaProtocoloEntrada.mesCadastro" name="date"/>
+                  <q-input
+                    autocomplete="off"
+                    type="month"
+                    v-model="buscaProtocoloEntrada.mesCadastro"
+                    name="date"
+                  />
                 </q-field>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <q-field class="form-input"
+                <q-field
+                  class="form-input"
                   label="Origem"
                   orientation="vertical"
                 >
-                  <q-input autocomplete="on" type="text" v-model="buscaProtocoloEntrada.origem" name="origem" >
+                  <q-input
+                    autocomplete="on"
+                    type="text"
+                    v-model="buscaProtocoloEntrada.origem"
+                    name="origem"
+                  >
                     <q-autocomplete
                       @search="search"
                       :min-characters="3"
@@ -159,7 +246,8 @@
                 </q-field>
               </div>
               <div class="col-md-6">
-                <q-field class="form-input"
+                <q-field
+                  class="form-input"
                   label="Destino"
                   orientation="vertical"
                 >
@@ -183,7 +271,8 @@
     <br>
     <div>
 
-      <q-table title="Listagem de Registros"
+      <q-table
+        title="Listagem de Registros"
         :data="registros"
         :columns="tabelaColunas"
         row-key="protocoloEntrada"
@@ -205,7 +294,10 @@
             class="col-6"
           />
         </template>
-        <template slot="top-right" slot-scope="props">
+        <template
+          slot="top-right"
+          slot-scope="props"
+        >
           <q-table-columns
             color="secondary"
             class="q-mr-sm"
@@ -225,13 +317,26 @@
             hide-underline
           />
           <q-btn
-            flat round dense
+            flat
+            round
+            dense
             :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             @click="props.toggleFullscreen"
           />
         </template>
-        <q-td slot="body-cell-editar" slot-scope="props" :props="props">
-          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/>
+        <q-td
+          slot="body-cell-editar"
+          slot-scope="props"
+          :props="props"
+        >
+          <q-btn
+            type="button"
+            color="primary"
+            flat
+            round
+            icon="edit"
+            :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"
+          />
           <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarProtocoloEntrada', params: { id: props.row.protocoloEntrada} }"/> -->
         </q-td>
       </q-table>
@@ -259,28 +364,36 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky> -->
-    <q-modal ref="modalRelatorio" maximized v-model="modalRelatorio">
-        <q-modal-layout
-          header-style="min-height: 100px"
-          content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
-          footer-class="bg-primary some-class"
-          footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-        >
-          <q-toolbar class="primary">
-            <q-btn flat @click="modalRelatorio = false">
-              <q-icon name="keyboard_arrow_left" />
-            </q-btn>
-            <div class="q-toolbar-title">
-              Relatório
-            </div>
-          </q-toolbar>
-          <iframe class="full-width full-height"
-            :src="linkRelatorio"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-        </q-modal-layout>
-      </q-modal>
+    <q-modal
+      ref="modalRelatorio"
+      maximized
+      v-model="modalRelatorio"
+    >
+      <q-modal-layout
+        header-style="min-height: 100px"
+        content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
+        footer-class="bg-primary some-class"
+        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
+      >
+        <q-toolbar class="primary">
+          <q-btn
+            flat
+            @click="modalRelatorio = false"
+          >
+            <q-icon name="keyboard_arrow_left" />
+          </q-btn>
+          <div class="q-toolbar-title">
+            Relatório
+          </div>
+        </q-toolbar>
+        <iframe
+          class="full-width full-height"
+          :src="linkRelatorio"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </q-modal-layout>
+    </q-modal>
 
   </q-page>
 </template>
@@ -290,7 +403,7 @@
 var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
-import {mask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
 import BuscaProtocoloEntrada from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntrada'
 import buscaProtocoloEntradaService from 'src/services/buscaProtocoloEntrada/BuscaProtocoloEntradaService'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
@@ -421,7 +534,7 @@ export default {
     },
     search (terms, done) {
       setTimeout(() => {
-        done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
+        done(filter(terms, { field: 'value', list: this.parseEnderecos() }))
       }, 1000)
     },
     setOptionsAno (anos) {

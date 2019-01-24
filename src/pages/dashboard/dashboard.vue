@@ -2,37 +2,75 @@
   <div>
     <q-layout-header>
       <q-toolbar>
-        <botao-menu-left/>
+        <botao-menu-left />
         <q-toolbar-title>Consultas</q-toolbar-title>
       </q-toolbar>
 
     </q-layout-header>
     <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
+    <q-tabs
+      position="top"
+      no-pane-border
+      inverted
+    >
       <!-- Tabs - notice slot="title" -->
-      <q-tab slot="title" name="tab-2" icon="mail_outline" label="Correspondências"/>
-      <q-tab slot="title" name="tab-3" icon="fas fa-file-alt" label="Entradas"/>
-      <q-tab slot="title" name="tab-4" icon="move_to_inbox" label="Malotes"/>
+      <q-tab
+        slot="title"
+        name="correspondencia"
+        icon="mail_outline"
+        label="Correspondências"
+        v-if="getPermissoes.correspondencia.abrir"
+      />
+      <q-tab
+        slot="title"
+        name="protocoloEntrada"
+        icon="fas fa-file-alt"
+        label="Entradas"
+        v-if="getPermissoes.protocoloEntrada.abrir"
+      />
+      <q-tab
+        slot="title"
+        name="malote"
+        icon="move_to_inbox"
+        label="Malotes"
+        v-if="getPermissoes.malote.abrir"
+      />
 
       <!-- Targets -->
-      <q-tab-pane name="tab-2">
+      <q-tab-pane
+        name="correspondencia"
+        v-if="getPermissoes.correspondencia.abrir"
+      >
         <consulta-correspondencia></consulta-correspondencia>
       </q-tab-pane>
 
-      <q-tab-pane name="tab-3">
+      <q-tab-pane
+        name="protocoloEntrada"
+        v-if="getPermissoes.protocoloEntrada.abrir"
+      >
         <consulta-protocolo-entrada></consulta-protocolo-entrada>
       </q-tab-pane>
 
-      <q-tab-pane name="tab-4">
+      <q-tab-pane
+        name="malote"
+        v-if="getPermissoes.malote.abrir"
+      >
         <consulta-malote></consulta-malote>
       </q-tab-pane>
 
     </q-tabs>
-    <q-modal maximized v-model="modalPrimeiroAcesso">
+    <q-modal
+      maximized
+      v-model="modalPrimeiroAcesso"
+    >
       <form @submit.prevent="submit">
 
-        <q-modal-layout header-style="min-height: 100px" content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}" footer-class="bg-primary some-class"
-          footer-style="{fontSize: '24px', fontWeight: 'bold'}">
+        <q-modal-layout
+          header-style="min-height: 100px"
+          content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
+          footer-class="bg-primary some-class"
+          footer-style="{fontSize: '24px', fontWeight: 'bold'}"
+        >
           <q-toolbar class="primary">
             <div class="center q-toolbar-title">
               Alterar Senha
@@ -41,7 +79,11 @@
           <q-toolbar slot="footer">
             <div class="q-toolbar-title">
               <div class="row justify-center botoes">
-                <q-btn color="positive" :disable="loadingVisible" type="submit" >Alterar</q-btn>
+                <q-btn
+                  color="positive"
+                  :disable="loadingVisible"
+                  type="submit"
+                >Alterar</q-btn>
               </div>
             </div>
           </q-toolbar>
@@ -52,16 +94,34 @@
             Digite a nova senha
             <div class="row">
               <div class="col-12 input">
-                <q-field helper="Obrigatório" :error="$v.form.senhaNova.$error" error-label="Digite a nova senha, minimo de 5 caracteres">
-                  <q-input type="password" v-model="form.senhaNova" stack-label="Nova senha" @blur="$v.form.senhaNova.$touch()" autocomplete="new-passoword"
+                <q-field
+                  helper="Obrigatório"
+                  :error="$v.form.senhaNova.$error"
+                  error-label="Digite a nova senha, minimo de 5 caracteres"
+                >
+                  <q-input
+                    type="password"
+                    v-model="form.senhaNova"
+                    stack-label="Nova senha"
+                    @blur="$v.form.senhaNova.$touch()"
+                    autocomplete="new-passoword"
                   />
                 </q-field>
 
               </div>
               <div class="col-12 input">
-                <q-field helper="Obrigatório" :error="$v.form.confirmaSenha.$error" error-label="As senhas novas devem ser iguais">
-                  <q-input type="password" v-model="form.confirmaSenha" stack-label="Repita a nova senha" @blur="$v.form.confirmaSenha.$touch()"
-                    autocomplete="new-passoword" />
+                <q-field
+                  helper="Obrigatório"
+                  :error="$v.form.confirmaSenha.$error"
+                  error-label="As senhas novas devem ser iguais"
+                >
+                  <q-input
+                    type="password"
+                    v-model="form.confirmaSenha"
+                    stack-label="Repita a nova senha"
+                    @blur="$v.form.confirmaSenha.$touch()"
+                    autocomplete="new-passoword"
+                  />
                 </q-field>
               </div>
             </div>
@@ -157,8 +217,8 @@ export default {
   computed: {
     ...mapGetters({
       getLogin: 'login/getLogin',
-      getUserId: 'login/getUserId'
-      // getGrupoLogin: 'getGrupoLogin'
+      getUserId: 'login/getUserId',
+      getPermissoes: 'login/getPermissoes'
     })
   },
   props: {
@@ -172,7 +232,7 @@ export default {
 }
 </script>
 <style scoped>
-  .input{
-    margin-top: 20px;
-  }
+.input {
+  margin-top: 20px;
+}
 </style>
