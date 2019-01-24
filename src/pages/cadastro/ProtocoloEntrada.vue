@@ -155,7 +155,7 @@
                   :error="$v.protocoloEntrada.assunto.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
+                  <q-input type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
                 </q-field>
               </div>
             </div>
