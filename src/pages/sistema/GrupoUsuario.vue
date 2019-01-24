@@ -20,12 +20,15 @@
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
-              <div class="col-md-6 linhaBotoes">
-                <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarGrupoUsuario">Novo</q-btn>
-                <q-btn small type="submit" icon="save" v-if="!grupoUsuario.grupoUsuario && possoGravarGrupoUsuario" >Gravar</q-btn>
-                <q-btn small type="submit" icon="save" v-if="grupoUsuario.grupoUsuario && possoAlterarGrupoUsuario" >Alterar</q-btn>
-                <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirGrupoUsuario">Excluir</q-btn>
-              </div>
+              <barra-de-botoes
+                @reset="reset"
+                @excluir="excluir"
+                @submit="salvarAlterar"
+                :id="grupoUsuario.grupoUsuario"
+                :possoGravar="possoGravarGrupoUsuario"
+                :possoAlterar="possoAlterarGrupoUsuario"
+                :possoExcluir="possoExcluirGrupoUsuario"
+              />
             </div>
 
             <div class="row">
@@ -320,6 +323,7 @@
 </template>
 
 <script>
+import BarraDeBotoes from 'src/components/form/BarraDeBotoes'
 import { mapGetters } from 'vuex'
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
@@ -339,7 +343,8 @@ export default {
     ListaDeRegistros,
     BotaoMenuLeft,
     BotaoMenuRight,
-    botaoMobile
+    botaoMobile,
+    BarraDeBotoes
   },
   data () {
     return {

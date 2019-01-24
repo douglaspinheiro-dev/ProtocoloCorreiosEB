@@ -18,16 +18,20 @@
         <q-page class="q-pa-sm full-height">
 
           <form @submit.prevent="salvarAlterar">
-            <div class="row barraBotoes">
-              <div class="col-md-6 linhaBotoes">
-                <q-btn small type="reset" @click="reset" icon="add" v-if="possoGravarUsuario">Novo</q-btn>
-                <q-btn small type="submit" icon="save" v-if="!usuario.usuario && possoGravarUsuario" >Gravar</q-btn>
-                <q-btn small type="submit" icon="save" v-if="usuario.usuario && possoAlterarUsuario" >Alterar</q-btn>
-                <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirUsuario">Excluir</q-btn>
-              </div>
-              <div class="col-md-6 botoesDireita">
-                <q-btn small type="button" icon="lock open" @click="ModalTrocaSenha = true" v-if="possoAlterarUsuario" >Alterar Senha</q-btn>
-              </div>
+            <div class="row">
+
+              <barra-de-botoes
+                @reset="reset"
+                @excluir="excluir"
+                @submit="salvarAlterar"
+                :id="grupoUsuario.grupoUsuario"
+                :possoGravar="possoGravarUsuario"
+                :possoAlterar="possoAlterarUsuario"
+                :possoExcluir="possoExcluirUsuario"
+              />
+            </div>
+            <div class="row text-right">
+              <q-btn class="col-6 float-right" small type="button" icon="lock open" @click="ModalTrocaSenha = true" v-if="possoAlterarUsuario" >Alterar Senha</q-btn>
             </div>
 
             <div class="row">
@@ -148,6 +152,7 @@
 </template>
 
 <script>
+import BarraDeBotoes from 'src/components/form/BarraDeBotoes'
 import { mapGetters } from 'vuex'
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
@@ -167,7 +172,8 @@ export default {
     ListaDeRegistros,
     BotaoMenuLeft,
     BotaoMenuRight,
-    botaoMobile
+    botaoMobile,
+    BarraDeBotoes
   },
   data () {
     return {
