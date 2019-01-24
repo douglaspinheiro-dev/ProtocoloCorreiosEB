@@ -16,21 +16,12 @@ module.exports = {
   ],
   // required to lint *.vue files
   plugins: [
-    'vue',
-    "php-markup"
+    'vue'
   ],
   globals: {
     'ga': true, // Google Analytics
     'cordova': true,
     '__statics': true
-  },
-  "settings": {
-    "php/php-extensions": [".php"],
-    "php/markup-replacement": {"php": "", "=": "0"},
-    "php/keep-eol": false,
-    "php/remove-whitespace": false,
-    "php/remove-empty-line": false,
-    "php/remove-php-lint": false
   },
   // add your custom rules here
   'rules': {
