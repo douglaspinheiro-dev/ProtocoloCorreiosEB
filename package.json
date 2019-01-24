@@ -19,8 +19,6 @@
     "currency.js": "^1.2.1",
     "dayjs": "^1.7.8",
     "localforage": "^1.7.3",
-    "logrocket": "^0.6.17",
-    "logrocket-vuex": "0.0.3",
     "moment": "^2.23.0",
     "numeral": "^2.0.6",
     "v-money": "^0.8.1",

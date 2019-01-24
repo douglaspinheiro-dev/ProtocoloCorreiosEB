@@ -1,8 +1,4 @@
 // import storage from 'localforage'
-import createPlugin from 'logrocket-vuex'
-import LogRocket from 'logrocket'
-const logrocketPlugin = createPlugin(LogRocket)
-
 export default {
   user: {
     login: '',
@@ -17,6 +13,5 @@ export default {
   nomeFantasia: '',
   categoriaUsuario: '',
   empresasDisponiveis: [],
-  permissoes: [],
-  plugins: [logrocketPlugin]
+  permissoes: []
 }
