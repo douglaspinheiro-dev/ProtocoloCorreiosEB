@@ -41,7 +41,7 @@ module.exports = function (ctx) {
           API: JSON.stringify('http://localhost:8000')
         }
         : { // and on build (production):
-          API: JSON.stringify('http://10.1.11.242/sysprot/api')
+          API: JSON.stringify('http://10.1.11.238/sysprot/api/public/index.php')
         }
     },
     devServer: {

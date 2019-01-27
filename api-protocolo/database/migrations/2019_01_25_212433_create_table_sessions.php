@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsuariosTable extends Migration
+class CreateTableSessions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateUsuariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('usuarios', function (Blueprint $table) {
-            $table->increments('usuario');
-            $table->string('nome');
-            $table->string('login')->unique();
-            $table->string('password');
-            $table->timestamps();
-        });
+      Schema::create('sessions', function (Blueprint $table) {
+        $table->string('session_id', 128);
+        $table->integer('expires', 11);
+        $table->text('data');
+      });
     }
 
     /**
@@ -29,6 +27,6 @@ class CreateUsuariosTable extends Migration
      */
     public function down()
     {
-        Schema::drop('users');
+      Schema::drop('sessions');
     }
 }
