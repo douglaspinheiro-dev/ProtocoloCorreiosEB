@@ -41,7 +41,7 @@ module.exports = function (ctx) {
           API: JSON.stringify('http://localhost:8000')
         }
         : { // and on build (production):
-          API: JSON.stringify('https://api-sysprot.sistemaparaeventos.com.br/public/index.php')
+          API: JSON.stringify('https://api-sysprot.douglaspinheiro.com.br/public/index.php')
         }
     },
     devServer: {

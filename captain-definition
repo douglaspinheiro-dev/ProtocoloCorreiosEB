@@ -1,5 +1,8 @@
 {
- "schemaVersion" :1 ,
- "templateId" :"php/7.1.10"
+  "schemaVersion": 2,
+  "dockerfileLines": [
+    "FROM socialengine/nginx-spa:latest",
+    "COPY ./build /app",
+    "RUN chmod -R 777 /app"
+  ]
 }
-
