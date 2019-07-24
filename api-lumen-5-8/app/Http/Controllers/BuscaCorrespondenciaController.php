@@ -92,7 +92,7 @@ class BuscaCorrespondenciaController extends Controller
 
     $dados['consultaData'] = '';
     $data = explode("-", $dados['mesCadastro']);
-    $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
+    $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) ";
 
     $results = CorrespondenciaDao::procuraCorrespondenciaComRastreioPublico($dados);
 
@@ -127,7 +127,7 @@ class BuscaCorrespondenciaController extends Controller
       $dados['consultaData'] = '';
 
       if ($dados['tipoData'] === 'data') {
-        $dados['consultaData'] = "correspondencias.dataCadastro LIKE '%".$dados['dataCadastro']."%' AND ";
+        $dados['consultaData'] = "correspondencias.dataCadastro LIKE '%".$dados['dataCadastro']."%' ";
         $inicio = explode("-", $dados['dataCadastro']);
         $periodo = $inicio[2].'/'.$inicio[1].'/'.$inicio[0];
 
@@ -139,14 +139,14 @@ class BuscaCorrespondenciaController extends Controller
         $fim = $fim[2].'/'.$fim[1].'/'.$fim[0];
 
         $periodo = $inicio.' - '.$fim;
-        $dados['consultaData'] = "(DATE(correspondencias.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataFinal']."') AND ";
+        $dados['consultaData'] = "(DATE(correspondencias.dataCadastro) BETWEEN '".$dados['dataInicial']."'  AND '".$dados['dataFinal']."') ";
       } elseif ($dados['tipoData'] === 'mes' and $dados['mesCadastro'] !== '') {
 
         $temp = explode("-", $dados['mesCadastro']);
         $periodo = $temp[1].'/'.$temp[0];
 
         $data = explode("-", $dados['mesCadastro']);
-        $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) AND ";
+        $dados['consultaData'] = "(YEAR(correspondencias.dataCadastro) = '".$data[0]."' AND MONTH(correspondencias.dataCadastro) = '".$data[1]."' ) ";
       }
       if ($dados['tipoRelatorio'] === 'listagemDeCorrespondencia') {
         $results = CorrespondenciaDao::procuraCorrespondencia($dados);

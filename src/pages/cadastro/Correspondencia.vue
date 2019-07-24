@@ -25,6 +25,9 @@
                 <q-btn small type="submit" icon="save" v-if="correspondencia.correspondencia && possoAlterarCorrespondencia" >Alterar</q-btn>
                 <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirCorrespondencia">Excluir</q-btn>
               </div>
+              <div class="col-md-6">
+                <q-btn small type="button" icon="autorenew" @click="preparaDocSemelhante" v-if="correspondencia.correspondencia">Gravar Doc Semelhante</q-btn>
+              </div>
             </div>
 
             <div class="row">
@@ -405,6 +408,21 @@ export default {
     }
   },
   methods: {
+    preparaDocSemelhante () {
+      this.$v.correspondencia.$reset()
+      this.$router.push({name: 'correspondencia'})
+      this.possoAlterarCorrespondencia = false
+      this.possoExcluirCorrespondencia = false
+
+      let correspondencia = new Correspondencia(this.correspondencia)
+      correspondencia.protocolo = ''
+      correspondencia.correspondencia = ''
+      correspondencia.destino = ''
+      correspondencia.codigoRastreio = ''
+      correspondencia.usuarioCriador = ''
+      correspondencia.usuarioAlterador = ''
+      this.correspondencia = new Correspondencia(correspondencia)
+    },
     somaTipoCorrespondencia () {
       this.$v.correspondencia.tipoCorrespondencia.$touch()
       this.valorTipoCorrespondencia = Number(this.optionsTipoCorrespondencia.filter(tipoCorrespondencia => tipoCorrespondencia.value === this.correspondencia.tipoCorrespondencia)[0]['valor'])

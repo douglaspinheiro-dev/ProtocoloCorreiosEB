@@ -25,6 +25,9 @@
                 <q-btn small type="submit" icon="save" v-if="protocoloEntrada.protocoloEntrada && possoAlterarProtocoloEntrada" >Alterar</q-btn>
                 <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirProtocoloEntrada">Excluir</q-btn>
               </div>
+              <div class="col-md-6">
+                <q-btn small type="button" icon="autorenew" @click="preparaDocSemelhante" v-if="protocoloEntrada.protocoloEntrada">Gravar Doc Semelhante</q-btn>
+              </div>
             </div>
 
             <div class="row">
@@ -239,6 +242,20 @@ export default {
     }
   },
   methods: {
+    preparaDocSemelhante () {
+      this.$v.protocoloEntrada.$reset()
+      this.$router.push({name: 'protocoloEntrada'})
+      this.possoAlterarProtocoloEntrada = false
+      this.possoExcluirProtocoloEntrada = false
+
+      let protocolo = new ProtocoloEntrada(this.protocoloEntrada)
+      protocolo.protocolo = ''
+      protocolo.protocoloEntrada = ''
+      protocolo.numero = ''
+      protocolo.usuarioCriador = ''
+      protocolo.usuarioAlterador = ''
+      this.protocoloEntrada = new ProtocoloEntrada(protocolo)
+    },
     parseEnderecos () {
       return this.optionsEndereco.map(endereco => {
         // console.log(endereco)
