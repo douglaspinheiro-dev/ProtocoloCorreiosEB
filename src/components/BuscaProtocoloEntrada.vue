@@ -19,7 +19,7 @@
             type="button"
             @click="gerarRelatorio"
             icon="print"
-          >Imprimir</q-btn>
+          >Gerar Relatório</q-btn>
         </div>
       </div>
       <div>
@@ -124,7 +124,6 @@
                   class="form-input"
                 >
                   <q-input
-                    autocomplete="off"
                     type="text"
                     v-model="buscaProtocoloEntrada.assunto"
                     name="text"

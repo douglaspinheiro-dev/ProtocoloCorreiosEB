@@ -41,9 +41,50 @@ export const BuscaMaloteService = {
         throw new Error(error)
       })
   },
+  procuraMes (dados) {
+    return http.get('busca-malotes/mes', { params: dados })
+      .then(response => response)
+      .catch(error => {
+        if (error.response.status === 401) {
+          Notify.semPermissao()
+        } else {
+          Dialog.create({
+            title: 'Atenção',
+            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
+          }).then(() => {
+            // Picked "OK"
+          }).catch(() => {
+            // Picked "Cancel" or dismissed
+          })
+        }
+        throw new Error(error)
+      })
+  },
 
   relatorio (dados) {
     return http.get('busca-malotes/relatorio', { params: dados })
+      .then(response => response)
+      .catch(error => {
+        if (error.response.status === 401) {
+          Notify.semPermissao()
+        } else {
+          Dialog.create({
+            title: 'Atenção',
+            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
+          }).then(() => {
+            // Picked "OK"
+          }).catch(() => {
+            // Picked "Cancel" or dismissed
+          })
+        }
+        throw new Error(error)
+      })
+  },
+
+  relatorioConsolidadoPorMes (dados) {
+    return http.get('busca-malotes/relatorio-por-mes', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {

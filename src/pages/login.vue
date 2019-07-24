@@ -3,14 +3,19 @@
     <q-page-container>
       <q-page>
         <!-- page content -->
-        <q-toolbar class="glossy">
+        <q-toolbar class="desktop-only">
           <q-toolbar-title class="text-center">
-            Protocolo - AJG/Correios
+            <img :src="imageSrc" alt="">
+            <span slot="subtitle">
+              <div class="q-headline">
+                SISPROT - SISTEMA DE PROTOCOLO DA 1ª REGIÃO MILITAR
+              </div>
+            </span>
           </q-toolbar-title>
         </q-toolbar>
 
         <div class="absolute-center" style="width: 500px; max-width: 90vw;">
-          <h2 class="text-center">Bem Vindo</h2>
+          <h2 class="desktop-only text-center">Bem Vindo</h2>
           <form @submit.prevent="submit">
             <q-field label="Login" orientation="vertical">
               <q-input v-model="form.login" @input="$v.form.login.$touch()" autocomplete="username"/>
@@ -23,7 +28,7 @@
               <div class="row justify-center botoes">
                 <q-btn-group>
                   <q-btn type="submit" color="primary" glossy label="Entrar" />
-                  <q-btn type="button" color="white" glossy label="Esqueci" class="text-black" @click="modalRecuperar = !modalRecuperar"/>
+                  <!-- <q-btn type="button" color="white" glossy label="Esqueci" class="text-black" @click="modalRecuperar = !modalRecuperar"/> -->
                 </q-btn-group>
               </div>
           </form>
@@ -141,6 +146,18 @@
 
       </q-page>
     </q-page-container>
+    <q-layout-footer class="desktop-only">
+      <q-toolbar >
+        <q-toolbar-title class="text-center">
+          Copyright &copy; 2019 - Exército Brasileiro - 1ª Região Militar.
+          <span slot="subtitle">
+            <div class="q-subheading">
+              Desenvolvido por ST Moreira
+            </div>
+          </span>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-layout-footer>
   </q-layout>
 
 </template>
@@ -153,6 +170,7 @@ export default {
   name: 'Login',
   data () {
     return {
+      imageSrc: 'statics/logo.png',
       confirmarToken: {
         token: ''
       },

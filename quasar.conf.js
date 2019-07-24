@@ -5,7 +5,8 @@ module.exports = function (ctx) {
     // app plugins (/src/plugins)
     plugins: [
       'axios',
-      'vuelidate'
+      'vuelidate',
+      'chrome'
     ],
     css: [
       'app.styl'
@@ -41,7 +42,7 @@ module.exports = function (ctx) {
           API: JSON.stringify('http://localhost:8000')
         }
         : { // and on build (production):
-          API: JSON.stringify('https://api-sysprot.sistemaparaeventos.com.br/public/index.php')
+          API: JSON.stringify('http://10.1.9.21/sysprot/api/public/index.php')
         }
     },
     devServer: {

@@ -7,7 +7,7 @@
           @input="pesquisando"
           v-model.lazy="busca"
           :debounce="600"
-          placeholder="Busca"
+          placeholder="Busca por malote"
           icon="search"
           stack-label="Busca"
         />

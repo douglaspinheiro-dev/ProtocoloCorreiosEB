@@ -12,12 +12,12 @@ export default class BuscaCorrespondencia {
     this.tipoCobranca = obj.tipoCobranca || ''
     this.codigoRastreio = obj.codigoRastreio || ''
     this.dataCadastro = obj.dataCadastro || dayjs().format('YYYY-MM-DD')
-    this.tipoData = obj.tipoData || 'periodo'
+    this.tipoData = obj.tipoData || 'mes'
     this.dataInicial = obj.dataInicial || dayjs().startOf('month').format('YYYY-MM-DD')
     this.dataFinal = obj.dataFinal || dayjs().endOf('month').format('YYYY-MM-DD')
     this.mesCadastro = obj.mesCadastro || dayjs().format('YYYY-MM')
     this.protocolo = obj.protocolo || ''
-    this.tipoRelatorio = obj.tipoRelatorio || 'listagemDeCorrespondencia'
+    this.tipoRelatorio = obj.tipoRelatorio || 'controleDeRegistroDePostagem'
   }
 
   setTabelaColunasListagemCorrespondencias () {

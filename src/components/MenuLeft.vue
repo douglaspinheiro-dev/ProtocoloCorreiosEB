@@ -397,7 +397,11 @@ export default {
   },
   mounted () {
     this.links = this.getLinks
-    this.$q.platform.is.mobile ? this.mostraMenuLeft = false : this.mostraMenuLeft = true
+    if (this.$q.platform.is.chromeExt) {
+      this.mostraMenuLeft = false
+    } else {
+      this.$q.platform.is.mobile ? this.mostraMenuLeft = false : this.mostraMenuLeft = true
+    }
   },
   computed: {
     ...mapGetters({

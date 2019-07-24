@@ -1,6 +1,7 @@
 
 export default [
   { path: '/', component: () => import('pages/login') },
+  { path: '/consulta', component: () => import('pages/consultaCorrespondencia') },
   {
     path: '/root',
     component: () => import('layouts/root'),
@@ -22,6 +23,7 @@ export default [
       { path: '/setores', name: 'setor', component: () => import('pages/cadastro/Setor'), meta: { requerAutenticacao: true } },
       { path: '/setores/setor/:id', name: 'alterarSetor', component: () => import('pages/cadastro/Setor'), meta: { requerAutenticacao: true }, props: true },
       { path: '/protocoloentradas', name: 'protocoloEntrada', component: () => import('pages/cadastro/ProtocoloEntrada'), meta: { requerAutenticacao: true } },
+      { path: '/protocoloentradas/extensao', name: 'protocoloEntradaExtensao', component: () => import('pages/cadastro/ProtocoloEntradaExtensao'), meta: { requerAutenticacao: true } },
       { path: '/protocoloentradas/protocoloentrada/:id', name: 'alterarProtocoloEntrada', component: () => import('pages/cadastro/ProtocoloEntrada'), meta: { requerAutenticacao: true }, props: true },
       { path: '/rotas', name: 'rota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true } },
       { path: '/rotas/rota/:id', name: 'alterarRota', component: () => import('pages/cadastro/Rota'), meta: { requerAutenticacao: true }, props: true },

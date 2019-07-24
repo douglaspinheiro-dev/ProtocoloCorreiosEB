@@ -7,7 +7,7 @@
           @input="pesquisando"
           v-model.lazy="busca"
           :debounce="300"
-          placeholder="Busca por Protocolo, ou nº do Documento"
+          placeholder="Busca por protocolo"
           icon="search"
           stack-label="Busca"
         />

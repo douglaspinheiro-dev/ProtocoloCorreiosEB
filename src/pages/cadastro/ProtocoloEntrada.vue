@@ -155,7 +155,7 @@
                   :error="$v.protocoloEntrada.assunto.$error"
                   error-label="Obrigatório"
                 >
-                  <q-input type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
+                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
                 </q-field>
               </div>
             </div>
@@ -181,16 +181,6 @@
             </div>
           </form>
 
-          <botao-mobile
-            :id="protocoloEntrada.protocoloEntrada"
-            :possoGravar="possoGravarProtocoloEntrada"
-            :possoAlterar="possoAlterarProtocoloEntrada"
-            :possoExcluir="possoExcluirProtocoloEntrada"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-
         </q-page>
       </q-tab-pane>
     </q-tabs>
@@ -207,7 +197,6 @@ import { required } from 'vuelidate/lib/validators'
 import ProtocoloEntrada from 'src/services/protocoloEntrada/ProtocoloEntrada'
 import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntradaService'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import botaoMobile from 'src/components/QFab/QFab'
 import notify from '../../tools/Notify'
 import { filter } from 'quasar'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
@@ -221,8 +210,7 @@ export default {
     ListaDeRegistros,
     BotaoMenuLeft,
     BotaoMenuRight,
-    RadioButton,
-    botaoMobile
+    RadioButton
   },
   data () {
     return {

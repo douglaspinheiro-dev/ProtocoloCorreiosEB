@@ -29,6 +29,16 @@ export const LoginService = {
         MsgDialog(error)
         throw new Error(error)
       })
+  },
+
+  isLogged (token) {
+    return http.post('/auth/logged', {token})
+      .then(response => response)
+      .catch(error => {
+        console.log('Erro ao validar token', error)
+        MsgDialog(error)
+        throw new Error(error)
+      })
   }
 }
 export default LoginService

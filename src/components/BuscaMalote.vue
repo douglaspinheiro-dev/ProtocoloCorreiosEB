@@ -3,32 +3,15 @@
     <form @submit.prevent="procurar">
       <div class="row barraBotoes">
         <div class="col-md-6 linhaBotoes">
-          <q-btn
-            small
-            type="reset"
-            @click="reset"
-            icon="add"
-          >Novo</q-btn>
-          <q-btn
-            small
-            type="submit"
-            icon="search"
-          >Procurar</q-btn>
-          <q-btn
-            small
-            type="button"
-            @click="gerarRelatorio"
-            icon="print"
-            v-show="tipoConsulta === 'protocolo'"
-          >Imprimir</q-btn>
+          <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
+          <q-btn small type="submit" icon="search">Procurar</q-btn>
+          <q-btn small type="button" @click="gerarRelatorio" icon="print">Gerar
+            Relatório</q-btn>
         </div>
       </div>
       <div>
 
-        <q-collapsible
-          label="Consulta"
-          opened
-        >
+        <q-collapsible label="Consulta" opened>
           <!-- <div class="row">
             <div class="col-md-3">
               <q-field class="form-input"
@@ -62,58 +45,36 @@
               </q-field>
             </div> -->
             <div class="col-md-12">
-              <q-field
-                class="form-input"
-                label="Tipo de Consulta"
-                orientation="vertical"
-              >
-                <q-select
-                  v-model="tipoConsulta"
-                  :options="optionsConsulta"
-                  filter
-                  autofocus-filter
-                  filter-placeholder="Selecione a forma de consulta"
-                  @input="trocaRelatorio"
-                  name="select"
-                />
+              <q-field class="form-input" label="Tipo de Consulta" orientation="vertical">
+                <q-select v-model="tipoConsulta" :options="optionsConsulta" filter autofocus-filter filter-placeholder="Selecione a forma de consulta"
+                  @input="trocaRelatorio" name="select" />
               </q-field>
             </div>
           </div>
-          <div
-            class="row"
-            v-show="tipoConsulta === 'protocolo'"
-          >
+          <div class="row" v-show="tipoConsulta === 'protocolo'">
 
             <div class="col-md-3">
-              <q-field
-                label="Número de Protocolo"
-                orientation="vertical"
-                class="form-input"
-                :error="$v.buscaMalote.protocolo.$error"
-                error-label="Obrigatório"
-                helper="Obrigatório"
-              >
-                <q-input
-                  autocomplete="off"
-                  type="text"
-                  v-model="buscaMalote.protocolo"
-                  name="number"
-                  @input="$v.buscaMalote.protocolo.$touch()"
-                />
+              <q-field label="Número de Protocolo" orientation="vertical" class="form-input" :error="$v.buscaMalote.protocolo.$error"
+                error-label="Obrigatório" helper="Obrigatório">
+                <q-input autocomplete="off" type="text" v-model="buscaMalote.protocolo" name="number" @input="$v.buscaMalote.protocolo.$touch()" />
               </q-field>
             </div>
             <div class="col-md-3">
-              <q-field
-                class="form-input"
-                label="Ano"
-                orientation="vertical"
-              >
-                <q-select
-                  v-model="buscaMalote.ano"
-                  :options="optionsAno"
-                  placeholder="Selecione o ano"
-                  name="select"
-                />
+              <q-field class="form-input" label="Ano" orientation="vertical">
+                <q-select v-model="buscaMalote.ano" :options="optionsAno" placeholder="Selecione o ano" name="select" />
+              </q-field>
+            </div>
+          </div>
+          <div class="row" v-show="tipoConsulta === 'mes'">
+
+            <div class="col-md-3">
+              <q-field class="form-input" label="Mês" orientation="vertical">
+                <q-select v-model="buscaMalote.mes" :options="optionsMes" placeholder="Selecione o Mês" name="select" @input="$v.buscaMalote.protocolo.$touch()"/>
+              </q-field>
+            </div>
+            <div class="col-md-3">
+              <q-field class="form-input" label="Ano" orientation="vertical">
+                <q-select v-model="buscaMalote.ano" :options="optionsAno" placeholder="Selecione o ano" name="select" @input="$v.buscaMalote.protocolo.$touch()"/>
               </q-field>
             </div>
           </div>
@@ -121,34 +82,15 @@
 
             <div class="row">
               <div class="col-md-3">
-                <q-field
-                  class="form-input"
-                  label="Tipo do Documento"
-                  orientation="vertical"
-                >
-                  <q-select
-                    v-model="buscaMalote.tipoDocumento"
-                    :options="optionsTipoDocumento"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o tipo do documento"
-                    name="select"
-                  />
+                <q-field class="form-input" label="Tipo do Documento" orientation="vertical">
+                  <q-select v-model="buscaMalote.tipoDocumento" :options="optionsTipoDocumento" filter autofocus-filter
+                    filter-placeholder="Selecione o tipo do documento" name="select" />
                 </q-field>
               </div>
 
               <div class="col-md-3">
-                <q-field
-                  label="Número do Documento"
-                  orientation="vertical"
-                  class="form-input"
-                >
-                  <q-input
-                    autocomplete="off"
-                    type="text"
-                    v-model="buscaMalote.numero"
-                    name="number"
-                  />
+                <q-field label="Número do Documento" orientation="vertical" class="form-input">
+                  <q-input autocomplete="off" type="text" v-model="buscaMalote.numero" name="number" />
                 </q-field>
               </div>
 
@@ -202,35 +144,15 @@
               </div>
             </div> -->
               <div class="col-md-3">
-                <q-field
-                  class="form-input"
-                  label="Origem"
-                  orientation="vertical"
-                >
-                  <q-select
-                    v-model="buscaMalote.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o setor"
-                    name="select"
-                  />
+                <q-field class="form-input" label="Origem" orientation="vertical">
+                  <q-select v-model="buscaMalote.setor" :options="optionsSetor" filter autofocus-filter
+                    filter-placeholder="Selecione o setor" name="select" />
                 </q-field>
               </div>
               <div class="col-md-3">
-                <q-field
-                  class="form-input"
-                  label="Destino"
-                  orientation="vertical"
-                >
-                  <q-select
-                    v-model="buscaMalote.rotaEndereco"
-                    :options="optionsRotaEndereco"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o Endereço"
-                    name="select"
-                  />
+                <q-field class="form-input" label="Destino" orientation="vertical">
+                  <q-select v-model="buscaMalote.rotaEndereco" :options="optionsRotaEndereco" filter autofocus-filter
+                    filter-placeholder="Selecione o Endereço" name="select" />
                 </q-field>
               </div>
             </div>
@@ -258,72 +180,26 @@
     <br>
     <div>
 
-      <q-table
-        title="Listagem de Documentos"
-        :data="registros"
-        :columns="tabelaColunas"
-        row-key="maloteDocumento"
-        :loading="carregandoLista"
-        :separator="tabelaSeparador"
-        no-data-label="Sem registros encontrados"
-        no-results-label="Sem registros encontrados"
-        rows-per-page-label="Linhas por página"
-        loading-label="Carregando"
-        :rows-per-page-options="[50,100,200,0]"
-        :visible-columns="colunasVisiveis"
-      >
+      <q-table title="Listagem de Documentos" :data="registros" :columns="tabelaColunas" row-key="maloteDocumento"
+        :loading="carregandoLista" :separator="tabelaSeparador" no-data-label="Sem registros encontrados"
+        no-results-label="Sem registros encontrados" rows-per-page-label="Linhas por página" loading-label="Carregando"
+        :rows-per-page-options="[50,100,200,0]" :visible-columns="colunasVisiveis">
         <template slot="top-left">
-          <q-search
-            placeholder="Busca"
-            hide-underline
-            color="secondary"
-            v-model="registros"
-            class="col-6"
-          />
+          <q-search placeholder="Busca" hide-underline color="secondary" v-model="registros" class="col-6" />
         </template>
-        <template
-          slot="top-right"
-          slot-scope="props"
-        >
-          <q-table-columns
-            color="secondary"
-            class="q-mr-sm"
-            v-model="colunasVisiveis"
-            :columns="tabelaColunas"
-            label="Colunas"
-          />
-          <q-select
-            color="secondary"
-            v-model="tabelaSeparador"
-            :options="[
+        <template slot="top-right" slot-scope="props">
+          <q-table-columns color="secondary" class="q-mr-sm" v-model="colunasVisiveis" :columns="tabelaColunas" label="Colunas" />
+          <q-select color="secondary" v-model="tabelaSeparador" :options="[
               { label: 'Horizontal', value: 'horizontal' },
               { label: 'Vertical', value: 'vertical' },
               { label: 'Célula', value: 'cell' },
               { label: 'Nenhum', value: 'none' }
             ]"
-            hide-underline
-          />
-          <q-btn
-            flat
-            round
-            dense
-            :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-            @click="props.toggleFullscreen"
-          />
+            hide-underline />
+          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" />
         </template>
-        <q-td
-          slot="body-cell-editar"
-          slot-scope="props"
-          :props="props"
-        >
-          <q-btn
-            type="button"
-            color="primary"
-            flat
-            round
-            icon="edit"
-            :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"
-          />
+        <q-td slot="body-cell-editar" slot-scope="props" :props="props">
+          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }" />
           <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"/> -->
         </q-td>
 
@@ -352,34 +228,18 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky> -->
-    <q-modal
-      ref="modalRelatorio"
-      maximized
-      v-model="modalRelatorio"
-    >
-      <q-modal-layout
-        header-style="min-height: 100px"
-        content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
-        footer-class="bg-primary some-class"
-        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-      >
+    <q-modal ref="modalRelatorio" maximized v-model="modalRelatorio">
+      <q-modal-layout header-style="min-height: 100px" content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
+        footer-class="bg-primary some-class" footer-style="{fontSize: '24px', fontWeight: 'bold'}">
         <q-toolbar class="primary">
-          <q-btn
-            flat
-            @click="modalRelatorio = false"
-          >
+          <q-btn flat @click="modalRelatorio = false">
             <q-icon name="keyboard_arrow_left" />
           </q-btn>
           <div class="q-toolbar-title">
             Relatório
           </div>
         </q-toolbar>
-        <iframe
-          class="full-width full-height"
-          :src="linkRelatorio"
-          frameborder="0"
-          allowfullscreen
-        ></iframe>
+        <iframe class="full-width full-height" :src="linkRelatorio" frameborder="0" allowfullscreen></iframe>
       </q-modal-layout>
     </q-modal>
 
@@ -387,11 +247,12 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
 var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
-import { mask } from 'vue-the-mask'
+import {
+  mask
+} from 'vue-the-mask'
 import BuscaMalote from 'src/services/buscaMalote/BuscaMalote'
 import buscaMaloteService from 'src/services/buscaMalote/BuscaMaloteService'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
@@ -399,15 +260,16 @@ import Malote from 'src/services/malote/Malote'
 import Endereco from 'src/services/endereco/Endereco'
 import RotaEndereco from 'src/services/rotaEndereco/RotaEndereco'
 import Setor from 'src/services/setor/Setor'
-import { filter } from 'quasar'
+import {
+  filter
+} from 'quasar'
 
 export default {
   name: 'ConsultaMalote',
   directives: {
     mask
   },
-  components: {
-  },
+  components: {},
   data () {
     return {
       modalRelatorio: false,
@@ -421,6 +283,55 @@ export default {
       optionsLoading: false,
       optionsSetor: [],
       optionsAno: [],
+      optionsMes: [{
+        label: 'Janeiro',
+        value: '1'
+      },
+      {
+        label: 'Fevereiro',
+        value: '2'
+      },
+      {
+        label: 'Março',
+        value: '3'
+      },
+      {
+        label: 'Abril',
+        value: '4'
+      },
+      {
+        label: 'Maio',
+        value: '5'
+      },
+      {
+        label: 'junho',
+        value: '6'
+      },
+      {
+        label: 'julho',
+        value: '7'
+      },
+      {
+        label: 'Agosto',
+        value: '8'
+      },
+      {
+        label: 'Setembro',
+        value: '9'
+      },
+      {
+        label: 'Outubro',
+        value: '10'
+      },
+      {
+        label: 'Novembro',
+        value: '11'
+      },
+      {
+        label: 'Dezembro',
+        value: '12'
+      }
+      ],
       optionsRotaEndereco: [],
       optionsTipoDocumento: [],
       busca: '',
@@ -428,21 +339,22 @@ export default {
       carregandoLista: false,
       registros: [],
       tipoConsulta: 'protocolo',
-      optionsTipoRelatorio: [
-        {
-          label: 'Listagem de Malote',
-          value: 'listagemDeMalote'
-        }
-      ],
-      optionsConsulta: [
-        {
-          label: 'Número do Protocolo',
-          value: 'protocolo'
-        },
-        {
-          label: 'Dados do documento',
-          value: 'documento'
-        }
+      optionsTipoRelatorio: [{
+        label: 'Listagem de Malote',
+        value: 'listagemDeMalote'
+      }],
+      optionsConsulta: [{
+        label: 'Número do Protocolo',
+        value: 'protocolo'
+      },
+      {
+        label: 'Dados do documento',
+        value: 'documento'
+      },
+      {
+        label: 'Consolidado por Mês',
+        value: 'mes'
+      }
       ],
       tabelaSeparador: 'horizontal',
       colunasVisiveis: new BuscaMalote().setColunasVisiveisListagemMalotes(),
@@ -452,8 +364,10 @@ export default {
   },
   validations: {
     buscaMalote: {
-      ano: { required },
-      protocolo: { required }
+      ano: {
+      },
+      protocolo: {
+      }
     }
   },
   methods: {
@@ -469,18 +383,19 @@ export default {
     },
     search (terms, done) {
       setTimeout(() => {
-        done(filter(terms, { field: 'value', list: this.parseEnderecos() }))
+        done(filter(terms, {
+          field: 'value',
+          list: this.parseEnderecos()
+        }))
       }, 1000)
     },
     setOptionsAno (anos) {
       if (anos.length > 0) {
         let optionsAno = []
-        anos.map(ano => optionsAno.push(
-          {
-            label: `${ano.ano}`,
-            value: `${ano.ano}`
-          }
-        ))
+        anos.map(ano => optionsAno.push({
+          label: `${ano.ano}`,
+          value: `${ano.ano}`
+        }))
         this.optionsAno = optionsAno
       } else {
         this.optionsAno = [{
@@ -512,7 +427,12 @@ export default {
     },
     carrega (id) {
       console.log('vou carregar o buscaMalote', id)
-      this.$router.push({ name: 'alterarMalote', params: { id } })
+      this.$router.push({
+        name: 'alterarMalote',
+        params: {
+          id
+        }
+      })
     },
     procurar () {
       this.$q.loading.show({
@@ -529,7 +449,7 @@ export default {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          }).then(() => {}).catch(() => {})
           return
         }
 
@@ -537,7 +457,6 @@ export default {
           buscaMaloteService.seleciona(this.buscaMalote)
             .then(result => {
               this.$q.loading.hide()
-              console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data.maloteDocumentos
@@ -549,11 +468,23 @@ export default {
                 timeout: 5000
               })
             })
-        } else {
+        } else if (this.tipoConsulta === 'mes') {
+          buscaMaloteService.procuraMes(this.buscaMalote)
+            .then(result => {
+              this.$q.loading.hide()
+              // this.listaDocumentos()
+              console.log(result.data)
+              this.registros = result.data
+              this.$q.notify({
+                type: 'positive',
+                message: 'Estes foram os registros encontrados.',
+                timeout: 5000
+              })
+            })
+        } else if (this.tipoConsulta === 'documento') {
           buscaMaloteService.procuraDocumento(this.buscaMalote)
             .then(result => {
               this.$q.loading.hide()
-              console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data
@@ -575,20 +506,37 @@ export default {
       })
       clearTimeout(timer)
       timer = setTimeout(() => {
-        buscaMaloteService.relatorio(this.buscaMalote)
-          .then(result => {
-            this.$q.loading.hide()
-            console.log('buscaMalote alterado com sucesso')
-            // this.listaDocumentos()
-            console.log(result.data)
-            this.linkRelatorio = result.data.link
-            this.modalRelatorio = true
-            this.$q.notify({
-              type: 'positive',
-              message: 'Estes foram os registros encontrados.',
-              timeout: 5000
+        if (this.tipoConsulta === 'protocolo') {
+          buscaMaloteService.relatorio(this.buscaMalote)
+            .then(result => {
+              this.$q.loading.hide()
+              console.log('buscaMalote alterado com sucesso')
+              // this.listaDocumentos()
+              console.log(result.data)
+              this.linkRelatorio = result.data.link
+              this.modalRelatorio = true
+              this.$q.notify({
+                type: 'positive',
+                message: 'Estes foram os registros encontrados.',
+                timeout: 5000
+              })
             })
-          })
+        } else if (this.tipoConsulta === 'mes') {
+          buscaMaloteService.relatorioConsolidadoPorMes(this.buscaMalote)
+            .then(result => {
+              this.$q.loading.hide()
+              console.log('buscaMalote alterado com sucesso')
+              // this.listaDocumentos()
+              console.log(result.data)
+              this.linkRelatorio = result.data.link
+              this.modalRelatorio = true
+              this.$q.notify({
+                type: 'positive',
+                message: 'Estes foram os registros encontrados.',
+                timeout: 5000
+              })
+            })
+        }
       }, 2000)
     },
     listaDocumentos () {
@@ -634,4 +582,5 @@ export default {
       })
   }
 }
+
 </script>

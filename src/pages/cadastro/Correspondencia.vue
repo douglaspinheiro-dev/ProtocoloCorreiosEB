@@ -82,7 +82,12 @@
                   label="Codigo de Rastreio"
                   orientation="vertical"
                 >
-                  <q-input type="text" v-model="correspondencia.codigoRastreio" name="text" />
+                  <q-input autocomplete="on" type="text" v-model="correspondencia.codigoRastreio" name="text" >
+                    <q-autocomplete
+                      :min-characters="1"
+                      :max-results="30"
+                    />
+                  </q-input>
                 </q-field>
               </div>
               <div class="col-md-4">
@@ -105,7 +110,7 @@
               </div>
               <div class="col-md-4">
                 <q-field class="form-input" label="Remetente" orientation="vertical">
-                  <q-input autocomplete="off" type="text" v-model="correspondencia.remetente" name="name"/>
+                  <q-input autocomplete="on" type="text" v-model="correspondencia.remetente" name="name"/>
                 </q-field>
               </div>
             </div>
