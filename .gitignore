@@ -29,3 +29,5 @@ api-protocolo/vendor\.tar
 api-protocolo\.tar
 
 src/pages/login\.vue
+
+api-lumen-5-8/public/pdf/
