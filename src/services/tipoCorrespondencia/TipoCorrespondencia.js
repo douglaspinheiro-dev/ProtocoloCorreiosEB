@@ -13,7 +13,7 @@ export default class TipoCorrespondencia {
       tiposCorrespondencias.map(option => optionsTipoCorrespondencia.push(
         {
           label: `${option.descricao} - R$ ${option.valor} `,
-          value: option.tipoCorrespondencia,
+          value: option.tipoCorrespondencia + '',
           valor: option.valor
         }
       ))

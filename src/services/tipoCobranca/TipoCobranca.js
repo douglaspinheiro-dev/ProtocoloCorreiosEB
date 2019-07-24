@@ -20,14 +20,14 @@ export default class TipoCobranca {
       tiposCobrancas.map(option => optionsTipoCobranca.push(
         {
           label: `${option.descricao} - R$ ${option.valor} `,
-          value: option.tipoCobranca,
+          value: option.tipoCobranca + '',
           valor: option.valor
         }
       ))
     } else {
       optionsTipoCobranca = [{
         label: 'Sem registros cadastrados',
-        value: ''
+        value: null
       }]
     }
     return optionsTipoCobranca
