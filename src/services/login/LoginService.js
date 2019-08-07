@@ -1,4 +1,4 @@
-import http from 'src/plugins/axios'
+import http from 'src/boot/axios'
 import MsgDialog from '../../tools/Dialogs'
 
 export const LoginService = {
@@ -22,7 +22,9 @@ export const LoginService = {
   },
 
   alteraEmpresaLogada (empresa) {
-    return http.post('/alterarEmpresaLogada', {empresa: empresa})
+    return http.post('/alterarEmpresaLogada', {
+      empresa: empresa
+    })
       .then(response => response)
       .catch(error => {
         console.log('Erro no servidor ao trocar empresa logada', error)
@@ -32,7 +34,9 @@ export const LoginService = {
   },
 
   isLogged (token) {
-    return http.post('/auth/logged', {token})
+    return http.post('/auth/logged', {
+      token
+    })
       .then(response => response)
       .catch(error => {
         console.log('Erro ao validar token', error)

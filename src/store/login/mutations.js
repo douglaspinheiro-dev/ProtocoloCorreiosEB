@@ -2,7 +2,7 @@
 export const someMutation = (state) => {}
  */
 import storage from 'localforage'
-import http from 'src/plugins/axios'
+import http from 'src/boot/axios'
 
 export const setLogin = (state, dados) => {
   state.user.login = dados.login

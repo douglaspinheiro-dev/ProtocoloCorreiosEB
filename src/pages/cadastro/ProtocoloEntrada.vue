@@ -80,39 +80,21 @@
 
             </div>
             <div class="row">
-              <div class="col-md-4">
-                <q-field class="form-input" label="É endereço cadastrado?" orientation="vertical">
-                  <q-btn-group  class="fit">
-                    <radio-button :status="protocoloEntrada.enderecoCadastrado"
-                    @toggleRadioButton="protocoloEntrada.enderecoCadastrado = !protocoloEntrada.enderecoCadastrado"
-                    :label="['Sim','Não']"
-                  />
-                  </q-btn-group>
-                </q-field>
-              </div>
-
-              <!-- <div class="col-md-8" v-show="enderecoCadastrado">
-                <q-field class="form-input"
-                  label="Origem"
+              <div class="col-md-12">
+                <q-field
+                  label="Assunto"
                   orientation="vertical"
+                  class="form-input"
                   helper="Obrigatório"
-                  :error="$v.protocoloEntrada.origem.$error"
+                  :error="$v.protocoloEntrada.assunto.$error"
                   error-label="Obrigatório"
                 >
-                  <q-select
-                    v-model="protocoloEntrada.origem"
-                    :options="optionsEndereco"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione a Origem"
-                    name="select"
-                    @input="procuraEndereco"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
+                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
                 </q-field>
-              </div> -->
-
-              <div class="col-md-8" v-show="protocoloEntrada.enderecoCadastrado">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
                 <q-field class="form-input"
                   label="Origem"
                   orientation="vertical"
@@ -130,40 +112,7 @@
                 </q-field>
               </div>
 
-              <div class="col-md-8" v-show="!protocoloEntrada.enderecoCadastrado">
-                <q-field class="form-input"
-                  label="Origem"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.protocoloEntrada.origem.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" >
-                    <!-- <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                      @selected="selected"
-                    /> -->
-                  </q-input>
-                </q-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <q-field
-                  label="Assunto"
-                  orientation="vertical"
-                  class="form-input"
-                  helper="Obrigatório"
-                  :error="$v.protocoloEntrada.assunto.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
-                </q-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <q-field class="form-input" label="Destino" orientation="vertical"
                   :error="$v.protocoloEntrada.setor.$error"
                   error-label="Obrigatório"
@@ -194,14 +143,13 @@
 <script>
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import RadioButton from 'src/components/form/radios/RadioButton'
+// import RadioButton from 'src/components/form/radios/RadioButton'
 import ListaDeRegistros from 'src/components/menuRight/ListaProtocoloEntradas.vue'
 import { required } from 'vuelidate/lib/validators'
 import ProtocoloEntrada from 'src/services/protocoloEntrada/ProtocoloEntrada'
 import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntradaService'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from '../../tools/Notify'
-import { filter } from 'quasar'
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
 import Endereco from 'src/services/endereco/Endereco'
 import Setor from 'src/services/setor/Setor'
@@ -212,8 +160,7 @@ export default {
   components: {
     ListaDeRegistros,
     BotaoMenuLeft,
-    BotaoMenuRight,
-    RadioButton
+    BotaoMenuRight
   },
   data () {
     return {
@@ -225,7 +172,6 @@ export default {
       possoAlterarProtocoloEntrada: false,
       possoExcluirProtocoloEntrada: false,
       optionsTipoDocumento: [],
-      enderecoCadastrado: true,
       optionsEndereco: [],
       optionsSetor: [],
       optionsLoading: false
@@ -265,11 +211,6 @@ export default {
           value: endereco.value
         }
       })
-    },
-    search (terms, done) {
-      setTimeout(() => {
-        done(filter(terms, {field: 'value', list: this.parseEnderecos()}))
-      }, 1000)
     },
     selected (item) {
       // this.$q.notify(`Selected suggestion "${item.label}"`)

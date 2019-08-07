@@ -2,8 +2,8 @@
 
 module.exports = function (ctx) {
   return {
-    // app plugins (/src/plugins)
-    plugins: [
+    // app boot (/src/boot)
+    boot: [
       'axios',
       'vuelidate',
       'chrome'
@@ -12,11 +12,10 @@ module.exports = function (ctx) {
       'app.styl'
     ],
     extras: [
-      ctx.theme.mat ? 'roboto-font' : null,
       'material-icons', // optional, you are not bound to it
-      // 'ionicons',
-      // 'mdi',
-      'fontawesome'
+      // 'ionicons-v4',
+      // 'mdi-v3',
+      'fontawesome-v5'
     ],
     supportIE: false,
     build: {
@@ -53,16 +52,13 @@ module.exports = function (ctx) {
     // framework: 'all' --- includes everything; for dev only!
     framework: {
       components: [
-        'QAutocomplete',
         'QBtn',
         'QBtnGroup',
         'QCard',
         'QCardActions',
-        'QCardMain',
-        'QCardMedia',
-        'QCardSeparator',
-        'QCardTitle',
-        'QCollapsible',
+        'QCardSection',
+        'QSeparator',
+        'QExpansionItem',
         'QDialog',
         'QFab',
         'QFabAction',
@@ -72,26 +68,22 @@ module.exports = function (ctx) {
         'QInnerLoading',
         'QInput',
         'QItem',
-        'QItemMain',
-        'QItemSeparator',
-        'QItemSide',
-        'QItemTile',
+        'QItemLabel',
+        'QSeparator',
+        'QItemSection',
         'QLayout',
-        'QLayoutDrawer',
-        'QLayoutFooter',
-        'QLayoutHeader',
+        'QDrawer',
+        'QFooter',
+        'QHeader',
         'QList',
-        'QListHeader',
-        'QModal',
-        'QModalLayout',
+        'QItemLabel',
         'QOptionGroup',
         'QPage',
         'QPageContainer',
         'QPageSticky',
-        'QPopover',
+        'QMenu',
         'QRouteTab',
         'QScrollArea',
-        'QSearch',
         'QSelect',
         'QSpinnerDots',
         'QSpinnerGears',
@@ -99,7 +91,8 @@ module.exports = function (ctx) {
         'QStepper',
         'QStepperNavigation',
         'QTab',
-        'QTabPane',
+        'QTabPanels',
+        'QTabPanel',
         'QTable',
         'QTabs',
         'QTd',
@@ -111,15 +104,13 @@ module.exports = function (ctx) {
         'QToggle',
         'QBtnToggle',
         'QRadio',
-        'QTableColumns',
-        'QProgress',
+        'QLinearProgress',
         'QAjaxBar',
         'QPopupEdit',
         'QBtnDropdown'
       ],
       directives: [
-        'Ripple',
-        'CloseOverlay'
+        'Ripple'
       ],
       // Quasar plugins
       plugins: [
@@ -127,12 +118,10 @@ module.exports = function (ctx) {
         'Loading',
         'Dialog'
       ]
-      // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
-      // i18n: 'de' // Quasar language
+      // lang: 'de' // Quasar language
     },
     // animations: 'all' --- includes all animations
-    animations: [
-    ],
+    animations: [],
     pwa: {
       // workboxPluginMode: 'InjectManifest',
       // workboxOptions: {},
@@ -144,32 +133,31 @@ module.exports = function (ctx) {
         orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#027be3',
-        icons: [
-          {
-            'src': 'statics/icons/icon-128x128.png',
-            'sizes': '128x128',
-            'type': 'image/png'
-          },
-          {
-            'src': 'statics/icons/icon-192x192.png',
-            'sizes': '192x192',
-            'type': 'image/png'
-          },
-          {
-            'src': 'statics/icons/icon-256x256.png',
-            'sizes': '256x256',
-            'type': 'image/png'
-          },
-          {
-            'src': 'statics/icons/icon-384x384.png',
-            'sizes': '384x384',
-            'type': 'image/png'
-          },
-          {
-            'src': 'statics/icons/icon-512x512.png',
-            'sizes': '512x512',
-            'type': 'image/png'
-          }
+        icons: [{
+          'src': 'statics/icons/icon-128x128.png',
+          'sizes': '128x128',
+          'type': 'image/png'
+        },
+        {
+          'src': 'statics/icons/icon-192x192.png',
+          'sizes': '192x192',
+          'type': 'image/png'
+        },
+        {
+          'src': 'statics/icons/icon-256x256.png',
+          'sizes': '256x256',
+          'type': 'image/png'
+        },
+        {
+          'src': 'statics/icons/icon-384x384.png',
+          'sizes': '384x384',
+          'type': 'image/png'
+        },
+        {
+          'src': 'statics/icons/icon-512x512.png',
+          'sizes': '512x512',
+          'type': 'image/png'
+        }
         ]
       }
     },

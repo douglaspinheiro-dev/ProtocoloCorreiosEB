@@ -1,9 +1,16 @@
-import http from 'src/plugins/axios'
-import { Dialog, Loading } from 'quasar'
+import http from 'src/boot/axios'
+import {
+  Dialog,
+  Loading
+} from 'quasar'
 import Notify from '../../tools/Notify'
 export const BuscaCorrespondenciaService = {
   procura (busca, inicio, fim) {
-    return http.get('busca-correspondencias', { params: { busca } })
+    return http.get('busca-correspondencias', {
+      params: {
+        busca
+      }
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -23,7 +30,9 @@ export const BuscaCorrespondenciaService = {
   },
 
   procuraDocumento (dados) {
-    return http.get('busca-correspondencias/correspondencia', { params: dados })
+    return http.get('busca-correspondencias/correspondencia', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -43,7 +52,9 @@ export const BuscaCorrespondenciaService = {
   },
 
   procuraDocumentoPublico (dados) {
-    return http.get('busca-correspondencias/correspondencia/publico', { params: dados })
+    return http.get('busca-correspondencias/correspondencia/publico', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -63,7 +74,9 @@ export const BuscaCorrespondenciaService = {
   },
 
   relatorio (dados) {
-    return http.get('busca-correspondencias/relatorio', { params: dados })
+    return http.get('busca-correspondencias/relatorio', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -83,7 +96,9 @@ export const BuscaCorrespondenciaService = {
   },
 
   relatorioPublico (dados) {
-    return http.get('busca-correspondencias/relatorio/publico', { params: dados })
+    return http.get('busca-correspondencias/relatorio/publico', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {

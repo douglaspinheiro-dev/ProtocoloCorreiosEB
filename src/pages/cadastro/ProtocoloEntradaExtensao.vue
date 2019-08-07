@@ -119,7 +119,6 @@ export default {
       }
       this.protocoloEntrada.assunto = dados.assunto
       this.protocoloEntrada.dataDocumento = dados.dataDocumento
-      this.protocoloEntrada.enderecoCadastrado = dados.enderecoCadastrado
       this.protocoloEntrada.numero = dados.numero
       this.protocoloEntrada.origem = dados.origem
       this.protocoloEntrada.tipoDocumento = dados.tipoDocumento
@@ -200,7 +199,6 @@ export default {
       console.log('result.protocoloEntrada ', result.protocoloEntrada)
       this.protocoloEntrada.assunto = result.protocoloEntrada.assunto
       this.protocoloEntrada.dataDocumento = result.protocoloEntrada.dataDocumento
-      this.protocoloEntrada.enderecoCadastrado = result.protocoloEntrada.enderecoCadastrado
       this.protocoloEntrada.numero = result.protocoloEntrada.numero
       this.protocoloEntrada.origem = result.protocoloEntrada.origem
       this.protocoloEntrada.tipoDocumento = result.protocoloEntrada.tipoDocumento

@@ -1,11 +1,20 @@
-import http from 'src/plugins/axios'
-import { Dialog, Loading } from 'quasar'
+import http from 'src/boot/axios'
+import {
+  Dialog,
+  Loading
+} from 'quasar'
 import Notify from '../../tools/Notify'
 
 export const RotaService = {
   // usado para a lista de registros
   procura (busca, inicio, fim) {
-    return http.get('rotas', { params: { busca: busca, inicio: inicio, fim: fim } })
+    return http.get('rotas', {
+      params: {
+        busca: busca,
+        inicio: inicio,
+        fim: fim
+      }
+    })
       .then(response => response)
       .catch(function (error) {
         console.log('erro no servidor ao listar rotas')

@@ -260,10 +260,6 @@ import Malote from 'src/services/malote/Malote'
 import Endereco from 'src/services/endereco/Endereco'
 import RotaEndereco from 'src/services/rotaEndereco/RotaEndereco'
 import Setor from 'src/services/setor/Setor'
-import {
-  filter
-} from 'quasar'
-
 export default {
   name: 'ConsultaMalote',
   directives: {
@@ -380,14 +376,6 @@ export default {
           value: endereco.value
         }
       })
-    },
-    search (terms, done) {
-      setTimeout(() => {
-        done(filter(terms, {
-          field: 'value',
-          list: this.parseEnderecos()
-        }))
-      }, 1000)
     },
     setOptionsAno (anos) {
       if (anos.length > 0) {

@@ -448,7 +448,6 @@ import buscaCorrespondenciaService from 'src/services/buscaCorrespondencia/Busca
 import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
 import Endereco from 'src/services/endereco/Endereco'
 import Setor from 'src/services/setor/Setor'
-import { filter } from 'quasar'
 
 export default {
   name: 'ConsultaCorrespondencia',
@@ -517,11 +516,6 @@ export default {
           value: endereco.value
         }
       })
-    },
-    search (terms, done) {
-      setTimeout(() => {
-        done(filter(terms, { field: 'value', list: this.parseEnderecos() }))
-      }, 1000)
     },
     setOptionsAno (anos) {
       if (anos.length > 0) {

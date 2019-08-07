@@ -1,10 +1,19 @@
-import http from 'src/plugins/axios'
-import { Dialog, Loading } from 'quasar'
+import http from 'src/boot/axios'
+import {
+  Dialog,
+  Loading
+} from 'quasar'
 import Notify from '../../tools/Notify'
 
 export const UsuarioService = {
   procura (busca, inicio, fim) {
-    return http.get('usuarios', { params: { busca: busca, inicio: inicio, fim: fim } })
+    return http.get('usuarios', {
+      params: {
+        busca: busca,
+        inicio: inicio,
+        fim: fim
+      }
+    })
       .then(response => response)
       .catch(error => {
         console.log('erro no servidor ao listar  usuario')
@@ -198,7 +207,11 @@ export const UsuarioService = {
   },
 
   buscalogin (login) {
-    return http.get(`usuarios/buscalogin`, { params: { login: login } })
+    return http.get(`usuarios/buscalogin`, {
+      params: {
+        login: login
+      }
+    })
       .then(function (response) {
         return {
           response: response,
@@ -232,7 +245,9 @@ export const UsuarioService = {
   },
 
   removerEmpresaUsuario (id, usuario) {
-    return http.put(`usuarios/acessoempresa/${id}`, {usuario: usuario})
+    return http.put(`usuarios/acessoempresa/${id}`, {
+      usuario: usuario
+    })
       .then(response => response)
       .catch(error => {
         console.log(error.response)

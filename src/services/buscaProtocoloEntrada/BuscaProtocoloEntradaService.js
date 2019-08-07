@@ -1,9 +1,16 @@
-import http from 'src/plugins/axios'
-import { Dialog, Loading } from 'quasar'
+import http from 'src/boot/axios'
+import {
+  Dialog,
+  Loading
+} from 'quasar'
 import Notify from '../../tools/Notify'
 export const BuscaProtocoloEntradaService = {
   procura (busca, inicio, fim) {
-    return http.get('busca-protocoloentradas', { params: { busca } })
+    return http.get('busca-protocoloentradas', {
+      params: {
+        busca
+      }
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -23,7 +30,9 @@ export const BuscaProtocoloEntradaService = {
   },
 
   procuraDocumento (dados) {
-    return http.get('busca-protocoloentradas/documento', { params: dados })
+    return http.get('busca-protocoloentradas/documento', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -43,7 +52,9 @@ export const BuscaProtocoloEntradaService = {
   },
 
   relatorio (dados) {
-    return http.get('busca-protocoloentradas/relatorio', { params: dados })
+    return http.get('busca-protocoloentradas/relatorio', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {

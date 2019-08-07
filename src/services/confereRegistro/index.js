@@ -1,5 +1,7 @@
-import http from 'src/plugins/axios'
-import { Dialog } from 'quasar'
+import http from 'src/boot/axios'
+import {
+  Dialog
+} from 'quasar'
 var timer
 const confereRegistro = function (tabela, campo, opcao, id, campoId, valor, campo2, valor2) {
   return new Promise((resolve, reject) => {
@@ -18,15 +20,15 @@ const confereRegistro = function (tabela, campo, opcao, id, campoId, valor, camp
         }
       }).then(response => resolve(response))
         .catch(function (error) {
-        // throw new Error(error)
+          // throw new Error(error)
           console.log('erro no servidor')
           Dialog.create({
             title: 'Atenção',
             message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
           }).then(() => {
-          // Picked "OK"
+            // Picked "OK"
           }).catch(() => {
-          // Picked "Cancel" or dismissed
+            // Picked "Cancel" or dismissed
           })
           reject(error)
           throw new Error(error)

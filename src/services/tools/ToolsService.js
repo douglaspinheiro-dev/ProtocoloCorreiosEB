@@ -1,6 +1,8 @@
-import http from 'src/plugins/axios'
+import http from '@/boot/axios'
 import MsgDialog from 'src/tools/Dialogs'
-import { Dialog } from 'quasar'
+import {
+  Dialog
+} from 'quasar'
 export const ToolsService = {
   listaQuantidades () {
     return http.get('tools/quantidades')

@@ -1,5 +1,8 @@
-import http from 'src/plugins/axios'
-import { Dialog, Loading } from 'quasar'
+import http from '@/boot/axios'
+import {
+  Dialog,
+  Loading
+} from 'quasar'
 import Notify from '../../tools/Notify'
 
 export const PermissoesService = {

@@ -1,9 +1,16 @@
-import http from 'src/plugins/axios'
-import { Dialog, Loading } from 'quasar'
+import http from 'src/boot/axios'
+import {
+  Dialog,
+  Loading
+} from 'quasar'
 import Notify from '../../tools/Notify'
 export const BuscaMaloteService = {
   procura (busca, inicio, fim) {
-    return http.get('busca-malotes', { params: { busca } })
+    return http.get('busca-malotes', {
+      params: {
+        busca
+      }
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -23,7 +30,9 @@ export const BuscaMaloteService = {
   },
 
   procuraDocumento (dados) {
-    return http.get('busca-malotes/documento', { params: dados })
+    return http.get('busca-malotes/documento', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -42,7 +51,9 @@ export const BuscaMaloteService = {
       })
   },
   procuraMes (dados) {
-    return http.get('busca-malotes/mes', { params: dados })
+    return http.get('busca-malotes/mes', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
@@ -62,7 +73,9 @@ export const BuscaMaloteService = {
   },
 
   relatorio (dados) {
-    return http.get('busca-malotes/relatorio', { params: dados })
+    return http.get('busca-malotes/relatorio', {
+      params: dados
+    })
       .then(response => response)
       .catch(error => {
         if (error.response.status === 401) {
