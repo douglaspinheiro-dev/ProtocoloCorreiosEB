@@ -1,9 +1,7 @@
 <template>
   <q-layout>
-    <q-page-container>
-      <q-page>
-        <!-- page content -->
-        <q-toolbar class="desktop-only">
+    <q-header class="desktop-only">
+      <q-toolbar class="desktop-only">
           <q-toolbar-title class="text-center">
             <img :src="imageSrc" alt="">
             <span slot="subtitle">
@@ -13,6 +11,11 @@
             </span>
           </q-toolbar-title>
         </q-toolbar>
+    </q-header>
+
+    <q-page-container>
+      <q-page>
+        <!-- page content -->
 
         <div class="absolute-center" style="width: 500px; max-width: 90vw;">
           <h2 class="desktop-only text-center">Bem Vindo</h2>
@@ -35,7 +38,7 @@
 
         </div>
 
-        <q-modal ref="modalRecuperar" minimized v-model="modalRecuperar" @hide="resetaStepper">
+        <q-dialog ref="modalRecuperar" minimized v-model="modalRecuperar" @hide="resetaStepper">
           <q-stepper ref="stepper">
             <!-- Step: -->
             <q-step default title="Identificação">
@@ -110,7 +113,7 @@
           <q-inner-loading :visible="loadingVisible">
             <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
           </q-inner-loading>
-        </q-modal>
+        </q-dialog>
 
         <q-dialog v-model="dialogValida">
           <span slot="title">Atenção</span>
@@ -146,7 +149,7 @@
 
       </q-page>
     </q-page-container>
-    <q-layout-footer class="desktop-only">
+    <q-footer class="desktop-only">
       <q-toolbar >
         <q-toolbar-title class="text-center">
           Copyright &copy; 2019 - Exército Brasileiro - 1ª Região Militar.
@@ -157,7 +160,7 @@
           </span>
         </q-toolbar-title>
       </q-toolbar>
-    </q-layout-footer>
+    </q-footer>
   </q-layout>
 
 </template>

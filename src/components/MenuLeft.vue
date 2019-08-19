@@ -1,304 +1,86 @@
 <template>
-  <q-layout-drawer
-    v-model="mostraMenuLeft"
-    side="left"
-    behavior="mobile"
-  >
-    <!--
-      Use <q-side-link> component
-      instead of <q-item> for
-      internal vue-router navigation
-    -->
+  <q-drawer side="left" elevated v-model="mostraMenuLeft" behavior="mobile" :width="360">
+    <q-scroll-area class="fit">
+      <q-list bordered class="rounded-borders menuLeft">
+        <q-expansion-item group="menuSuperior" icon="perm_identity" :label="getLogin">
+          <q-item clickable v-ripple link @click.native="abreModalTrocaSenha = !abreModalTrocaSenha">
+            <q-item-section>Alterar Senha</q-item-section>
+          </q-item>
 
-    <q-list
-      no-border
-      link
-      inset-delimiter
-      sparse
-    >
-      <q-collapsible
-        group="menuSuperior"
-        icon="perm_identity"
-        :label="getLogin"
-      >
-        <q-item
-          link
-          @click.native="abreModalTrocaSenha = !abreModalTrocaSenha"
-        >
-          <q-item-side icon="lock outline" />
-          <q-item-main label="Alterar Senha" />
-        </q-item>
+          <q-item clickable v-ripple link @click.native="logout">
+            <q-item-section>Sair</q-item-section>
+          </q-item>
+        </q-expansion-item>
 
-      </q-collapsible>
-      <q-item
-        link
-        @click.native="logout"
-      >
-        <q-item-side icon="exit to app" />
-        <q-item-main
-          label="Sair"
-          sublabel="Sair do sistema"
-        />
-      </q-item>
+        <q-separator />
+        <q-item-label header>Menu de Navegação</q-item-label>
 
-      <q-item-separator />
-      <q-list-header>Menu de Navegação</q-list-header>
+        <q-expansion-item group="menuLinks" icon="settings" label="Sistema" v-if="hasSistema">
+          <q-item v-for="(link, index) in linksSistema" :key="index" v-ripple link :to="{name: link.rota}">
+            <q-item-section>
+              <q-item-label>{{link.titulo}}</q-item-label>
+              <q-item-label v-if="link.subtitulo !== ''" caption>{{link.subTitulo}}</q-item-label>
+            </q-item-section>
+            <q-item-section v-if="link.icone !== ''" side top>
+              <q-icon :color="link.corIcone" :name="link.icone" />
+            </q-item-section>
+          </q-item>
+        </q-expansion-item>
 
-      <q-side-link
-        v-for="(link, key) in links"
-        :key="key"
-        item
-        :to="link.to"
-        exact
-      >
-        <q-item-side :icon="link.icon" />
-        <q-item-main
-          :label="link.label"
-          :sublabel="link.sublabel"
-        />
-      </q-side-link>
+        <q-expansion-item group="menuLinks" icon="folder_shared" label="Cadastro" v-if="hasCadastro">
+          <q-item v-for="(link, index) in linksCadastro" :key="index" v-ripple link :to="{name: link.rota}">
+            <q-item-section>
+              <q-item-label>{{link.titulo}}</q-item-label>
+              <q-item-label v-if="link.subtitulo !== ''" caption>{{link.subTitulo}}</q-item-label>
+            </q-item-section>
+            <q-item-section v-if="link.icone !== ''" side top>
+              <q-icon :color="link.corIcone" :name="link.icone" />
+            </q-item-section>
+          </q-item>
 
-      <q-item
-        link
-        :to="{name: 'dashboard'}"
-      >
-        <q-item-side icon="dashboard" />
-        <q-item-main
-          label="Consultas"
-          sublabel="Procurar documentos, imprimir Relatórios"
-        />
-      </q-item>
+        </q-expansion-item>
+      </q-list>
+    </q-scroll-area>
 
-      <q-collapsible
-        group="menuLinks"
-        icon="settings"
-        label="Sistema"
-        v-if="hasSistema"
-      >
+    <q-dialog :content-css="{minWidth: '50vw', minHeight: '50vh'}" v-model="abreModalTrocaSenha">
+      <q-card>
+        <q-card-section class="row items-center">
+          <div class="text-h6">Alterar Senha</div>
+          <q-btn icon="close" flat round dense v-close-dialog @click="cancelarModal" :disable="loadingVisible" />
+        </q-card-section>
 
-        <q-item
-          link
-          :to="{name: 'grupoUsuario'}"
-          v-if="getPermissoes.grupoUsuario.abrir"
-        >
-          <q-item-side icon="supervisor account" />
-          <q-item-main
-            label="Grupo de Usuários"
-            sublabel="Organiza por grupo e cria permissões"
-          />
-        </q-item>
-        <q-item
-          link
-          :to="{name: 'usuario'}"
-          v-if="getPermissoes.usuario.abrir"
-        >
-          <q-item-side icon="person" />
-          <q-item-main
-            label="Usuários"
-            sublabel="Cadastra usuários do sistema"
-          />
-        </q-item>
+        <q-card-section>
+          <div class="layout-padding">
+            Digite a senha atual e a nova senha
+            <form @submit.prevent="submit" id="formAlterarSenha">
+              <q-input hint="Obrigatório" :error="$v.form.senhaAtual.$error" error-message="Digite a senha atual" type="password"
+                v-model="form.senhaAtual" stack-label label="Senha atual" @blur="$v.form.senhaAtual.$touch()"
+                autocomplete="current-password" />
 
-      </q-collapsible>
+              <q-input hint="Obrigatório" :error="$v.form.senhaNova.$error" error-message="Digite a nova senha, minimo de 5 caracteres"
+                type="password" v-model="form.senhaNova" stack-label label="Nova senha" @blur="$v.form.senhaNova.$touch()"
+                autocomplete="new-passoword" />
 
-      <q-collapsible
-        group="menuLinks"
-        icon="folder shared"
-        label="Cadastro"
-        v-if="hasCadastro"
-      >
+              <q-input hint="Obrigatório" :error="$v.form.confirmaSenha.$error" error-message="As senhas novas devem ser iguais"
+                type="password" v-model="form.confirmaSenha" stack-label label="Repita a nova senha" @blur="$v.form.confirmaSenha.$touch()"
+                autocomplete="new-passoword" />
 
-        <q-item
-          link
-          :to="{name: 'tipoDocumento'}"
-          v-if="getPermissoes.tipoDocumento.abrir"
-        >
-          <q-item-side icon="fas fa-file-contract" />
-          <q-item-main label="Tipos de Documentos" />
-        </q-item>
+            </form>
 
-        <q-item
-          link
-          :to="{name: 'tipoCorrespondencia'}"
-          v-if="getPermissoes.tipoCorrespondencia.abrir"
-        >
-          <q-item-side icon="fas fa-envelope" />
-          <q-item-main label="Tipos de Correspondencias" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'tipoCobranca'}"
-          v-if="getPermissoes.tipoCobranca.abrir"
-        >
-          <q-item-side icon="attach_money" />
-          <q-item-main label="Tipos de Cobrancas" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'endereco'}"
-          v-if="getPermissoes.endereco.abrir"
-        >
-          <q-item-side icon="fas fa-map-marked-alt" />
-          <q-item-main label="Endereços" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'setor'}"
-          v-if="getPermissoes.setor.abrir"
-        >
-          <q-item-side icon="work_outline" />
-          <q-item-main label="Setores Internos" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'protocoloEntrada'}"
-          v-if="getPermissoes.protocoloEntrada.abrir"
-        >
-          <q-item-side icon="fas fa-file-alt" />
-          <q-item-main label="Protocolo de Entrada" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'rota'}"
-          v-if="getPermissoes.rota.abrir"
-        >
-          <q-item-side icon="fas fa-map-marked-alt" />
-          <q-item-main label="Rotas" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'malote'}"
-          v-if="getPermissoes.malote.abrir"
-        >
-          <q-item-side icon="move_to_inbox" />
-          <q-item-main label="Malotes" />
-        </q-item>
-
-        <q-item
-          link
-          :to="{name: 'correspondencia'}"
-          v-if="getPermissoes.correspondencia.abrir"
-        >
-          <q-item-side icon="mail_outline" />
-          <q-item-main label="Correspondencias" />
-        </q-item>
-
-      </q-collapsible>
-
-    </q-list>
-
-    <q-modal
-      :content-css="{minWidth: '50vw', minHeight: '50vh'}"
-      v-model="abreModalTrocaSenha"
-    >
-      <q-modal-layout
-        header-style="min-height: 100px"
-        content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
-        footer-class="bg-primary some-class"
-        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-      >
-        <q-toolbar class="primary">
-          <q-btn
-            flat
-            @click="cancelarModal"
-            :disable="loadingVisible"
-          >
-            <q-icon name="keyboard_arrow_left" />
-          </q-btn>
-          <div class="q-toolbar-title">
-            Alterar Senha
           </div>
-        </q-toolbar>
-        <q-toolbar slot="footer">
-          <div class="q-toolbar-title">
-            <div class="row justify-center botoes">
-              <q-btn
-                color="positive"
-                :disable="loadingVisible"
-                type="submit"
-                form="formAlterarSenha"
-              >Alterar</q-btn>
-              <q-btn
-                type="reset"
-                :disable="loadingVisible"
-                color="light"
-                class="text-black"
-                form="formAlterarSenha"
-                @click="cancelarModal"
-              >Cancelar</q-btn>
-            </div>
+          <br>
+          <div class="row justify-center botoes">
+            <q-btn color="primary" :disable="loadingVisible" type="submit" form="formAlterarSenha">Alterar</q-btn>
+            <q-btn type="reset" :disable="loadingVisible" color="light" class="text-black" form="formAlterarSenha"
+              @click="cancelarModal">Cancelar</q-btn>
           </div>
-        </q-toolbar>
-        <div class="layout-padding">
-          Digite a senha atual e a nova senha
-          <form
-            @submit.prevent="submit"
-            id="formAlterarSenha"
-          >
-            <q-field
-              class="input"
-              helper="Obrigatório"
-              :error="$v.form.senhaAtual.$error"
-              error-label="Digite a senha atual"
-            >
-              <q-input
-                type="password"
-                v-model="form.senhaAtual"
-                stack-label="Senha atual"
-                @blur="$v.form.senhaAtual.$touch()"
-                autocomplete="current-password"
-              />
-            </q-field>
-
-            <q-field
-              class="input"
-              helper="Obrigatório"
-              :error="$v.form.senhaNova.$error"
-              error-label="Digite a nova senha, minimo de 5 caracteres"
-            >
-              <q-input
-                type="password"
-                v-model="form.senhaNova"
-                stack-label="Nova senha"
-                @blur="$v.form.senhaNova.$touch()"
-                autocomplete="new-passoword"
-              />
-            </q-field>
-
-            <q-field
-              class="input"
-              helper="Obrigatório"
-              :error="$v.form.confirmaSenha.$error"
-              error-label="As senhas novas devem ser iguais"
-            >
-              <q-input
-                type="password"
-                v-model="form.confirmaSenha"
-                stack-label="Repita a nova senha"
-                @blur="$v.form.confirmaSenha.$touch()"
-                autocomplete="new-passoword"
-              />
-            </q-field>
-
-          </form>
-
-        </div>
-      </q-modal-layout>
-      <q-inner-loading :visible="loadingVisible">
-        <q-spinner-gears
-          size="50px"
-          color="primary"
-        ></q-spinner-gears>
-      </q-inner-loading>
-    </q-modal>
-
-  </q-layout-drawer>
+        </q-card-section>
+        <q-inner-loading :showing="loadingVisible">
+          <q-spinner size="50px" color="primary"></q-spinner>
+        </q-inner-loading>
+      </q-card>
+    </q-dialog>
+  </q-drawer>
 </template>
 
 <script>
@@ -310,12 +92,13 @@ import {
   sameAs,
   minLength
 } from 'vuelidate/lib/validators'
-import usuarioService from 'src/services/usuario/UsuarioService'
-// import loginService from 'src/services/login/LoginService'
+import usuarioService from 'src/pages/sistema/usuario/UsuarioService'
+import loginService from 'src/services/login/LoginService'
 
 export default {
   name: 'MenuLeft',
   components: {},
+  props: ['quasar'],
   data () {
     return {
       mostraMenuLeft: false,
@@ -326,7 +109,6 @@ export default {
         senhaNova: '',
         confirmaSenha: ''
       },
-      links: [],
       loadingVisible: false,
       trocaEmpresa: '',
       optionsEmpresa: []
@@ -349,10 +131,25 @@ export default {
   },
   methods: {
     logout () {
-      this.$store.commit('login/removeToken', '')
-      this.$store.commit('login/setLogin', '')
-      this.$store.commit('login/setSessaoInvalida', false)
-      this.$router.push('/')
+      console.log('teste')
+      console.log(this.getGrupoLogin)
+
+      this.$q.loading.show({
+        message: 'Saindo do sistema',
+        messageColor: 'white',
+        spinnerSize: 250, // in pixels
+        spinnerColor: 'white'
+      })
+      loginService.deslogar(this.getLogin)
+        .then(result => {
+          this.$q.loading.hide()
+          if (result.status === 200) {
+            this.$store.commit('login/removeToken', '')
+            this.$store.commit('login/setLogin', '')
+            this.$store.commit('login/setSessaoInvalida', false)
+            this.$router.push('/')
+          }
+        })
     },
     submit () {
       this.$v.form.$touch()
@@ -387,21 +184,21 @@ export default {
       this.$v.form.$reset()
       this.loadingVisible = false
       this.abreModalTrocaSenha = false
+      this.abreModalTrocaEmpresa = false
     }
-
   },
   created () {
     this.$root.$on('toggleLeft', () => {
       this.mostraMenuLeft = !this.mostraMenuLeft
     })
+
+    this.$root.$on('controlaMenuLeft', (valor) => {
+      this.mostraMenuLeft = valor
+    })
   },
   mounted () {
     this.links = this.getLinks
-    if (this.$q.platform.is.chromeExt) {
-      this.mostraMenuLeft = false
-    } else {
-      this.$q.platform.is.mobile ? this.mostraMenuLeft = false : this.mostraMenuLeft = true
-    }
+    this.$q.platform.is.mobile ? this.mostraMenuLeft = false : this.mostraMenuLeft = true
   },
   computed: {
     ...mapGetters({
@@ -411,7 +208,7 @@ export default {
     }),
     hasSistema: function () {
       for (const key in this.getPermissoes) {
-        if (this.getPermissoes[key].categoriaModulo === 'SISTEMA' && this.getPermissoes[key].abrir) {
+        if (this.getPermissoes[key].tipoModulo === 'SISTEMA' && this.getPermissoes[key].abrir) {
           return true
         }
       }
@@ -419,11 +216,65 @@ export default {
     },
     hasCadastro: function () {
       for (const key in this.getPermissoes) {
-        if (this.getPermissoes[key].categoriaModulo === 'CADASTROS' && this.getPermissoes[key].abrir) {
+        if (this.getPermissoes[key].tipoModulo === 'CADASTROS' && this.getPermissoes[key].abrir) {
           return true
         }
       }
       return false
+    },
+    linksSistema: function () {
+      let links = [
+      // {
+      //   'rota': 'configuracaoSistema',
+      //   'titulo': 'Configuração do Sistema',
+      //   'subTitulo': 'Define configurações gerais para o sistema',
+      //   'icone': 'settings',
+      //   'corIcone': 'primary'
+      // },
+        {
+          'rota': 'grupoUsuario',
+          'titulo': 'Grupos de Usuários',
+          'subTitulo': 'Organiza por grupo e cria permissões',
+          'icone': 'supervisor_account',
+          'corIcone': 'primary'
+        },
+        {
+          'rota': 'usuario',
+          'titulo': 'Usuários',
+          'subTitulo': 'Cadastra usuários do sistema e gerencia acessos às empresas',
+          'icone': 'person',
+          'corIcone': 'primary'
+        }
+      ]
+
+      return links.filter((link) => this.getPermissoes[link.rota].abrir)
+    },
+    linksCadastro: function () {
+      let links = [
+        { 'rota': 'tipoDocumento', 'titulo': 'Tipos de Documentos', 'icone': 'fas fa-file-contract', 'corIcone': 'primary' },
+        { 'rota': 'tipoCorrespondencia', 'titulo': 'Tipos de Correspondencias', 'icone': 'fas fa-envelope', 'corIcone': 'primary' },
+        { 'rota': 'tipoCobranca', 'titulo': 'Tipos de Cobranças', 'icone': 'attach_money', 'corIcone': 'primary' },
+        { 'rota': 'endereco', 'titulo': 'Endereços', 'icone': 'fas fa-map-marked-alt', 'corIcone': 'primary' },
+        { 'rota': 'setor', 'titulo': 'Setores Internos', 'icone': 'work_outline', 'corIcone': 'primary' },
+        { 'rota': 'protocoloEntrada', 'titulo': 'Protocolo de Entrada', 'icone': 'fas fa-file-alt', 'corIcone': 'primary' },
+        { 'rota': 'rota', 'titulo': 'Rotas', 'icone': 'fas fa-map-marked-alt', 'corIcone': 'primary' },
+        { 'rota': 'malote', 'titulo': 'Malotes', 'icone': 'move_to_inbox', 'corIcone': 'primary' },
+        { 'rota': 'correspondencia', 'titulo': 'Correspondencias', 'icone': 'mail_outline', 'corIcone': 'primary' }
+        // {
+        //   'rota': 'membro',
+        //   'titulo': 'Membros',
+        //   'icone': 'fas fa-id-card',
+        //   'corIcone': 'primary'
+        // },
+        // {
+        //   'rota': 'igreja',
+        //   'titulo': 'Igrejas',
+        //   'icone': 'home',
+        //   'corIcone': 'primary'
+        // }
+      ]
+
+      return links.filter((link) => this.getPermissoes[link.rota].abrir)
     }
   }
 }
@@ -431,7 +282,12 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin: 10px;
-}
+  h3 {
+    margin: 10px;
+  }
+
+  .menuLeft{
+    margin-bottom: 50px;
+  }
+
 </style>
