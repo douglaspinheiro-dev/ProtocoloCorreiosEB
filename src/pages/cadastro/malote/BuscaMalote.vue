@@ -16,7 +16,7 @@
             <div class="col-md-3">
               <q-field class="form-input"
                 label="Tipo do Documento"
-                orientation="vertical"
+
               >
                 <q-select
                   v-model="consultaMalote.tipoBusca"
@@ -33,7 +33,7 @@
             <!-- <div class="col-md-6">
               <q-field class="form-input"
                 label="Tipo de Relatório"
-                orientation="vertical"
+
               >
                 <q-select
                   v-model="buscaMalote.tipoRelatorio"
@@ -45,60 +45,45 @@
               </q-field>
             </div> -->
             <div class="col-md-12">
-              <q-field class="form-input" label="Tipo de Consulta" orientation="vertical">
-                <q-select v-model="tipoConsulta" :options="optionsConsulta" filter autofocus-filter filter-placeholder="Selecione a forma de consulta"
-                  @input="trocaRelatorio" name="select" />
-              </q-field>
+              <form-select @input="trocaRelatorio" classe="form-input" label="Tipo de Consulta" v-model="tipoConsulta"
+                :options="optionsConsulta" />
             </div>
           </div>
           <div class="row" v-show="tipoConsulta === 'protocolo'">
 
             <div class="col-md-3">
-              <q-field label="Número de Protocolo" orientation="vertical" class="form-input" :error="$v.buscaMalote.protocolo.$error"
-                error-label="Obrigatório" helper="Obrigatório">
-                <q-input autocomplete="off" type="text" v-model="buscaMalote.protocolo" name="number" @input="$v.buscaMalote.protocolo.$touch()" />
-              </q-field>
+                <q-input label="Número de Protocolo"  class="form-input"
+                :error="$v.buscaMalote.protocolo.$error" error-label="Obrigatório" helper="Obrigatório" autocomplete="off" type="text" v-model="buscaMalote.protocolo" name="number"
+                  @input="$v.buscaMalote.protocolo.$touch()" />
             </div>
             <div class="col-md-3">
-              <q-field class="form-input" label="Ano" orientation="vertical">
-                <q-select v-model="buscaMalote.ano" :options="optionsAno" placeholder="Selecione o ano" name="select" />
-              </q-field>
+              <form-select classe="form-input" label="Ano" v-model="buscaMalote.ano" :options="optionsAno" />
             </div>
           </div>
           <div class="row" v-show="tipoConsulta === 'mes'">
 
             <div class="col-md-3">
-              <q-field class="form-input" label="Mês" orientation="vertical">
-                <q-select v-model="buscaMalote.mes" :options="optionsMes" placeholder="Selecione o Mês" name="select" @input="$v.buscaMalote.protocolo.$touch()"/>
-              </q-field>
+              <form-select classe="form-input" label="Mês" v-model="buscaMalote.mes" :options="optionsMes" @input="$v.buscaMalote.protocolo.$touch()"/>
             </div>
             <div class="col-md-3">
-              <q-field class="form-input" label="Ano" orientation="vertical">
-                <q-select v-model="buscaMalote.ano" :options="optionsAno" placeholder="Selecione o ano" name="select" @input="$v.buscaMalote.protocolo.$touch()"/>
-              </q-field>
+              <form-select classe="form-input" label="Ano" v-model="buscaMalote.ano" :options="optionsAno" @input="$v.buscaMalote.protocolo.$touch()"/>
             </div>
           </div>
           <div v-show="tipoConsulta === 'documento'">
 
             <div class="row">
-              <div class="col-md-3">
-                <q-field class="form-input" label="Tipo do Documento" orientation="vertical">
-                  <q-select v-model="buscaMalote.tipoDocumento" :options="optionsTipoDocumento" filter autofocus-filter
-                    filter-placeholder="Selecione o tipo do documento" name="select" />
-                </q-field>
+              <div class="col-md-2">
+                <form-select classe="form-input" label="Tipo do Documento" v-model="buscaMalote.tipoDocumento" :options="optionsTipoDocumento"/>
               </div>
-
-              <div class="col-md-3">
-                <q-field label="Número do Documento" orientation="vertical" class="form-input">
-                  <q-input autocomplete="off" type="text" v-model="buscaMalote.numero" name="number" />
-                </q-field>
+              <div class="col-md-2">
+                <q-input label="Número do Documento"  class="form-input" autocomplete="off" type="text" v-model="buscaMalote.numero" name="number" />
               </div>
 
               <!-- <div class="row">
               <div class="col-md-4">
                 <q-field
                   label="Data ou Período?"
-                  orientation="vertical"
+
                   class="form-input"
                 >
                   <q-radio v-model="buscaMalote.tipoData" val="data" label="Data do Cadastro" />
@@ -109,7 +94,7 @@
               <div class="col-md-4" v-show="buscaMalote.tipoData === 'data'">
                 <q-field
                   label="Data do Cadastro"
-                  orientation="vertical"
+
                   class="form-input"
                 >
                   <q-input autocomplete="off" type="date" v-model="buscaMalote.dataCadastro" name="date"/>
@@ -118,7 +103,7 @@
               <div class="col-md-4" v-show="buscaMalote.tipoData === 'periodo'">
                 <q-field
                   label="Data inicial"
-                  orientation="vertical"
+
                   class="form-input"
                 >
                   <q-input autocomplete="off" type="date" v-model="buscaMalote.dataInicial" name="date"/>
@@ -127,7 +112,7 @@
               <div class="col-md-4" v-show="buscaMalote.tipoData === 'periodo'">
                 <q-field
                   label="Data Final"
-                  orientation="vertical"
+
                   class="form-input"
                 >
                   <q-input autocomplete="off" type="date" v-model="buscaMalote.dataFinal" name="date"/>
@@ -136,24 +121,20 @@
               <div class="col-md-4" v-show="buscaMalote.tipoData === 'mes'">
                 <q-field
                   label="Mês do cadastro"
-                  orientation="vertical"
+
                   class="form-input"
                 >
                   <q-input autocomplete="off" type="month" v-model="buscaMalote.mesCadastro" name="date"/>
                 </q-field>
               </div>
             </div> -->
-              <div class="col-md-3">
-                <q-field class="form-input" label="Origem" orientation="vertical">
-                  <q-select v-model="buscaMalote.setor" :options="optionsSetor" filter autofocus-filter
-                    filter-placeholder="Selecione o setor" name="select" />
-                </q-field>
+              <div class="col-md-4">
+                <form-select classe="form-input" label="Origem" v-model="buscaMalote.setor"
+                  :options="optionsSetor" />
               </div>
-              <div class="col-md-3">
-                <q-field class="form-input" label="Destino" orientation="vertical">
-                  <q-select v-model="buscaMalote.rotaEndereco" :options="optionsRotaEndereco" filter autofocus-filter
-                    filter-placeholder="Selecione o Endereço" name="select" />
-                </q-field>
+              <div class="col-md-4">
+                <form-select classe="form-input" label="Destino" v-model="buscaMalote.rotaEndereco"
+                  :options="optionsRotaEndereco" />
               </div>
             </div>
 
@@ -194,12 +175,13 @@
               { label: 'Vertical', value: 'vertical' },
               { label: 'Célula', value: 'cell' },
               { label: 'Nenhum', value: 'none' }
-            ]"
-            hide-underline />
-          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" />
+            ]" hide-underline />
+          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+            @click="props.toggleFullscreen" />
         </template>
         <q-td slot="body-cell-editar" slot-scope="props" :props="props">
-          <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }" />
+          <q-btn type="button" color="primary" flat round icon="edit"
+            :to="{ name: 'alterarMalote', params: { id: props.row.malote} }" />
           <!-- <q-btn type="button" color="primary" flat round icon="edit" :to="{ name: 'alterarMalote', params: { id: props.row.malote} }"/> -->
         </q-td>
 
@@ -260,12 +242,16 @@ import Malote from 'src/pages/cadastro/malote/Malote'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
+import formSelect from 'src/components/form/select/QSelect'
+
 export default {
   name: 'ConsultaMalote',
   directives: {
     mask
   },
-  components: {},
+  components: {
+    formSelect
+  },
   data () {
     return {
       modalRelatorio: false,
@@ -360,10 +346,8 @@ export default {
   },
   validations: {
     buscaMalote: {
-      ano: {
-      },
-      protocolo: {
-      }
+      ano: {},
+      protocolo: {}
     }
   },
   methods: {
