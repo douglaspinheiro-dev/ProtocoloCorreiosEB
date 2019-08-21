@@ -90,17 +90,15 @@
           <div class="row">
             <div class="col-md-6">
               <form-select classe="form-input" label="Origem" v-model="buscaCorrespondencia.setor"
-              :options="optionsTipoRelatorio" name="origem"/>
+              :options="optionsSetor"/>
             </div>
             <div class="col-md-6">
-              <form-select classe="form-input" label="Destino" v-model="buscaCorrespondencia.destino" name="destino"
-              :options="optionsTipoRelatorio" />
-                <q-input class="form-input" label="Destino" autocomplete="on" type="text" v-model="buscaCorrespondencia.destino" name="origem">
-                  <!-- <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                    /> -->
-                </q-input>
+              <q-input class="form-input" label="Destino" autocomplete="on" type="text" v-model="buscaCorrespondencia.destino">
+                <!-- <q-autocomplete
+                    @search="search"
+                    :min-characters="3"
+                  /> -->
+              </q-input>
             </div>
           </div>
 
