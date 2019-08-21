@@ -9,8 +9,8 @@
         </div>
       </div>
       <div>
-        <div class="row">
-          <!-- <div class="col-md-3">
+        <!-- <div class="row">
+          <div class="col-md-3">
               <q-field class="form-input"
                 label="Tipo do Documento"
               >
@@ -23,8 +23,8 @@
                   name="select"
                 />
               </q-field>
-            </div> -->
-        </div>
+            </div>
+        </div> -->
         <div class="row">
           <div class="col-md-6">
             <form-select classe="form-input" label="Tipo de Relatório" v-model="buscaCorrespondencia.tipoRelatorio"

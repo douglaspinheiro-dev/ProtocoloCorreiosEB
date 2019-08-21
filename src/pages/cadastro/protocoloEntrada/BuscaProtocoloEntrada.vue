@@ -32,7 +32,7 @@
             <!-- <div class="col-md-3">
               <q-field class="form-input"
                 label="Tipo do Documento"
-                orientation="vertical"
+
               >
                 <q-select
                   v-model="consultaProtocoloEntrada.tipoBusca"
@@ -47,55 +47,25 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <q-field
-                class="form-input"
-                label="Tipo de Consulta"
-                orientation="vertical"
-              >
-                <q-select
-                  v-model="tipoConsulta"
-                  :options="optionsConsulta"
-                  filter
-                  @input="reset"
-                  autofocus-filter
-                  filter-placeholder="Selecione a forma de consulta"
-                  name="select"
-                />
-              </q-field>
+              <form-select classe="form-input" label="Tipo de Consulta" v-model="tipoConsulta" :options="optionsConsulta" />
             </div>
           </div>
           <div
             class="row"
             v-show="tipoConsulta === 'protocolo'"
           >
-
             <div class="col-md-3">
-              <q-field
+              <q-input
                 label="Número de Protocolo"
-                orientation="vertical"
                 class="form-input"
-              >
-                <q-input
-                  autocomplete="off"
-                  type="text"
-                  v-model="buscaProtocoloEntrada.protocolo"
-                  name="number"
-                />
-              </q-field>
+                autocomplete="off"
+                type="text"
+                v-model="buscaProtocoloEntrada.protocolo"
+                name="number"
+              />
             </div>
             <div class="col-md-3">
-              <q-field
-                class="form-input"
-                label="Ano"
-                orientation="vertical"
-              >
-                <q-select
-                  v-model="buscaProtocoloEntrada.ano"
-                  :options="optionsAno"
-                  placeholder="Selecione o ano"
-                  name="select"
-                />
-              </q-field>
+              <form-select classe="form-input" label="Ano" v-model="buscaProtocoloEntrada.ano" :options="optionsAno" />
             </div>
           </div>
           <div v-show="tipoConsulta === 'documento'">
@@ -103,55 +73,37 @@
             <div class="row">
 
               <div class="col-md-6">
-                <q-field
+                <q-input
                   label="Número do Documento"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input
-                    autocomplete="off"
-                    type="text"
-                    v-model="buscaProtocoloEntrada.numero"
-                    name="number"
-                  />
-                </q-field>
+                  autocomplete="off"
+                  type="text"
+                  v-model="buscaProtocoloEntrada.numero"
+                  name="number"
+                />
               </div>
 
               <div class="col-md-6">
-                <q-field
+                <q-input
                   label="Assunto"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input
-                    type="text"
-                    v-model="buscaProtocoloEntrada.assunto"
-                    name="text"
-                  />
-                </q-field>
+                  type="text"
+                  v-model="buscaProtocoloEntrada.assunto"
+                  name="text"
+                />
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <q-field
-                  label="Data ou Período?"
-                  orientation="vertical"
-                  class="form-input"
-                >
-                  <q-radio
+                <q-field label="Data ou Período?" class="form-input" stack-label borderless="">
+                  <q-option-group inline
                     v-model="buscaProtocoloEntrada.tipoData"
-                    val="data"
-                    label="Data do Documento"
-                  />
-                  <q-radio
-                    v-model="buscaProtocoloEntrada.tipoData"
-                    val="periodo"
-                    label="Período do Cadastro"
-                  />
-                  <q-radio
-                    v-model="buscaProtocoloEntrada.tipoData"
-                    val="mes"
-                    label="Mês do Cadastro"
+                    :options="[
+                      {label: 'Data', value: 'data'},
+                      {label: 'Período', value: 'periodo'},
+                      {label: 'Mês', value: 'mes'}
+                    ]"
+                    color="primary"
                   />
                 </q-field>
               </div>
@@ -159,111 +111,79 @@
                 class="col-md-4"
                 v-show="buscaProtocoloEntrada.tipoData === 'data'"
               >
-                <q-field
+                <q-input
+                  stack-label
                   label="Data do Documento"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input
-                    autocomplete="off"
-                    type="date"
-                    v-model="buscaProtocoloEntrada.dataDocumento"
-                    name="date"
-                  />
-                </q-field>
+                  autocomplete="off"
+                  type="date"
+                  v-model="buscaProtocoloEntrada.dataDocumento"
+                  name="date"
+                />
               </div>
               <div
                 class="col-md-4"
                 v-show="buscaProtocoloEntrada.tipoData === 'periodo'"
               >
-                <q-field
+                <q-input
+                  stack-label
                   label="Data inicial"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input
-                    autocomplete="off"
-                    type="date"
-                    v-model="buscaProtocoloEntrada.dataInicial"
-                    name="date"
-                  />
-                </q-field>
+                  autocomplete="off"
+                  type="date"
+                  v-model="buscaProtocoloEntrada.dataInicial"
+                  name="date"
+                />
               </div>
               <div
                 class="col-md-4"
                 v-show="buscaProtocoloEntrada.tipoData === 'periodo'"
               >
-                <q-field
+                <q-input
+                  stack-label
                   label="Data Final"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input
-                    autocomplete="off"
-                    type="date"
-                    v-model="buscaProtocoloEntrada.dataFinal"
-                    name="date"
-                  />
-                </q-field>
+                  autocomplete="off"
+                  type="date"
+                  v-model="buscaProtocoloEntrada.dataFinal"
+                  name="date"
+                />
               </div>
               <div
                 class="col-md-4"
                 v-show="buscaProtocoloEntrada.tipoData === 'mes'"
               >
-                <q-field
+                <q-input
                   label="Mês do cadastro"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input
-                    autocomplete="off"
-                    type="month"
-                    v-model="buscaProtocoloEntrada.mesCadastro"
-                    name="date"
-                  />
-                </q-field>
+                  autocomplete="off"
+                  type="month"
+                  v-model="buscaProtocoloEntrada.mesCadastro"
+                  name="date"
+                />
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <q-field
+                <q-input
                   class="form-input"
                   label="Origem"
-                  orientation="vertical"
+                  autocomplete="on"
+                  type="text"
+                  v-model="buscaProtocoloEntrada.origem"
+                  name="origem"
                 >
-                  <q-input
-                    autocomplete="on"
-                    type="text"
-                    v-model="buscaProtocoloEntrada.origem"
-                    name="origem"
-                  >
-                    <!-- <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                    /> -->
-                  </q-input>
-                </q-field>
+                  <!-- <q-autocomplete
+                    @search="search"
+                    :min-characters="3"
+                  /> -->
+                </q-input>
               </div>
               <div class="col-md-6">
-                <q-field
-                  class="form-input"
-                  label="Destino"
-                  orientation="vertical"
-                >
-                  <q-select
-                    v-model="buscaProtocoloEntrada.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o setor"
-                    name="select"
-                  />
-                </q-field>
+                <form-select classe="form-input" label="Destino" v-model="buscaProtocoloEntrada.setor" :options="optionsSetor" />
               </div>
             </div>
-
           </div>
-
         </q-expansion-item>
       </div>
     </form>
@@ -408,6 +328,7 @@ import buscaProtocoloEntradaService from 'src/pages/cadastro/protocoloEntrada/Bu
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'ConsultaProtocoloEntrada',
@@ -415,6 +336,7 @@ export default {
     mask
   },
   components: {
+    formSelect
   },
   data () {
     return {
