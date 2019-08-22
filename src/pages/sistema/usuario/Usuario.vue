@@ -1,179 +1,129 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Usuários</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
+    <bodyTabs titulo="Cadastro de Usuários">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+      </template>
 
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="folder shared" label="Cadastro"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row">
+              <div class="col-md-6">
 
-              <barra-de-botoes
-                @reset="reset"
-                @excluir="excluir"
-                @submit="salvarAlterar"
-                :id="grupoUsuario.grupoUsuario"
-                :possoGravar="possoGravarUsuario"
-                :possoAlterar="possoAlterarUsuario"
-                :possoExcluir="possoExcluirUsuario"
-              />
-            </div>
-            <div class="row text-right">
-              <q-btn class="col-6 float-right" small type="button" icon="lock open" @click="ModalTrocaSenha = true" v-if="possoAlterarUsuario" >Alterar Senha</q-btn>
+                <barra-de-botoes
+                  @reset="reset"
+                  @excluir="excluir"
+                  @submit="salvarAlterar"
+                  :id="usuario.usuario"
+                  :possoGravar="possoGravarUsuario"
+                  :possoAlterar="possoAlterarUsuario"
+                  :possoExcluir="possoExcluirUsuario"
+                />
+              </div>
+              <div class="col-md-6 text-right">
+                <q-btn small type="button" icon="lock_open" @click="ModalTrocaSenha = true" v-if="possoAlterarUsuario" >Alterar Senha</q-btn>
+              </div>
             </div>
 
             <div class="row">
               <div class="col-md-4">
-                <q-field
-                  class="form-input"
+                <q-input class="form-input"
                   helper="Obrigatório"
                   :error="$v.usuario.nome.$error"
                   :error-label="errorNome"
                   label="Nome"
-                  orientation="vertical"
-                >
-                  <q-input autocomplete="off" type="text" v-model="usuario.nome" @blur="$v.usuario.nome.$touch()" required name="name"/>
-                </q-field>
-
+                  autocomplete="off" type="text" v-model="usuario.nome" @blur="$v.usuario.nome.$touch()" required name="name"/>
               </div>
               <div class="col-md-4">
-                <q-field
+                <q-input
                   class="form-input"
                   helper="Obrigatório"
                   :error="$v.usuario.login.$error"
                   :error-label="errorLogin"
                   label="Login"
-                  orientation="vertical"
-                >
-                  <q-input autocomplete="off" type="text" v-model="usuario.login" @input="$v.usuario.login.$touch()" required name="username"/>
-                </q-field>
-
+                  autocomplete="off" type="text" v-model="usuario.login" @input="$v.usuario.login.$touch()" required name="username"/>
               </div>
               <div class="col-md-4">
-                <q-field
-                  class="form-input"
-                  helper="Obrigatório"
+                <form-select
+                  classe="form-input"
                   label="Grupos de Usuário"
-                  orientation="vertical"
-                >
-                  <q-select
-                    v-model="usuario.grupoUsuario"
-                    :options="optionsGrupoUsuario"
-                    required
-                  />
-                </q-field>
-
+                  hint="Obrigatório"
+                  v-model="usuario.grupoUsuario"
+                  :options="optionsGrupoUsuario"
+                  required
+                />
               </div>
             </div>
           </form>
 
-          <botao-mobile
-            :id="usuario.usuario"
-            :possoGravar="possoGravarUsuario"
-            :possoAlterar="possoAlterarUsuario"
-            :possoExcluir="possoExcluirUsuario"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-        </q-page>
+        </q-tab-panel>
 
-      </q-tab-pane>
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
 
-    </q-tabs>
-    <lista-de-registros/>
-    <q-modal :content-css="{minWidth: '50vw', minHeight: '50vh'}" v-model="ModalTrocaSenha" @close="cancelarModal" @hide="resetaModalSenha">
-      <q-modal-layout
-        header-style="min-height: 100px"
-        content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
-        footer-class="bg-primary some-class"
-        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-      >
-        <q-toolbar class="primary">
-          <q-btn flat @click="cancelarModal">
-            <q-icon name="keyboard_arrow_left" />
-          </q-btn>
-          <div class="q-toolbar-title">
-            Alterar Senha
+    <q-dialog :content-css="{minWidth: '50vw', minHeight: '50vh'}" v-model="ModalTrocaSenha" @close="cancelarModal"
+      @hide="resetaModalSenha">
+      <q-card>
+        <q-card-section class="row items-center">
+          <div class="text-h6">Alterar Senha</div>
+          <q-btn icon="close" flat round dense v-close-popup @click="cancelarModal"/>
+        </q-card-section>
+
+        <q-card-section>
+          <div class="layout-padding">
+            Digite e confirme a nova senha
+            <form @submit.prevent="alterarSenhaOutroUsuario" id="alterarSenha">
+              <q-input hint="Obrigatório" :error="$v.modal.senhaNova.$error" error-message="Digite a nova senha, minimo de 5 caracteres"
+                type="password" v-model="modal.senhaNova" stack-label label="Nova senha" @blur="$v.modal.senhaNova.$touch()"
+                />
+
+              <q-input hint="Obrigatório" :error="$v.modal.confirmaSenha.$error" error-message="As senhas novas devem ser iguais"
+                type="password" v-model="modal.confirmaSenha" stack-label label="Repita a nova senha" @blur="$v.modal.confirmaSenha.$touch()"
+                />
+
+            </form>
+
           </div>
-        </q-toolbar>
-        <q-toolbar slot="footer">
-          <div class="q-toolbar-title">
-            <div class="row justify-center botoes">
-              <q-btn color="positive" type="submit" form="formAlterarSenhaOutroUsuario">Alterar</q-btn>
-              <q-btn type="reset" color="light" class="text-black" form="formAlterarSenhaOutroUsuario" @click="ModalTrocaSenha = false">Cancelar</q-btn>
-            </div>
+          <br>
+          <div class="row justify-center botoes">
+            <q-btn color="primary" type="submit" form="alterarSenha">Alterar</q-btn>
+            <q-btn type="reset" color="light" class="text-black" form="alterarSenha"
+              @click="cancelarModal">Cancelar</q-btn>
           </div>
-        </q-toolbar>
-        <div class="layout-padding">
-          Digite e confirme a nova senha
-          <form @submit.prevent="alterarSenhaOutroUsuario" id="formAlterarSenhaOutroUsuario">
-            <q-field
-              class="input form-input"
-              helper="Obrigatório"
-              :error="$v.modal.senhaNova.$error"
-              error-label="Digite a nova senha"
-              label="Nova senha"
-              orientation="vertical"
-            >
-            <q-input autocomplete="off" type="password" v-model="modal.senhaNova" @blur="$v.modal.senhaNova.$touch()" required/>
-            </q-field>
-
-            <q-field
-              class="input form-input"
-              helper="Obrigatório"
-              :error="$v.modal.confirmaSenha.$error"
-              error-label="As senhas novas devem ser iguais"
-              label="Repita a nova senha"
-              orientation="vertical"
-            >
-            <q-input autocomplete="off" type="password" v-model="modal.confirmaSenha" @blur="$v.modal.confirmaSenha.$touch()" required/>
-            </q-field>
-
-          </form>
-
-        </div>
-      </q-modal-layout>
-    </q-modal>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
   </div>
 </template>
 
 <script>
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import BarraDeBotoes from 'src/components/form/BarraDeBotoes'
 import { mapGetters } from 'vuex'
-import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
-import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import ListaDeRegistros from './ListaUsuarios.vue'
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 import Usuario from './Usuario'
 import usuarioService from './UsuarioService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import botaoMobile from 'src/components/QFab/QFab'
 import notify from 'src/tools/Notify'
+import formSelect from 'src/components/form/select/QSelect'
 var timer
 
 export default {
   name: 'Cadastro-de-Usuarios',
   components: {
+    BodyTabs,
     ListaDeRegistros,
-    BotaoMenuLeft,
-    BotaoMenuRight,
-    botaoMobile,
-    BarraDeBotoes
+    BarraDeBotoes,
+    formSelect
   },
   data () {
     return {
