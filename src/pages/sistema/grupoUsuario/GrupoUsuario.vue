@@ -327,14 +327,14 @@ import BarraDeBotoes from 'src/components/form/BarraDeBotoes'
 import { mapGetters } from 'vuex'
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import ListaDeRegistros from 'src/components/menuRight/ListaGrupoUsuarios.vue'
+import ListaDeRegistros from './ListaGrupoUsuarios.vue'
 import { required } from 'vuelidate/lib/validators'
-import GrupoUsuario from 'GrupoUsuario'
-import grupoUsuarioService from 'GrupoUsuarioService'
+import GrupoUsuario from './GrupoUsuario'
+import grupoUsuarioService from './GrupoUsuarioService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
-import notify from '../../tools/Notify'
+import notify from 'src/tools/Notify'
 var timer
 
 export default {

@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import Rota from 'src/services/rota/Rota'
-import rotaService from 'src/services/rota/RotaService'
+import Rota from './Rota'
+import rotaService from './RotaService'
 export default {
   name: 'ListaRotas',
   components: {

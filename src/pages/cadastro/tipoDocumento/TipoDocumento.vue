@@ -83,14 +83,14 @@
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import RadioButton from 'src/components/form/radios/RadioButton'
-import ListaDeRegistros from 'src/components/menuRight/ListaTipoDocumentos.vue'
+import ListaDeRegistros from './ListaTipoDocumentos.vue'
 import { required } from 'vuelidate/lib/validators'
-import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
-import tipoDocumentoService from 'src/services/tipoDocumento/TipoDocumentoService'
+import TipoDocumento from './TipoDocumento'
+import tipoDocumentoService from './TipoDocumentoService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
-import notify from '../../tools/Notify'
+import notify from 'src/tools/Notify'
 var timer
 
 export default {

@@ -184,18 +184,18 @@
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import RadioButton from 'src/components/form/radios/RadioButton'
-import ListaDeRegistros from 'src/components/menuRight/ListaEnderecos.vue'
+import ListaDeRegistros from './ListaEnderecos.vue'
 import { required, requiredIf } from 'vuelidate/lib/validators'
-import Endereco from 'src/services/endereco/Endereco'
-import enderecoService from 'src/services/endereco/EnderecoService'
+import Endereco from './Endereco'
+import enderecoService from './EnderecoService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from '../../tools/Notify'
+import notify from 'src/tools/Notify'
 import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
 import botaoMobile from 'src/components/QFab/QFab'
-import Rota from 'src/services/rota/Rota'
+import Rota from 'src/pages/cadastro/rota/Rota'
 var timer
 
 export default {

@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import ProtocoloEntrada from 'src/services/protocoloEntrada/ProtocoloEntrada'
-import protocoloEntradaService from 'src/services/protocoloEntrada/ProtocoloEntradaService'
+import ProtocoloEntrada from './ProtocoloEntrada'
+import protocoloEntradaService from './ProtocoloEntradaService'
 import moment from 'src/tools/Moment'
 export default {
   name: 'ListaProtocoloEntradaes',

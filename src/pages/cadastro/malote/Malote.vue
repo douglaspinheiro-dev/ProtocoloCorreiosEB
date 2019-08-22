@@ -123,20 +123,20 @@
 <script>
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import ListaDeRegistros from 'src/components/menuRight/ListaMalotes.vue'
+import ListaDeRegistros from './ListaMalotes.vue'
 import { required } from 'vuelidate/lib/validators'
-import Malote from 'src/services/malote/Malote'
-import maloteService from 'src/services/malote/MaloteService'
-import formMaloteDocumento from 'src/components/MaloteDocumento'
+import Malote from './Malote'
+import maloteService from './MaloteService'
+import formMaloteDocumento from './MaloteDocumento'
 import confereRegistro from 'src/services/confereRegistro'
 var timer
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from '../../tools/Notify'
+import notify from 'src/tools/Notify'
 // import RadioButton from 'src/components/form/radios/RadioButton'
 import {mask} from 'vue-the-mask'
 import botaoMobile from 'src/components/QFab/QFab'
-import Rota from 'src/services/rota/Rota'
+import Rota from 'src/pages/cadastro/rota/Rota'
 
 export default {
   name: 'Malote',

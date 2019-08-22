@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import Malote from 'src/services/malote/Malote'
-import maloteService from 'src/services/malote/MaloteService'
+import Malote from './Malote'
+import maloteService from './MaloteService'
 export default {
   name: 'ListaMalotes',
   components: {

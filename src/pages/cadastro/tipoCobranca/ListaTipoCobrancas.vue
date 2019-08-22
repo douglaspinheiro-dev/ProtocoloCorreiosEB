@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import TipoCobranca from 'src/services/tipoCobranca/TipoCobranca'
-import tipoCobrancaService from 'src/services/tipoCobranca/TipoCobrancaService'
+import TipoCobranca from './TipoCobranca'
+import tipoCobrancaService from './TipoCobrancaService'
 export default {
   name: 'ListaTipoCobrancas',
   components: {

@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import TipoCorrespondencia from 'src/services/tipoCorrespondencia/TipoCorrespondencia'
-import tipoCorrespondenciaService from 'src/services/tipoCorrespondencia/TipoCorrespondenciaService'
+import TipoCorrespondencia from './TipoCorrespondencia'
+import tipoCorrespondenciaService from './TipoCorrespondenciaService'
 export default {
   name: 'ListaTipoCorrespondencias',
   components: {

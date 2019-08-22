@@ -3,7 +3,7 @@ import {
   Dialog,
   Loading
 } from 'quasar'
-import Notify from '../../../tools/Notify'
+import Notify from 'src/tools/Notify'
 
 export const UsuarioService = {
   procura (busca, inicio, fim) {

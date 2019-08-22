@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import Setor from 'src/services/setor/Setor'
-import setorService from 'src/services/setor/SetorService'
+import Setor from './Setor'
+import setorService from './SetorService'
 export default {
   name: 'ListaSetores',
   components: {

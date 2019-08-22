@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
-import tipoDocumentoService from 'src/services/tipoDocumento/TipoDocumentoService'
+import TipoDocumento from './TipoDocumento'
+import tipoDocumentoService from './TipoDocumentoService'
 export default {
   name: 'ListaTipoDocumentos',
   components: {

@@ -24,6 +24,13 @@ const Router = new VueRouter({
 })
 
 Router.beforeEach((to, from, next) => {
+  console.log('entrando na rota')
+
+  if (from.meta.rota !== to.meta.rota) {
+    // se a rota for diferente, reseto a lista de registros,  se for a mesma rota, ( carregou usuario,) nao reseto a lista
+    store.commit('listaDeRegistros/resetaLista')
+  }
+
   // gambi para extensao
   let query = location.search.slice(1)
   let partes = query.split('&')
@@ -82,6 +89,8 @@ Router.beforeEach((to, from, next) => {
                 store.commit('login/setSessaoInvalida', false)
                 store.commit('login/setAuth', result.data.token)
                 store.commit('login/setPermissoes', result.data.permissoes)
+                console.log(200)
+
                 next()
               } else {
                 store.commit('login/removeToken')

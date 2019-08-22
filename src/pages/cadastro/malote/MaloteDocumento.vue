@@ -171,11 +171,11 @@ var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
-import MaloteDocumento from 'src/services/maloteDocumento/MaloteDocumento'
-import maloteDocumentoService from 'src/services/maloteDocumento/MaloteDocumentoService'
-import TipoDocumento from 'src/services/tipoDocumento/TipoDocumento'
-import Setor from 'src/services/setor/Setor'
-import RotaEndereco from 'src/services/rotaEndereco/RotaEndereco'
+import MaloteDocumento from './MaloteDocumento'
+import maloteDocumentoService from './MaloteDocumentoService'
+import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
+import Setor from 'src/pages/cadastro/setor/Setor'
+import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 export default {
   name: 'MaloteDocumento',
   directives: {

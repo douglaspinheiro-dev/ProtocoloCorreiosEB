@@ -3,7 +3,7 @@ import {
   Dialog,
   Loading
 } from 'quasar'
-import Notify from '../../tools/Notify'
+import Notify from 'src/tools/Notify'
 
 export const MaloteDocumentoService = {
   // usado para a lista de registros

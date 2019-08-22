@@ -208,7 +208,7 @@ export default {
     }),
     hasSistema: function () {
       for (const key in this.getPermissoes) {
-        if (this.getPermissoes[key].tipoModulo === 'SISTEMA' && this.getPermissoes[key].abrir) {
+        if (this.getPermissoes[key].categoriaModulo === 'SISTEMA' && this.getPermissoes[key].abrir) {
           return true
         }
       }
@@ -216,7 +216,7 @@ export default {
     },
     hasCadastro: function () {
       for (const key in this.getPermissoes) {
-        if (this.getPermissoes[key].tipoModulo === 'CADASTROS' && this.getPermissoes[key].abrir) {
+        if (this.getPermissoes[key].categoriaModulo === 'CADASTROS' && this.getPermissoes[key].abrir) {
           return true
         }
       }

@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import Endereco from 'src/services/endereco/Endereco'
-import enderecoService from 'src/services/endereco/EnderecoService'
+import Endereco from './Endereco'
+import enderecoService from './EnderecoService'
 export default {
   name: 'ListaEnderecos',
   components: {

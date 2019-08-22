@@ -156,14 +156,14 @@ import BarraDeBotoes from 'src/components/form/BarraDeBotoes'
 import { mapGetters } from 'vuex'
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import ListaDeRegistros from 'src/components/menuRight/ListaUsuarios.vue'
+import ListaDeRegistros from './ListaUsuarios.vue'
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
-import Usuario from 'Usuario'
-import usuarioService from 'UsuarioService'
+import Usuario from './Usuario'
+import usuarioService from './UsuarioService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
-import notify from '../../tools/Notify'
+import notify from 'src/tools/Notify'
 var timer
 
 export default {

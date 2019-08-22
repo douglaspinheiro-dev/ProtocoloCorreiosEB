@@ -80,14 +80,14 @@
 import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
 import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
 import RadioButton from 'src/components/form/radios/RadioButton'
-import ListaDeRegistros from 'src/components/menuRight/ListaTipoCorrespondencias.vue'
+import ListaDeRegistros from './ListaTipoCorrespondencias.vue'
 import { required } from 'vuelidate/lib/validators'
-import TipoCorrespondencia from 'src/services/tipoCorrespondencia/TipoCorrespondencia'
-import tipoCorrespondenciaService from 'src/services/tipoCorrespondencia/TipoCorrespondenciaService'
+import TipoCorrespondencia from './TipoCorrespondencia'
+import tipoCorrespondenciaService from './TipoCorrespondenciaService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import botaoMobile from 'src/components/QFab/QFab'
-import notify from '../../tools/Notify'
+import notify from 'src/tools/Notify'
 import VMoney from 'src/tools/money'
 
 var timer
