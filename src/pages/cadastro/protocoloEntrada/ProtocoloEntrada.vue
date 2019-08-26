@@ -1,21 +1,13 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Protocolo de Entrada</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
-
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="fas fa-file-contract" label="Cadastro"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+    <bodyTabs titulo="Protocolo de Entrada">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+      </template>
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
@@ -32,115 +24,89 @@
 
             <div class="row">
               <div class="col-md-2">
-                <q-field label="Nº" orientation="vertical" class="form-input">
+                <q-field label="Nº"  class="form-input" stack-label>
                   {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
                 </q-field>
               </div>
               <div class="col-md-4">
-                <q-field class="form-input" label="Tipo de Documento" orientation="vertical"
-                  :error="$v.protocoloEntrada.tipoDocumento.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
-                  <q-select
+                  <form-select
+                    label="Tipo de Documento"
+                    :error="$v.protocoloEntrada.tipoDocumento.$error"
+                    error-message="Obrigatório"
+                    classe="form-input"
+                    hint="Obrigatório"
                     v-model="protocoloEntrada.tipoDocumento"
                     :options="optionsTipoDocumento"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o Tipo de Documento"
-                    name="select"
                     @input="$v.protocoloEntrada.tipoDocumento.$touch()"
+                    required
                   />
                   <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
               </div>
               <div class="col-md-3">
-                <q-field
-                  label="Número"
-                  orientation="vertical"
+                <q-input label="Número"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.protocoloEntrada.numero.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="off" type="text" v-model="protocoloEntrada.numero" @input="$v.protocoloEntrada.numero.$touch()" name="number"/>
-                </q-field>
+                  error-message="Obrigatório" autocomplete="off" type="text" v-model="protocoloEntrada.numero" @input="$v.protocoloEntrada.numero.$touch()" name="number"/>
               </div>
               <div class="col-md-3">
-                <q-field class="form-input"
-                  label="Data do documento"
-                  orientation="vertical"
-                  helper="Obrigatório"
+                <q-input label="Data do documento" class="form-input"
+                  hint="Obrigatório" stack-label
                   :error="$v.protocoloEntrada.dataDocumento.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="off" type="date" v-model="protocoloEntrada.dataDocumento" name="data" />
-                </q-field>
+                  error-message="Obrigatório" autocomplete="off" type="date" v-model="protocoloEntrada.dataDocumento" name="data" />
               </div>
 
             </div>
             <div class="row">
               <div class="col-md-12">
-                <q-field
+                <q-input
                   label="Assunto"
-                  orientation="vertical"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.protocoloEntrada.assunto.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
-                </q-field>
+                  error-message="Obrigatório" autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <q-field class="form-input"
-                  label="Origem"
-                  orientation="vertical"
-                  helper="Obrigatório"
+                <q-input label="Origem"
+                  hint="Obrigatório"
+                  class="form-input"
                   :error="$v.protocoloEntrada.origem.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" >
-                    <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                      @selected="selected"
-                    />
-                  </q-input>
-                </q-field>
+                  error-message="Obrigatório"
+                  autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" >
+
+                </q-input>
               </div>
 
               <div class="col-md-6">
-                <q-field class="form-input" label="Destino" orientation="vertical"
+                <form-select
+                  class="form-input"
                   :error="$v.protocoloEntrada.setor.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
-                  <q-select
-                    v-model="protocoloEntrada.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o Destino"
-                    name="select"
-                    @input="$v.protocoloEntrada.setor.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
+                  error-message="Obrigatório"
+                  hint="Obrigatório"
+                  classe="form-input"
+                  label="Destino"
+                  v-model="protocoloEntrada.setor"
+                  :options="optionsSetor"
+                  @input="$v.protocoloEntrada.setor.$touch()"
+                  required
+                />
+                <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
             </div>
           </form>
 
-        </q-page>
-      </q-tab-pane>
-    </q-tabs>
-    <lista-de-registros/>
+        </q-tab-panel>
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
   </div>
 </template>
 
 <script>
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import ListaDeRegistros from './ListaProtocoloEntradas.vue'
 import { required } from 'vuelidate/lib/validators'
 import ProtocoloEntrada from './ProtocoloEntrada'
@@ -150,12 +116,14 @@ import notify from 'src/tools/Notify'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
-var timer
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'Cadastro-de-ProtocoloEntradas',
   components: {
-    ListaDeRegistros
+    BodyTabs,
+    ListaDeRegistros,
+    formSelect
   },
   data () {
     return {
@@ -169,7 +137,8 @@ export default {
       optionsTipoDocumento: [],
       optionsEndereco: [],
       optionsSetor: [],
-      optionsLoading: false
+      optionsLoading: false,
+      timer: ''
     }
   },
   validations: {
@@ -253,8 +222,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.protocoloEntrada.$touch()
         if (this.$v.protocoloEntrada.$error) {
           this.$q.loading.hide()
