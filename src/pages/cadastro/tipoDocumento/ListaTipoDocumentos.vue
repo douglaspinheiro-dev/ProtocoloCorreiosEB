@@ -38,8 +38,8 @@ export default {
       ListaDeRegistrosService.atualizaLista({
         service: tipoDocumentoService,
         semRegistros: [{
-          login: 'Sem registros encontrados',
-          nome: ''
+          descricao: 'Sem registros encontrados',
+          codigo: ''
         }],
         self: this,
         done
