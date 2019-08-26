@@ -1,21 +1,13 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Setores Internos</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
-
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="fas fa-file-contract" label="Cadastro"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+    <bodyTabs titulo="Cadastro de Setores Internos">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+      </template>
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
@@ -30,84 +22,71 @@
             <div class="row">
 
               <div class="col-md-6">
-                <q-field
-                  label="Descrição"
-                  orientation="vertical"
+                <q-input label="Descrição"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.setor.descricao.$error"
-                  :error-label="errorDescricao"
-                >
-                  <q-input autocomplete="off" type="text" v-model="setor.descricao" @input="$v.setor.descricao.$touch()" name="descricao"/>
-                </q-field>
+                  :error-message="errorDescricao" autocomplete="off" type="text" v-model="setor.descricao" @input="$v.setor.descricao.$touch()" name="descricao"/>
               </div>
               <div class="col-md-3">
-                <q-field
-                  label="Código"
-                  orientation="vertical"
+                <q-input label="Código"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.setor.codigo.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="off" type="text" v-model="setor.codigo" @input="$v.setor.codigo.$touch()" name="codigo"/>
-                </q-field>
+                  error-message="Obrigatório" autocomplete="off" type="text" v-model="setor.codigo" @input="$v.setor.codigo.$touch()" name="codigo"/>
               </div>
               <div class="col-md-3">
-                <q-field class="form-input" label="Status" orientation="vertical">
-                  <q-btn-group  class="fit">
-                    <radio-button :status="setor.status" @toggleRadioButton="toggleRadioButton"/>
-                  </q-btn-group>
+                <q-field class="form-input" label="Status" stack-label borderless>
+                  <q-option-group inline
+                    v-model="setor.status"
+                    :options="[
+                      {
+                        label: 'Ativo',
+                        value: 1
+                      },
+                      {
+                        label: 'Inativo',
+                        value: 0
+                      }
+                    ]"
+                    color="primary"
+                  />
                 </q-field>
               </div>
             </div>
           </form>
 
-          <botao-mobile
-            :id="setor.setor"
-            :possoGravar="possoGravarSetor"
-            :possoAlterar="possoAlterarSetor"
-            :possoExcluir="possoExcluirSetor"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-        </q-page>
-      </q-tab-pane>
-    </q-tabs>
-    <lista-de-registros/>
+        </q-tab-panel>
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
   </div>
 </template>
 
 <script>
-import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
-import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import RadioButton from 'src/components/form/radios/RadioButton'
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import ListaDeRegistros from './ListaSetores.vue'
 import { required } from 'vuelidate/lib/validators'
 import Setor from './Setor'
 import setorService from './SetorService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import botaoMobile from 'src/components/QFab/QFab'
 import notify from 'src/tools/Notify'
-var timer
 
 export default {
   name: 'Cadastro-de-Setores',
   components: {
     ListaDeRegistros,
-    BotaoMenuLeft,
-    BotaoMenuRight,
-    RadioButton,
-    botaoMobile
+    BodyTabs
   },
   data () {
     return {
       setor: new Setor(),
       errorDescricao: 'Preencha a descrição',
       possoAlterarSetor: false,
-      possoExcluirSetor: false
+      possoExcluirSetor: false,
+      timer: ''
     }
   },
   validations: {
@@ -179,8 +158,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.setor.$touch()
         if (this.$v.setor.$error) {
           this.$q.loading.hide()

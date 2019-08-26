@@ -7,10 +7,10 @@
   >
     <template slot="qItem">
       <q-item class="item-lista" multiline v-for="(tipoDocumento, index) in getRegistros" :class="index%2 ? 'bg-blue-grey-1' : 'bg-blue-grey-2'" item :to="{ name: 'alterarTipoDocumento', params: { id: tipoDocumento.tipoDocumento} }" exact :key="index">
-        <q-item-label>
-          <q-item-section header> {{ tipoDocumento.descricao }}</q-item-section>
-          <q-item-section caption>{{ tipoDocumento.codigo }}</q-item-section>
-        </q-item-label>
+        <q-item-section>
+          <q-item-label> {{ tipoDocumento.descricao }}</q-item-label>
+          <q-item-label caption>{{ tipoDocumento.codigo }}</q-item-label>
+        </q-item-section>
       </q-item>
     </template>
   </lista-de-registros>
