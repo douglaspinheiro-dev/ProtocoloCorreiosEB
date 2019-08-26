@@ -1,21 +1,13 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Endereços</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
-
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="folder shared" label="Cadastro"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+    <bodyTabs titulo="Cadastro de Endereços">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+      </template>
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
@@ -27,133 +19,120 @@
               </div>
             </div>
 
-            <q-collapsible label="Dados Gerais" opened>
+            <q-expansion-item label="Dados Gerais" default-opened>
               <div class="row">
-
                 <div class="col-md-6">
-                  <q-field
+                  <q-input
                     label="Descrição"
-                    orientation="vertical"
                     class="form-input"
-                    helper="Obrigatório"
+                    hint="Obrigatório"
                     :error="$v.endereco.descricao.$error"
-                    :error-label="errorDescricao"
-                  >
-                    <q-input autocomplete="off" type="text" v-model="endereco.descricao" @input="$v.endereco.descricao.$touch()" name="descricao"/>
-                  </q-field>
+                    :error-message="errorDescricao"
+                    autocomplete="off" type="text" v-model="endereco.descricao" @input="$v.endereco.descricao.$touch()" name="descricao"/>
                 </div>
                 <div class="col-md-3">
-                  <q-field
+                  <q-input
                     label="Código"
-                    orientation="vertical"
                     class="form-input"
-                    helper="Obrigatório"
+                    hint="Obrigatório"
                     :error="$v.endereco.codigo.$error"
-                    error-label="Obrigatório"
-                  >
-                    <q-input autocomplete="off" type="text" v-model="endereco.codigo" @input="$v.endereco.codigo.$touch()" name="codigo"/>
-                  </q-field>
+                    error-message="Obrigatório" autocomplete="off" type="text" v-model="endereco.codigo" @input="$v.endereco.codigo.$touch()" name="codigo"/>
                 </div>
                 <div class="col-md-3">
-                  <q-field class="form-input" label="Status" orientation="vertical">
-                    <q-btn-group  class="fit">
-                      <radio-button :status="endereco.status" @toggleRadioButton="toggleStatus"/>
-                    </q-btn-group>
+                  <q-field class="form-input" label="Status" stack-label borderless>
+                    <q-option-group inline
+                      v-model="endereco.status"
+                      :options="[
+                        {
+                          label: 'Ativo',
+                          value: 1
+                        },
+                        {
+                          label: 'Inativo',
+                          value: 0
+                        }
+                      ]"
+                      color="primary"
+                    />
                   </q-field>
                 </div>
               </div>
               <div class="row">
                 <div class="col-3">
-                  <q-field class="form-input" label="É rota para Malote?" orientation="vertical">
-                    <q-btn-group  class="fit">
-                      <radio-button :status="endereco.malote" @toggleRadioButton="toggleMalote" :label="['Sim', 'Não']"/>
-                    </q-btn-group>
+                  <q-field class="form-input" label="É rota para Malote?" stack-label borderless>
+                    <q-option-group inline
+                      v-model="endereco.malote"
+                      :options="[
+                        {
+                          label: 'Sim',
+                          value: 1
+                        },
+                        {
+                          label: 'Não',
+                          value: 0
+                        }
+                      ]"
+                      color="primary"
+                    />
                   </q-field>
                 </div>
                 <div class="col-md-3" v-show="this.endereco.malote">
-                  <q-field class="form-input"
-                    label="Qual Rota?"
-                    orientation="vertical"
-                    helper="Obrigatório"
+                  <form-select
+                    classe="form-input"
+                    hint="Obrigatório"
                     :error="$v.endereco.rota.$error"
-                    error-label="Obrigatório"
-                  >
-                    <q-select
-                      v-model="endereco.rota"
-                      :options="optionsRota"
-                      filter
-                      autofocus-filter
-                      filter-placeholder="Selecione a Origem"
-                      name="select"
-                      @input="$v.endereco.rota.$touch()"
-                    />
-                    <q-progress indeterminate v-show="optionsLoading"/>
-                  </q-field>
+                    error-message="Obrigatório"
+                    label="Qual Rota?"
+                    v-model="endereco.rota"
+                    :options="optionsRota"
+                    required
+                  />
+                  <q-linear-progress indeterminate v-show="optionsLoading"/>
                 </div>
               </div>
-            </q-collapsible>
-            <q-collapsible label="Endereço" opened>
+            </q-expansion-item>
+            <q-expansion-item label="Endereço" default-opened>
               <div class="panel-body">
                 <div class="row">
 
                   <div class="col-md-3">
-                    <q-field class="form-input"
-                      label="Cep"
-                      orientation="vertical"
-                    >
-                      <q-input autocomplete="off" type="text" v-model="endereco.cep" @input="procuraCep" v-mask="'99999-999'" placeholder="00000-000" name="cep"/>
-                    </q-field>
+                      <q-input class="form-input"
+                        label="Cep" autocomplete="off" type="text" v-model="endereco.cep" @input="procuraCep" v-mask="'99999-999'" placeholder="00000-000" name="cep"/>
                   </div>
 
                   <div class="col-md-7">
-                    <q-field class="form-input"
-                      label="Logradouro"
-                      orientation="vertical"
-                    >
-                      <q-input autocomplete="off" type="text" v-model="endereco.logradouro" name="logradouro"/>
-                    </q-field>
+                      <q-input class="form-input"
+                      label="Logradouro" autocomplete="off" type="text" v-model="endereco.logradouro" name="logradouro"/>
                   </div>
                   <div class="col-md-2">
-                    <q-field class="form-input" label="Número" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="endereco.numero" name="numero"/>
-                    </q-field>
+                      <q-input class="form-input" label="Número" autocomplete="off" type="text" v-model="endereco.numero" name="numero"/>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Complemento" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="endereco.complemento" name="complemento"/>
-                    </q-field>
+                    <q-input class="form-input" label="Complemento" autocomplete="off" type="text" v-model="endereco.complemento" name="complemento"/>
                   </div>
 
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Referência" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="endereco.referencia" name="referencia"/>
-                    </q-field>
+                    <q-input class="form-input" label="Referência" autocomplete="off" type="text" v-model="endereco.referencia" name="referencia"/>
                   </div>
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Bairro" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="endereco.bairro" name="bairro"/>
-                    </q-field>
+                    <q-input class="form-input" label="Bairro" autocomplete="off" type="text" v-model="endereco.bairro" name="bairro"/>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <q-field class="form-input" label="Cidade" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="endereco.cidade" name="cidade"/>
-                    </q-field>
+                    <q-input class="form-input" label="Cidade" autocomplete="off" type="text" v-model="endereco.cidade" name="cidade"/>
                   </div>
                   <div class="col-md-6">
-                    <q-field class="form-input" label="Estado" orientation="vertical">
-                      <q-select
-                        v-model="endereco.uf"
-                        :options="optionsEstados"
-                        filter
-                        autofocus-filter
-                        filter-placeholder="Digite o estado"
-                        name="uf"
-                      />
-                    </q-field>
+                    <form-select
+                      classe="form-input"
+                      label="Estado"
+                      hint="Obrigatório"
+                      v-model="endereco.uf"
+                      :options="optionsEstados"
+                      required
+                    />
                   </div>
                 </div>
 
@@ -161,29 +140,18 @@
               <q-inner-loading :visible="cepLoading">
                 <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
               </q-inner-loading>
-            </q-collapsible>
+            </q-expansion-item>
           </form>
-
-          <botao-mobile
-            :id="endereco.endereco"
-            :possoGravar="possoGravarEndereco"
-            :possoAlterar="possoAlterarEndereco"
-            :possoExcluir="possoExcluirEndereco"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-        </q-page>
-      </q-tab-pane>
-    </q-tabs>
-    <lista-de-registros/>
+        </q-tab-panel>
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
   </div>
 </template>
 
 <script>
-import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
-import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import RadioButton from 'src/components/form/radios/RadioButton'
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import ListaDeRegistros from './ListaEnderecos.vue'
 import { required, requiredIf } from 'vuelidate/lib/validators'
 import Endereco from './Endereco'
@@ -194,18 +162,15 @@ import notify from 'src/tools/Notify'
 import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
-import botaoMobile from 'src/components/QFab/QFab'
 import Rota from 'src/pages/cadastro/rota/Rota'
-var timer
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'Cadastro-de-Enderecos',
   components: {
+    BodyTabs,
     ListaDeRegistros,
-    BotaoMenuLeft,
-    BotaoMenuRight,
-    RadioButton,
-    botaoMobile
+    formSelect
   },
   directives: {
     'mask': AwesomeMask
@@ -220,7 +185,8 @@ export default {
       possoAlterarEndereco: false,
       possoExcluirEndereco: false,
       optionsRota: [],
-      optionsLoading: false
+      optionsLoading: false,
+      timer: ''
     }
   },
   validations: {
@@ -263,8 +229,8 @@ export default {
   },
   methods: {
     procuraCep () {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         if (this.endereco.cep.length === 9) {
           this.cepLoading = true
           this.endereco.logradouro = ''
@@ -292,12 +258,6 @@ export default {
             })
         }
       }, 300)
-    },
-    toggleStatus () {
-      this.endereco.status = !this.endereco.status
-    },
-    toggleMalote () {
-      this.endereco.malote = !this.endereco.malote
     },
     reset () {
       this.$v.endereco.$reset()
@@ -333,8 +293,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.endereco.$touch()
         if (this.$v.endereco.$error) {
           this.$q.loading.hide()

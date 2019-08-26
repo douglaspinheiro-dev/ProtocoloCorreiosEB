@@ -107,7 +107,8 @@ module.exports = function (ctx) {
         'QLinearProgress',
         'QAjaxBar',
         'QPopupEdit',
-        'QBtnDropdown'
+        'QBtnDropdown',
+        'QLinearProgress'
       ],
       directives: [
         'Ripple'
