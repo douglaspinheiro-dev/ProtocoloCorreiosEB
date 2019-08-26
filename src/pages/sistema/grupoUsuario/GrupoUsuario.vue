@@ -27,16 +27,16 @@
             <div class="row">
               <div class="col-md-6">
                 <q-input class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.grupoUsuario.codigo.$error"
-                  :error-label="errorCodigo"
+                  :error-message="errorCodigo"
                   label="Código" autocomplete="off" type="text" v-model="grupoUsuario.codigo" @blur="$v.grupoUsuario.codigo.$touch()" required name="codigo"/>
               </div>
               <div class="col-md-6">
                 <q-input class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.grupoUsuario.descricao.$error"
-                  error-label="Preencha a descrição do grupo"
+                  error-message="Preencha a descrição do grupo"
                   label="Descrição" autocomplete="off" type="text" v-model="grupoUsuario.descricao" @input="$v.grupoUsuario.descricao.$touch()" required name="codigo"/>
               </div>
             </div>

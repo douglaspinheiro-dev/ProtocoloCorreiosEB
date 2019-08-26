@@ -32,18 +32,18 @@
             <div class="row">
               <div class="col-md-4">
                 <q-input class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.usuario.nome.$error"
-                  :error-label="errorNome"
+                  :error-message="errorNome"
                   label="Nome"
                   autocomplete="off" type="text" v-model="usuario.nome" @blur="$v.usuario.nome.$touch()" required name="name"/>
               </div>
               <div class="col-md-4">
                 <q-input
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.usuario.login.$error"
-                  :error-label="errorLogin"
+                  :error-message="errorLogin"
                   label="Login"
                   autocomplete="off" type="text" v-model="usuario.login" @input="$v.usuario.login.$touch()" required name="username"/>
               </div>
@@ -115,7 +115,6 @@ import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from 'src/tools/Notify'
 import formSelect from 'src/components/form/select/QSelect'
-var timer
 
 export default {
   name: 'Cadastro-de-Usuarios',
@@ -131,6 +130,7 @@ export default {
         senhaNova: '',
         confirmaSenha: ''
       },
+      timer: '',
       ModalTrocaSenha: false,
       selected: [],
       usuario: new Usuario(),
@@ -260,8 +260,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.usuario.$touch()
         if (this.$v.usuario.$error) {
           this.$q.loading.hide()
