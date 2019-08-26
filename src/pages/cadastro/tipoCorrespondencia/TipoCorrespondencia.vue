@@ -55,7 +55,7 @@
             </div>
           </form>
 
-          </q-tab-panel>
+        </q-tab-panel>
       </template>
     </bodyTabs>
     <lista-de-registros />

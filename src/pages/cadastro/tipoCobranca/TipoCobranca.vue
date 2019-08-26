@@ -1,21 +1,13 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Tipos de Cobrança</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
-
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="fas fa-file-contract" label="Cadastro"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+    <bodyTabs titulo="Cadastro de Tipos de Cobrança">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+      </template>
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
@@ -30,63 +22,55 @@
             <div class="row">
 
               <div class="col-md-4">
-                <q-field
+                <q-input
                   label="Descrição"
-                  orientation="vertical"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.tipoCobranca.descricao.$error"
-                  :error-label="errorDescricao"
-                >
-                  <q-input autocomplete="off" type="text" v-model="tipoCobranca.descricao" @input="$v.tipoCobranca.descricao.$touch()" name="descricao"/>
-                </q-field>
+                  :error-message="errorDescricao"
+                  autocomplete="off" type="text" v-model="tipoCobranca.descricao" @input="$v.tipoCobranca.descricao.$touch()" name="descricao"/>
               </div>
               <div class="col-md-4">
-                <q-field
+                <q-input
                   label="Valor"
-                  orientation="vertical"
                   class="form-input"
-                >
-                  <q-input autocomplete="off" type="tel" v-model.lazy="tipoCobranca.valor" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money"/>
-                </q-field>
+                  autocomplete="off" type="tel" v-model.lazy="tipoCobranca.valor" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money"/>
               </div>
               <div class="col-md-4">
-                <q-field class="form-input" label="Status" orientation="vertical">
-                  <q-btn-group  class="fit">
-                    <radio-button :status="tipoCobranca.status" @toggleRadioButton="toggleRadioButton"/>
-                  </q-btn-group>
+                <q-field class="form-input" label="Status" stack-label borderless>
+                  <q-option-group inline
+                    v-model="tipoCobranca.status"
+                    :options="[
+                      {
+                        label: 'Ativo',
+                        value: 1
+                      },
+                      {
+                        label: 'Inativo',
+                        value: 0
+                      }
+                    ]"
+                    color="primary"
+                  />
                 </q-field>
               </div>
             </div>
           </form>
-
-          <botao-mobile
-            :id="tipoCobranca.tipoCobranca"
-            :possoGravar="possoGravarTipoCobranca"
-            :possoAlterar="possoAlterarTipoCobranca"
-            :possoExcluir="possoExcluirTipoCobranca"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-        </q-page>
-      </q-tab-pane>
-    </q-tabs>
-    <lista-de-registros/>
+        </q-tab-panel>
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
   </div>
 </template>
 
 <script>
-import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
-import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
-import RadioButton from 'src/components/form/radios/RadioButton'
+import BodyTabs from 'src/components/body/BodyTabs'
 import ListaDeRegistros from './ListaTipoCobrancas.vue'
 import { required } from 'vuelidate/lib/validators'
 import TipoCobranca from './TipoCobranca'
 import tipoCobrancaService from './TipoCobrancaService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import botaoMobile from 'src/components/QFab/QFab'
 import notify from 'src/tools/Notify'
 import VMoney from 'src/tools/money'
 
@@ -96,10 +80,7 @@ export default {
   name: 'Cadastro-de-TipoCobrancas',
   components: {
     ListaDeRegistros,
-    BotaoMenuLeft,
-    BotaoMenuRight,
-    RadioButton,
-    botaoMobile
+    BodyTabs
   },
   data () {
     return {
