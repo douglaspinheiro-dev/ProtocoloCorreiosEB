@@ -1,48 +1,23 @@
-import http from 'src/boot/axios'
-import MsgDialog from '../../tools/Dialogs'
+import Service from 'src/services/Service'
+class LoginService extends Service {
+  static logar (usuario) {
+    return this.post('/auth/login', usuario)
+  }
 
-export const LoginService = {
-  logar (usuario) {
-    return http.post('/auth/login', usuario)
-      .then(response => response)
-      .catch(error => {
-        MsgDialog(error.response)
-        throw new Error(error)
-      })
-  },
+  static deslogar (usuario) {
+    return this.delete('/logoff', usuario)
+  }
 
-  deslogar (usuario) {
-    return http.delete('/logoff', usuario)
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao fazer logout', error)
-        MsgDialog(error)
-        throw new Error(error)
-      })
-  },
-
-  alteraEmpresaLogada (empresa) {
-    return http.post('/alterarEmpresaLogada', {
+  static alteraEmpresaLogada (empresa) {
+    return this.post('/alterarEmpresaLogada', {
       empresa: empresa
     })
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao trocar empresa logada', error)
-        MsgDialog(error)
-        throw new Error(error)
-      })
-  },
+  }
 
-  isLogged (token) {
-    return http.post('/auth/logged', {
+  static isLogged (token) {
+    return this.post('/auth/logged', {
       token
     })
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro ao validar token', error)
-        MsgDialog(error)
-        throw new Error(error)
-      })
   }
 }
 export default LoginService

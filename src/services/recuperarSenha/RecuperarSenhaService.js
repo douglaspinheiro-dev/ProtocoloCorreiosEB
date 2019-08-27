@@ -1,58 +1,23 @@
-import http from 'src/boot/axios'
-import MsgDialog from '../../tools/Dialogs'
-import {
-  Dialog
-} from 'quasar'
+import Service from 'src/services/Service'
+class RecuperarSenhaService extends Service {
+  static enviarCodigoEmail (login) {
+    return this.post('recuperar/login', login)
+  }
 
-export const RecuperarSenhaService = {
-  enviarCodigoEmail (login) {
-    return http.post('recuperar/login', login)
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao enviar email ao usuario, para recuperar senha', error)
-        MsgDialog(error, Dialog)
-        throw new Error(error)
-      })
-  },
+  static confirmarToken (token) {
+    return this.post('recuperar/token', token)
+  }
 
-  confirmarToken (token) {
-    return http.post('recuperar/token', token)
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao confirmar token do usuario, para recuperar senha', error)
-        MsgDialog(error, Dialog)
-        throw new Error(error)
-      })
-  },
+  static confirmarTokenLogin (token) {
+    return this.post('clientes/twa/confirmar', token)
+  }
 
-  confirmarTokenLogin (token) {
-    return http.post('clientes/twa/confirmar', token)
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao confirmar token do usuario, para logar', error)
-        MsgDialog(error, Dialog)
-        throw new Error(error)
-      })
-  },
+  static confirmarTokenTwa (token) {
+    return this.post('clientes/twa/token', token)
+  }
 
-  confirmarTokenTwa (token) {
-    return http.post('clientes/twa/token', token)
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao confirmar token do usuario, para ativar twa', error)
-        MsgDialog(error, Dialog)
-        throw new Error(error)
-      })
-  },
-
-  alterarSenha (dados) {
-    return http.put('recuperar/alterarsenha', dados)
-      .then(response => response)
-      .catch(error => {
-        console.log('Erro no servidor ao alterar a senha do usuario, no recuperar senha', error)
-        MsgDialog(error, Dialog)
-        throw new Error(error)
-      })
+  static alterarSenha (dados) {
+    return this.put('recuperar/alterarsenha', dados)
   }
 }
 export default RecuperarSenhaService

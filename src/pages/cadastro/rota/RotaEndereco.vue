@@ -10,32 +10,21 @@
         </div>
       </div>
       <q-list>
-        <q-collapsible label="Enderecos" opened>
-          <div>
-            <div class="row">
-              <div class="col-md-12">
-                <q-field class="form-input"
-                  label="Endereço"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.rotaEndereco.endereco.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-select
-                    v-model="rotaEndereco.endereco"
-                    :options="optionsEndereco"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione a Origem"
-                    name="select"
-                    @input="$v.rotaEndereco.endereco.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-md-12">
+            <form-select
+              classe="form-input"
+              label="Endereço"
+              hint="Obrigatório"
+              :error="$v.rotaEndereco.endereco.$error"
+              error-message="Obrigatório"
+              v-model="rotaEndereco.endereco"
+              :options="optionsEndereco"
+              required
+            />
+            <q-linear-progress indeterminate v-show="optionsLoading"/>
           </div>
-        </q-collapsible>
+        </div>
       </q-list>
     </form>
     <br>
@@ -54,33 +43,20 @@
         loading-label="Carregando"
         :visible-columns="colunasVisiveis"
       >
-        <template slot="top-left">
-          <q-search
-            placeholder="Busca"
-            hide-underline
-            color="secondary"
-            v-model="buscaRotaEndereco"
-            class="col-6"
-          />
-        </template>
         <template slot="top-right" slot-scope="props">
-          <q-table-columns
-            label="Colunas"
-            color="secondary"
-            class="q-mr-sm"
-            v-model="colunasVisiveis"
-            :columns="tabelaColunas"
-          />
+
           <q-select
-            color="secondary"
-            v-model="tabelaSeparador"
-            :options="[
-              { label: 'Horizontal', value: 'horizontal' },
-              { label: 'Vertical', value: 'vertical' },
-              { label: 'Célula', value: 'cell' },
-              { label: 'Nenhum', value: 'none' }
-            ]"
-            hide-underline
+            v-model="colunasVisiveis"
+            multiple
+            borderless
+            dense
+            options-dense
+            display-value="Colunas"
+            emit-value
+            map-options
+            :options="tabelaColunas"
+            option-value="name"
+            style="min-width: 150px"
           />
           <q-btn
             flat round dense
@@ -96,26 +72,6 @@
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
       </q-inner-loading> -->
     </div>
-
-    <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
-      possoGravarRotaEndereco ||
-      possoExcluirRotaEndereco
-    ">
-      <q-fab color="primary" active-icon="close" direction="up" icon="expand less">
-        <q-tooltip slot="tooltip" anchor="center left" self="center right" :offset="[20, 0]">
-          Botões de ação
-        </q-tooltip>
-        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarRotaEndereco || possoAlterarRotaEndereco">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">{{ botaoSalvarAlterar }}</q-tooltip>
-        </q-fab-action>
-        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarRotaEndereco">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Novo</q-tooltip>
-        </q-fab-action>
-        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirRotaEndereco">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Excluir</q-tooltip>
-        </q-fab-action>
-      </q-fab>
-    </q-page-sticky>
   </q-page>
 </template>
 
@@ -128,9 +84,13 @@ import {mask} from 'vue-the-mask'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 import rotaEnderecoService from 'src/pages/cadastro/rota/RotaEnderecoService'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'RotaEndereco',
+  components: {
+    formSelect
+  },
   directives: {
     mask
   },
@@ -275,7 +235,7 @@ export default {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          })
           return
         }
         if (!this.rotaEndereco.rotaEndereco && this.possoGravarRotaEndereco) {
@@ -313,14 +273,13 @@ export default {
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
+        }).onOk(() => {
           this.$q.loading.show({
             message: 'Processando sua requisição',
             messageColor: 'white',
             spinnerSize: 250, // in pixels
             spinnerColor: 'white'
           })
-
           rotaEnderecoService.apaga({rotaEndereco: id, rota: this.rota})
             .then(result => {
               this.$q.loading.hide()
@@ -334,8 +293,6 @@ export default {
               this.listaDeRotaEnderecos.splice(this.listaDeRotaEnderecos.indexOf(idRegistro[0]), 1)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
         notify.semPermissao()
@@ -383,7 +340,7 @@ export default {
     rotaEnderecoService.getOptions()
       .then(result => {
         this.optionsLoading = false
-        this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
+        this.optionsEndereco = this.rotaEndereco.setOptions(result.data.endereco)
       })
   }
 }

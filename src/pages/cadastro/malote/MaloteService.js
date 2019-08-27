@@ -1,171 +1,46 @@
-import http from 'src/boot/axios'
-import {
-  Dialog,
-  Loading
-} from 'quasar'
-import Notify from 'src/tools/Notify'
+import Service from 'src/services/Service'
+const rotasMalote = {
+  malote: `/malotes`,
+  grava: `/malotes/malote`,
+  lista: `/malotes/lista`,
+  cadastro: (id) => `/malotes/malote/${id}`,
+  options: `/malotes/options`
+}
 
-export const RotaService = {
+class MaloteService extends Service {
   // usado para a lista de registros
-  procura (busca, inicio, fim) {
-    return http.get('malotes', {
+  static procura (busca, inicio, fim) {
+    return this.get(rotasMalote.malote, {
       params: {
         busca: busca,
         inicio: inicio,
         fim: fim
       }
     })
-      .then(response => response)
-      .catch(function (error) {
-        console.log('erro no servidor ao listar malotes')
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {
-            // Picked "OK"
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          })
-        }
-        throw new Error(error)
-      })
-  },
+  }
 
   // usado para preencher selects
-  lista () {
-    return http.get('malotes/lista')
-      .then(response => response)
-      .catch(function (error) {
-        console.log('erro no servidor ao listar malotes')
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {
-            // Picked "OK"
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          })
-        }
-        throw new Error(error)
-      })
-  },
+  static lista () {
+    return this.get(rotasMalote.lista)
+  }
 
-  seleciona (id) {
-    return http.get(`malotes/malote/${id}`)
-      .then(response => response)
-      .catch(function (error) {
-        Loading.hide()
-        console.log('erro no servidor ao buscar um grupo de usuario', id)
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {
-            // Picked "OK"
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          })
-        }
-        throw new Error(error)
-      })
-  },
+  static seleciona (id) {
+    return this.get(rotasMalote.cadastro)
+  }
 
-  grava (malote) {
-    return http.post(`malotes/malote`, malote)
-      .then(response => response)
-      .catch(error => {
-        console.log(error.response)
-        Loading.hide()
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else if (error.response.status === 500) {
-          console.log('erro no servidor')
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {}).catch(() => {})
-        } else if (error.response.status === 400) {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => {}).catch(() => {})
-        }
-        throw new Error(error)
-      })
-  },
+  static grava (malote) {
+    return this.post(rotasMalote.grava, malote)
+  }
 
-  altera (malote) {
-    return http.put(`malotes/malote/${malote.malote}`, malote)
-      .then(response => response)
-      .catch(error => {
-        console.log(error.response)
-        Loading.hide()
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else if (error.response.status === 500) {
-          console.log('erro no servidor')
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {}).catch(() => {})
-        } else if (error.response.status === 400) {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => {}).catch(() => {})
-        }
-        throw new Error(error)
-      })
-  },
+  static altera (malote) {
+    return this.put(rotasMalote.cadastro(malote.malote), malote)
+  }
 
-  apaga (id) {
-    return http.delete(`malotes/malote/${id}`)
-      .then(response => response)
-      .catch(error => {
-        console.log(error.response)
-        Loading.hide()
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else if (error.response.status === 500) {
-          console.log('erro no servidor')
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {}).catch(() => {})
-        }
-        throw new Error(error)
-      })
-  },
-  getOptions () {
-    return http.get(`malotes/options`)
-      .then(response => response)
-      .catch(error => {
-        // throw new Error(error)
-        Loading.hide()
-        console.log('erro no servidor ao selecionar as options')
-
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {
-            // Picked "OK"
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          })
-        }
-        throw new Error(error)
-      })
+  static apaga (id) {
+    return this.delete(rotasMalote.cadastro(id))
+  }
+  static getOptions () {
+    return this.get(rotasMalote.options)
   }
 }
-export default RotaService
+export default MaloteService

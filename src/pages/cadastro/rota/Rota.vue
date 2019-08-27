@@ -1,22 +1,14 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Rotas</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
-
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted v-model="selectedTab">
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="fas fa-map-marked-alt" label="Cadastro"/>
-      <q-tab slot="title" name="tab-2" icon="fas fa-map-signs" label="Endereços" v-if="rota.rota && possoAbrirRotaEndereco"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+    <bodyTabs titulo="Cadastro de Rotas">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+        <q-tab name="tab-2" icon="fas fa-map-signs" label="Endereços" v-if="rota.rota && possoAbrirRotaEndereco"/>
+      </template>
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
@@ -29,95 +21,81 @@
             </div>
 
             <q-list>
-              <q-collapsible label="Dados Gerais" opened>
+              <q-expansion-item label="Dados Gerais" default-opened>
                 <div class="row">
                   <div class="col-md-6">
-                    <q-field
+                    <q-input
                       label="Descrição"
-                      orientation="vertical"
                       class="form-input"
-                      helper="Obrigatório"
+                      hint="Obrigatório"
                       :error="$v.rota.descricao.$error"
-                      :error-label="errorDescricao"
-                    >
-                      <q-input autocomplete="off" type="text" v-model="rota.descricao" @input="$v.rota.descricao.$touch()" name="descricao"/>
-                    </q-field>
+                      :error-message="errorDescricao"
+                      autocomplete="off" type="text" v-model="rota.descricao" @input="$v.rota.descricao.$touch()" name="descricao"/>
                   </div>
                   <div class="col-md-3">
-                    <q-field
+                    <q-input
                       label="Código"
-                      orientation="vertical"
                       class="form-input"
-                      helper="Obrigatório"
+                      hint="Obrigatório"
                       :error="$v.rota.codigo.$error"
-                      error-label="Obrigatório"
-                    >
-                      <q-input autocomplete="off" type="text" v-model="rota.codigo" @input="$v.rota.codigo.$touch()" name="codigo"/>
-                    </q-field>
+                      error-message="Obrigatório"
+                      autocomplete="off" type="text" v-model="rota.codigo" @input="$v.rota.codigo.$touch()" name="codigo"/>
                   </div>
                   <div class="col-md-3">
-                    <q-field class="form-input" label="Status" orientation="vertical">
-                      <q-btn-group  class="fit">
-                        <radio-button :status="rota.status" @toggleRadioButton="toggleRadioButton"/>
-                      </q-btn-group>
+                    <q-field class="form-input" label="Status" borderless stack-label>
+                      <q-option-group inline
+                        v-model="rota.status"
+                        :options="[
+                          {
+                            label: 'Ativo',
+                            value: 1
+                          },
+                          {
+                            label: 'Inativo',
+                            value: 0
+                          }
+                        ]"
+                        color="primary"
+                      />
                     </q-field>
                   </div>
                 </div>
-              </q-collapsible>
+              </q-expansion-item>
 
             </q-list>
 
           </form>
-          <botao-mobile
-            :id="rota.rota"
-            :possoGravar="possoGravarRota"
-            :possoAlterar="possoAlterarRota"
-            :possoExcluir="possoExcluirRota"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-        </q-page>
-
-      </q-tab-pane>
-
-      <q-tab-pane name="tab-2" v-if="rota.rota && possoAbrirRotaEndereco">
-        <form-rotaEndereco :rota="rota.rota"></form-rotaEndereco>
-
-      </q-tab-pane>
-
-    </q-tabs>
-    <lista-de-registros/>
-
+        </q-tab-panel>
+        <q-tab-panel name="tab-2">
+          <form-rotaEndereco :rota="rota.rota"></form-rotaEndereco>
+        </q-tab-panel>
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
   </div>
 </template>
 
 <script>
-import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
-import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import ListaDeRegistros from './ListaRotas.vue'
 import { required } from 'vuelidate/lib/validators'
 import Rota from './Rota'
 import rotaService from './RotaService'
-import formRotaEndereco from './RotaEndereco'
+import formRotaEndereco from './RotaEndereco.vue'
 import confereRegistro from 'src/services/confereRegistro'
 var timer
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from 'src/tools/Notify'
-import RadioButton from 'src/components/form/radios/RadioButton'
 import {mask} from 'vue-the-mask'
-import botaoMobile from 'src/components/QFab/QFab'
 
 export default {
   name: 'Rota',
   components: {
     ListaDeRegistros,
-    BotaoMenuLeft,
-    BotaoMenuRight,
-    RadioButton,
     formRotaEndereco,
-    botaoMobile
+    BodyTabs
   },
   directives: { mask },
   data () {
@@ -173,9 +151,6 @@ export default {
     }
   },
   methods: {
-    toggleRadioButton () {
-      this.rota.status = !this.rota.status
-    },
     reset () {
       this.$v.rota.$reset()
       this.rota = new Rota()
@@ -219,7 +194,7 @@ export default {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          }).onOk(() => { }).catch(() => { })
           return
         }
 
@@ -263,7 +238,7 @@ export default {
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
+        }).onOk(() => {
           this.$q.loading.show({
             message: 'Processando sua requisição',
             messageColor: 'white',
@@ -284,8 +259,6 @@ export default {
               // this.$store.commit('menuRight/removeRegistro', this.id)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
         notify.semPermissao()

@@ -1,124 +1,36 @@
-import http from 'src/boot/axios'
-import {
-  Dialog,
-  Loading
-} from 'quasar'
-import Notify from 'src/tools/Notify'
-export const SetorService = {
-  procura (busca, inicio, fim) {
-    return http.get('setores', {
+
+import Service from 'src/services/Service'
+const rotasSetor = {
+  setor: `/setores`,
+  grava: `/setores/setor`,
+  pesquisa: `/setores/pesquisa`,
+  cadastro: (id) => `/setores/setor/${id}`
+}
+class SetorService extends Service {
+  static procura (busca, inicio, fim) {
+    return this.get(rotasSetor.pesquisa, {
       params: {
         busca: busca,
         inicio: inicio,
         fim: fim
       }
     })
-      .then(response => response)
-      .catch(error => {
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {
-            // Picked "OK"
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          })
-        }
-        throw new Error(error)
-      })
-  },
+  }
 
-  grava (setor) {
-    return http.post(`setores/setor`, setor)
-      .then(response => response)
-      .catch(error => {
-        console.log(error.response)
-        Loading.hide()
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else if (error.response.status === 500) {
-          console.log('erro no servidor')
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {}).catch(() => {})
-        } else if (error.response.status === 400) {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'Todos os campos são obrigatórios'
-          }).then(() => {}).catch(() => {})
-        }
-        throw new Error(error)
-      })
-  },
+  static grava (setor) {
+    return this.post(rotasSetor.grava, setor)
+  }
 
-  altera (setor) {
-    return http.put(`setores/setor/${setor.setor}`, setor)
-      .then(response => response)
-      .catch(error => {
-        console.log(error.response)
-        Loading.hide()
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else if (error.response.status === 500) {
-          console.log('erro no servidor')
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {}).catch(() => {})
-        } else if (error.response.status === 400) {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 400.'
-          }).then(() => {}).catch(() => {})
-        }
-        throw new Error(error)
-      })
-  },
+  static seleciona (id) {
+    return this.get(rotasSetor.cadastro(id))
+  }
 
-  apaga (id) {
-    return http.delete(`setores/setor/${id}`)
-      .then(response => response)
-      .catch(error => {
-        console.log(error.response)
-        Loading.hide()
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else if (error.response.status === 500) {
-          console.log('erro no servidor')
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {}).catch(() => {})
-        }
-        throw new Error(error)
-      })
-  },
+  static altera (setor) {
+    return this.put(rotasSetor.cadastro(setor.setor), setor)
+  }
 
-  seleciona (id) {
-    return http.get(`setores/setor/${id}`)
-      .then(response => response)
-      .catch(error => {
-        Loading.hide()
-        console.log('erro no servidor ao buscar um setor', id)
-
-        if (error.response.status === 401) {
-          Notify.semPermissao()
-        } else {
-          Dialog.create({
-            title: 'Atenção',
-            message: 'O servidor respondeu erro interno, contate o suporte e informe o erro 500.'
-          }).then(() => {
-            // Picked "OK"
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          })
-        }
-        throw new Error(error)
-      })
+  static apaga (id) {
+    return this.delete(rotasSetor.cadastro(id))
   }
 }
 export default SetorService

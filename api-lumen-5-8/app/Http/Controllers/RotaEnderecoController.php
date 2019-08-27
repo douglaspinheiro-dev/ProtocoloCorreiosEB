@@ -17,11 +17,7 @@ class RotaEnderecoController extends Controller
 
   public function apaga($id)
   {
-    $dados = [
-      'id' => $id,
-      'usuarioAlterador' => $this->getUsuario()
-    ];
-    $results = RotaEnderecoDao::apaga($dados);
+    $results = RotaEnderecoDao::apaga($id);
     return response()->json('', 204);
   }
 
