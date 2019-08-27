@@ -15,6 +15,16 @@
         <q-separator />
         <q-item-label header>Menu de Navegação</q-item-label>
 
+        <q-item v-ripple link :to="{name: 'dashboard'}">
+          <q-item-section avatar>
+            <q-icon color="primary" name="dashboard" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Consultas</q-item-label>
+            <q-item-label caption>Procurar documentos, imprimir Relatórios</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-expansion-item group="menuLinks" icon="settings" label="Sistema" v-if="hasSistema">
           <q-item v-for="(link, index) in linksSistema" :key="index" v-ripple link :to="{name: link.rota}">
             <q-item-section>
