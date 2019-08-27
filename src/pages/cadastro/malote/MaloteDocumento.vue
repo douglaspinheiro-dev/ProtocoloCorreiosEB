@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm full-height">
+  <div>
     <form @submit.prevent="salvarAlterar">
       <div class="row barraBotoes">
         <div class="col-md-6 linhaBotoes">
@@ -10,91 +10,64 @@
         </div>
       </div>
       <q-list>
-        <q-collapsible label="Documentos" default-opened>
-          <div>
-            <div class="row">
-              <div class="col-md-3">
-                <q-field class="form-input"
-                  label="Tipo do Documento"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.maloteDocumento.tipoDocumento.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-select
-                    v-model="maloteDocumento.tipoDocumento"
-                    :options="optionsTipoDocumento"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione a Origem"
-                    name="select"
-                    @input="$v.maloteDocumento.tipoDocumento.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
-              </div>
-
-              <div class="col-md-3">
-                <q-field
-                  label="Número"
-                  orientation="vertical"
-                  class="form-input"
-                  helper="Obrigatório"
-                  :error="$v.maloteDocumento.numero.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input type="tel" v-model="maloteDocumento.numero" @input="$v.maloteDocumento.numero.$touch()" name="numero"/>
-                </q-field>
-              </div>
-              <div class="col-md-3">
-                <q-field class="form-input"
-                  label="Origem"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.maloteDocumento.setor.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-select
-                    v-model="maloteDocumento.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione a Origem"
-                    name="select"
-                    @input="$v.maloteDocumento.setor.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
-              </div>
-
-              <div class="col-md-3">
-                <q-field class="form-input"
-                  label="Destino"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.maloteDocumento.rotaEndereco.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-select
-                    v-model="maloteDocumento.rotaEndereco"
-                    :options="optionsRotaEndereco"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione a Origem"
-                    name="select"
-                    @input="$v.maloteDocumento.rotaEndereco.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-md-3">
+            <form-select
+              classe="form-input"
+              label="Tipo do Documento"
+              hint="Obrigatório"
+              required
+              :error="$v.maloteDocumento.tipoDocumento.$error"
+              error-message="Obrigatório"
+              v-model="maloteDocumento.tipoDocumento"
+              :options="optionsTipoDocumento"
+              @input="$v.maloteDocumento.tipoDocumento.$touch()"
+            />
+            <q-linear-progress indeterminate v-show="optionsLoading"/>
           </div>
-        </q-collapsible>
+
+          <div class="col-md-9">
+            <q-input label="Número"
+              class="form-input"
+              hint="Obrigatório"
+              :error="$v.maloteDocumento.numero.$error"
+              error-message="Obrigatório" type="tel" v-model="maloteDocumento.numero" @input="$v.maloteDocumento.numero.$touch()" name="numero"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <form-select
+              classe="form-input"
+              label="Origem"
+              hint="Obrigatório"
+              required
+              :error="$v.maloteDocumento.setor.$error"
+              error-message="Obrigatório"
+              v-model="maloteDocumento.setor"
+              :options="optionsSetor"
+              @input="$v.maloteDocumento.setor.$touch()"
+            />
+            <q-linear-progress indeterminate v-show="optionsLoading"/>
+          </div>
+
+          <div class="col-md-6">
+            <form-select
+              classe="form-input"
+              label="Destino"
+              hint="Obrigatório"
+              required
+              :error="$v.maloteDocumento.rotaEndereco.$error"
+              error-message="Obrigatório"
+              v-model="maloteDocumento.rotaEndereco"
+              :options="optionsRotaEndereco"
+              @input="$v.maloteDocumento.rotaEndereco.$touch()"
+            />
+            <q-linear-progress indeterminate v-show="optionsLoading"/>
+          </div>
+        </div>
       </q-list>
     </form>
     <br>
-    <div>
-
       <q-table title="Lista de MaloteDocumentos"
         :data="listaDeMaloteDocumentos"
         :columns="tabelaColunas"
@@ -107,27 +80,8 @@
         rows-per-page-label="Linhas por página"
         loading-label="Carregando"
       >
-        <template slot="top-left">
-          <q-search
-            placeholder="Busca"
-            hide-underline
-            color="secondary"
-            v-model="buscaMaloteDocumento"
-            class="col-6"
-          />
-        </template>
+
         <template slot="top-right" slot-scope="props">
-          <q-select
-            color="secondary"
-            v-model="tabelaSeparador"
-            :options="[
-              { label: 'Horizontal', value: 'horizontal' },
-              { label: 'Vertical', value: 'vertical' },
-              { label: 'Célula', value: 'cell' },
-              { label: 'Nenhum', value: 'none' }
-            ]"
-            hide-underline
-          />
           <q-btn
             flat round dense
             :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -141,33 +95,11 @@
       <!-- <q-inner-loading :visible="carregandoLista">
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
       </q-inner-loading> -->
-    </div>
-
-    <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
-      possoGravarMaloteDocumento ||
-      possoExcluirMaloteDocumento
-    ">
-      <q-fab color="primary" active-icon="close" direction="up" icon="expand less">
-        <q-tooltip slot="tooltip" anchor="center left" self="center right" :offset="[20, 0]">
-          Botões de ação
-        </q-tooltip>
-        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarMaloteDocumento || possoAlterarMaloteDocumento">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">{{ botaoSalvarAlterar }}</q-tooltip>
-        </q-fab-action>
-        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarMaloteDocumento">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Novo</q-tooltip>
-        </q-fab-action>
-        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirMaloteDocumento">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Excluir</q-tooltip>
-        </q-fab-action>
-      </q-fab>
-    </q-page-sticky>
-  </q-page>
+  </div>
 </template>
 
 <script>
 import { required } from 'vuelidate/lib/validators'
-var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
@@ -176,8 +108,11 @@ import maloteDocumentoService from './MaloteDocumentoService'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
+import formSelect from 'src/components/form/select/QSelect'
+
 export default {
   name: 'MaloteDocumento',
+  components: {formSelect},
   directives: {
     mask
   },
@@ -233,7 +168,8 @@ export default {
           field: 'editar',
           required: true
         }
-      ]
+      ],
+      timer: ''
     }
   },
   validations: {
@@ -245,7 +181,6 @@ export default {
     }
   },
   methods: {
-
     reset () {
       this.$v.maloteDocumento.$reset()
       this.maloteDocumento = new MaloteDocumento()
@@ -278,15 +213,15 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.maloteDocumento.$touch()
         if (this.$v.maloteDocumento.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          })
           return
         }
         if (this.maloteDocumento.maloteDocumento && this.possoAlterarMaloteDocumento) {
@@ -295,7 +230,7 @@ export default {
             .then(result => {
               this.$q.loading.hide()
               console.log('maloteDocumento alterado com sucesso')
-              this.listaDocumentos()
+              this.listaDocumentos(this.malote)
               this.$q.notify({
                 type: 'positive',
                 message: 'Documento do malote alterado com sucesso.',
@@ -326,15 +261,13 @@ export default {
       }, 2000)
     },
     excluir (id) {
-      console.log(id)
-
       if (this.possoExcluirMaloteDocumento) {
         this.$q.dialog({
           title: 'Tem certeza?',
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
+        }).onOk(() => {
           this.$q.loading.show({
             message: 'Processando sua requisição',
             messageColor: 'white',
@@ -355,17 +288,15 @@ export default {
               this.listaDeMaloteDocumentos.splice(this.listaDeMaloteDocumentos.indexOf(idRegistro[0]), 1)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
         notify.semPermissao()
       }
     },
-    listaDocumentos () {
+    listaDocumentos (malote) {
       this.carregandoLista = true
       maloteDocumentoService
-        .lista(this.malote)
+        .lista(malote)
         .then(result => {
           this.carregandoLista = false
           console.log('carreguei a lista de maloteDocumentos')
@@ -398,7 +329,7 @@ export default {
   },
   mounted () {
     console.log('vou carregar a lista de maloteDocumento')
-    this.listaDocumentos()
+    this.listaDocumentos(this.malote)
 
     this.optionsLoading = true
     this.maloteDocumento.malote = this.malote

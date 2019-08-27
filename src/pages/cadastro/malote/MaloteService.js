@@ -2,7 +2,7 @@ import Service from 'src/services/Service'
 const rotasMalote = {
   malote: `/malotes`,
   grava: `/malotes/malote`,
-  lista: `/malotes/lista`,
+  lista: `/malotes`,
   cadastro: (id) => `/malotes/malote/${id}`,
   options: `/malotes/options`
 }
@@ -25,7 +25,7 @@ class MaloteService extends Service {
   }
 
   static seleciona (id) {
-    return this.get(rotasMalote.cadastro)
+    return this.get(rotasMalote.cadastro(id))
   }
 
   static grava (malote) {

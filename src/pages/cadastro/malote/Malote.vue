@@ -1,22 +1,15 @@
 <template>
   <div>
-    <q-layout-header>
-      <q-toolbar>
-        <botao-menu-left/>
-        <q-toolbar-title>Cadastro de Malotes</q-toolbar-title>
-        <botao-menu-right/>
-      </q-toolbar>
+    <bodyTabs titulo="Cadastro de Malotes">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+        <q-tab name="tab-2" icon="fas fa-map-signs" label="Documentos" v-if="malote.malote && possoAbrirMaloteDocumento"/>
+      </template>
 
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted v-model="selectedTab">
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="fas fa-map-marked-alt" label="Cadastro"/>
-      <q-tab slot="title" name="tab-2" icon="fas fa-map-signs" label="Documentos" v-if="malote.malote && possoAbrirMaloteDocumento"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
+      <template slot="tabPanel">
+        <!-- Targets -->
+        <q-tab-panel name="tab-1">
 
           <form @submit.prevent="salvarAlterar">
             <div class="row barraBotoes">
@@ -29,124 +22,91 @@
             </div>
 
             <q-list>
-              <q-collapsible label="Dados Gerais" opened>
+              <q-expansion-item label="Dados Gerais" default-opened>
                 <div class="row">
                   <div class="col-md-2">
-                    <q-field label="Nº" orientation="vertical" class="form-input">
+                    <q-field label="Nº"  class="form-input">
                       {{malote.protocolo}}
                     </q-field>
                   </div>
                   <div class="col-md-4">
-                    <q-field
+                    <q-input stack-label
                       label="Data"
-                      orientation="vertical"
                       class="form-input"
-                      helper="Obrigatório"
+                      hint="Obrigatório"
                       :error="$v.malote.data.$error"
-                      error-label="Obrigatório"
-                    >
-                      <q-input type="date" v-model="malote.data" @input="$v.malote.data.$touch()" name="data"/>
-                    </q-field>
+                      error-message="Obrigatório"
+                      type="date" v-model="malote.data" @input="$v.malote.data.$touch()" name="data"/>
                   </div>
                   <div class="col-md-3">
-                    <q-field
-                      label="Lacre"
-                      orientation="vertical"
+                    <q-input label="Lacre"
                       class="form-input"
                       :error="$v.malote.lacre.$error"
-                      :error-label="errorLacre"
-                    >
-                      <q-input autocomplete="off" type="tel" v-model="malote.lacre" @input="$v.malote.lacre.$touch()" name="lacre"/>
-                    </q-field>
+                      :error-message="errorLacre" autocomplete="off" type="tel" v-model="malote.lacre" @input="$v.malote.lacre.$touch()" name="lacre"/>
                   </div>
 
                   <div class="col-md-3">
-                    <q-field
-                      label="Nº da Bolsa"
-                      orientation="vertical"
-                      class="form-input"
-                    >
-                      <q-input autocomplete="off" type="tel" v-model="malote.numeroBolsa" name="lacre"/>
-                    </q-field>
+                    <q-input label="Nº da Bolsa"
+                      class="form-input" autocomplete="off" type="tel" v-model="malote.numeroBolsa" name="lacre"/>
                   </div>
 
                 </div>
                 <div class="row">
                   <div class="col-md-12">
-                    <q-field class="form-input" label="Rota" orientation="vertical"
+                    <form-select
+                      classe="form-input"
+                      label="Rota"
                       :error="$v.malote.rota.$error"
-                      error-label="Obrigatório"
-                      helper="Obrigatório"
-                    >
-                      <q-select
-                        v-model="malote.rota"
-                        :options="optionsRota"
-                        filter
-                        autofocus-filter
-                        filter-placeholder="Selecione a rota"
-                        name="select"
-                        @input="$v.malote.rota.$touch()"
-                      />
-                      <q-progress indeterminate v-show="optionsLoading"/>
-                    </q-field>
+                      error-message="Obrigatório"
+                      hint="Obrigatório"
+                      v-model="malote.rota"
+                      :options="optionsRota"
+                      @input="$v.malote.rota.$touch()"
+                      required
+                    />
+                    <q-linear-progress indeterminate v-show="optionsLoading"/>
                   </div>
                 </div>
-              </q-collapsible>
-
+              </q-expansion-item>
             </q-list>
 
           </form>
-          <botao-mobile
-            :id="malote.malote"
-            :possoGravar="possoGravarMalote"
-            :possoAlterar="possoAlterarMalote"
-            :possoExcluir="possoExcluirMalote"
-            @salvarAlterar="salvarAlterar"
-            @excluir="excluir"
-            @reset="reset"
-          />
-        </q-page>
 
-      </q-tab-pane>
+        </q-tab-panel>
+        <q-tab-panel name="tab-2">
+          <form-maloteDocumento :malote="malote.malote" :rota="malote.rota" ref="formMaloteDocumento"></form-maloteDocumento>
+        </q-tab-panel>
 
-      <q-tab-pane name="tab-2" v-if="malote.malote && possoAbrirMaloteDocumento">
-        <form-maloteDocumento :malote="malote.malote" :rota="malote.rota"></form-maloteDocumento>
-
-      </q-tab-pane>
-
-    </q-tabs>
-    <lista-de-registros/>
-
+      </template>
+    </bodyTabs>
+    <lista-de-registros />
   </div>
 </template>
 
 <script>
-import BotaoMenuLeft from 'src/components/header/BotaoMenuLeft'
-import BotaoMenuRight from 'src/components/header/BotaoMenuRight'
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import ListaDeRegistros from './ListaMalotes.vue'
 import { required } from 'vuelidate/lib/validators'
 import Malote from './Malote'
 import maloteService from './MaloteService'
-import formMaloteDocumento from './MaloteDocumento'
+import formMaloteDocumento from './MaloteDocumento.vue'
 import confereRegistro from 'src/services/confereRegistro'
-var timer
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from 'src/tools/Notify'
 // import RadioButton from 'src/components/form/radios/RadioButton'
 import {mask} from 'vue-the-mask'
-import botaoMobile from 'src/components/QFab/QFab'
 import Rota from 'src/pages/cadastro/rota/Rota'
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'Malote',
   components: {
     ListaDeRegistros,
-    BotaoMenuLeft,
-    BotaoMenuRight,
-    // RadioButton,
     formMaloteDocumento,
-    botaoMobile
+    formSelect,
+    BodyTabs
   },
   directives: { mask },
   data () {
@@ -158,7 +118,8 @@ export default {
       possoExcluirMalote: false,
       selectedTab: 'tab-1',
       optionsRota: [],
-      optionsLoading: false
+      optionsLoading: false,
+      timer: ''
     }
   },
   validations: {
@@ -233,6 +194,9 @@ export default {
 
           this.confereAlterarExcluir()
           this.selectedTab = 'tab-1'
+          if (this.$refs.formMaloteDocumento) {
+            this.$refs.formMaloteDocumento.listaDocumentos(id)
+          }
         })
     },
     salvarAlterar () {
@@ -242,15 +206,15 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.malote.$touch()
         if (this.$v.malote.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          })
           return
         }
 
@@ -299,7 +263,7 @@ export default {
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
+        }).onOk(() => {
           this.$q.loading.show({
             message: 'Processando sua requisição',
             messageColor: 'white',
@@ -320,8 +284,6 @@ export default {
               // this.$store.commit('menuRight/removeRegistro', this.id)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
         notify.semPermissao()
