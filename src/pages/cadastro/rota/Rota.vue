@@ -61,13 +61,12 @@
                   </div>
                 </div>
               </q-expansion-item>
-
             </q-list>
 
           </form>
         </q-tab-panel>
         <q-tab-panel name="tab-2">
-          <form-rotaEndereco :rota="rota.rota"></form-rotaEndereco>
+          <form-rota-endereco :rota="rota.rota" ref="formRotaEndereco"></form-rota-endereco>
         </q-tab-panel>
       </template>
     </bodyTabs>
@@ -84,7 +83,6 @@ import Rota from './Rota'
 import rotaService from './RotaService'
 import formRotaEndereco from './RotaEndereco.vue'
 import confereRegistro from 'src/services/confereRegistro'
-var timer
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import notify from 'src/tools/Notify'
@@ -106,7 +104,8 @@ export default {
       permissoes: [],
       possoAlterarRota: false,
       possoExcluirRota: false,
-      selectedTab: 'tab-1'
+      selectedTab: 'tab-1',
+      timer: ''
     }
   },
   validations: {
@@ -177,6 +176,9 @@ export default {
           this.rota = Object.assign({}, this.rota, result.data)
           this.confereAlterarExcluir()
           this.selectedTab = 'tab-1'
+          if (this.$refs.formRotaEndereco) {
+            this.$refs.formRotaEndereco.listaEnderecos(id)
+          }
         })
     },
     salvarAlterar () {
@@ -186,15 +188,15 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.rota.$touch()
         if (this.$v.rota.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).onOk(() => { }).catch(() => { })
+          })
           return
         }
 

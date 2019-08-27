@@ -164,7 +164,7 @@ export default {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          })
           return
         }
 
@@ -208,7 +208,7 @@ export default {
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
+        }).onOk(() => {
           this.$q.loading.show({
             message: 'Processando sua requisição',
             messageColor: 'white',
@@ -228,8 +228,6 @@ export default {
               this.$root.$emit('removeRegistro', this.tipoDocumento.tipoDocumento)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
         notify.semPermissao()

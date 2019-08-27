@@ -3,12 +3,11 @@ import Service from 'src/services/Service'
 const rotasSetor = {
   setor: `/setores`,
   grava: `/setores/setor`,
-  pesquisa: `/setores/pesquisa`,
   cadastro: (id) => `/setores/setor/${id}`
 }
 class SetorService extends Service {
   static procura (busca, inicio, fim) {
-    return this.get(rotasSetor.pesquisa, {
+    return this.get(rotasSetor.setor, {
       params: {
         busca: busca,
         inicio: inicio,

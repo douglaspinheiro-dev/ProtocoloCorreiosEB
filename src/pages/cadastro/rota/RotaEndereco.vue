@@ -298,10 +298,10 @@ export default {
         notify.semPermissao()
       }
     },
-    listaEnderecos () {
+    listaEnderecos (rota) {
       this.carregandoLista = true
       rotaEnderecoService
-        .lista(this.rota)
+        .lista(rota)
         .then(result => {
           this.carregandoLista = false
           console.log('carreguei a lista de rotaEnderecos')
@@ -334,7 +334,7 @@ export default {
   },
   mounted () {
     console.log('vou carregar a rotaEndereco')
-    this.listaEnderecos()
+    this.listaEnderecos(this.rota)
 
     this.optionsLoading = true
     rotaEnderecoService.getOptions()
