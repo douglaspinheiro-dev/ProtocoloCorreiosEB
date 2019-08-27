@@ -21,228 +21,164 @@
 
             <div class="row">
               <div class="col-md-2">
-                <q-field label="Nº" orientation="vertical" class="form-input">
+                <q-field label="Nº"  class="form-input" stack-label>
                   {{correspondencia.anoCadastro+'-'+correspondencia.protocolo}}
                 </q-field>
               </div>
               <div class="col-md-3">
-                <q-field class="form-input"
+                <q-input class="form-input"
                   label="Data do cadastro"
-                  orientation="vertical"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.correspondencia.dataCadastro.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="off" type="date" v-model="correspondencia.dataCadastro" name="data" />
-                </q-field>
+                  error-message="Obrigatório" autocomplete="off" type="date" v-model="correspondencia.dataCadastro" name="data" />
               </div>
               <div class="col-md-4">
-                <q-field class="form-input" label="Tipo de Documento" orientation="vertical"
+                <form-select
                   :error="$v.correspondencia.tipoDocumento.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
-                  <q-select
-                    v-model="correspondencia.tipoDocumento"
-                    :options="optionsTipoDocumento"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o Tipo de Documento"
-                    name="select"
-                    @input="$v.correspondencia.tipoDocumento.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
+                  hint="Obrigatório"
+                  v-model="correspondencia.tipoDocumento"
+                  :options="optionsTipoDocumento"
+                  error-message="Obrigatório"
+                  classe="form-input"
+                  label="Tipo de Documento"
+                  @input="$v.correspondencia.tipoDocumento.$touch()"
+                  required
+                />
+                <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
               <div class="col-md-3">
-                <q-field
-                  label="Número"
-                  orientation="vertical"
+                <q-input label="Número"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.correspondencia.numeroDocumento.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input type="text" v-model="correspondencia.numeroDocumento" @input="$v.correspondencia.numeroDocumento.$touch()" name="numero"/>
-                </q-field>
+                  error-message="Obrigatório" type="text" v-model="correspondencia.numeroDocumento" @input="$v.correspondencia.numeroDocumento.$touch()" name="numero"/>
               </div>
 
             </div>
             <div class="row">
-              <div class="col-md-4">
-                <q-field class="form-input"
-                  label="Codigo de Rastreio"
-                  orientation="vertical"
-                >
-                  <q-input autocomplete="on" type="text" v-model="correspondencia.codigoRastreio" name="text" >
-                    <q-autocomplete
-                      :min-characters="1"
-                      :max-results="30"
-                    />
-                  </q-input>
-                </q-field>
+              <div class="col-md-2">
+                <q-input class="form-input"
+                  label="Codigo de Rastreio" autocomplete="on" type="text" v-model="correspondencia.codigoRastreio" name="text" >
+                </q-input>
               </div>
-              <div class="col-md-4">
-                <q-field class="form-input" label="Origem" orientation="vertical"
+              <div class="col-md-7">
+                <form-select
                   :error="$v.correspondencia.setor.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
-                  <q-select
-                    v-model="correspondencia.setor"
-                    :options="optionsSetor"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o origem"
-                    name="select"
-                    @input="$v.correspondencia.setor.$touch()"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
+                  hint="Obrigatório"
+                  v-model="correspondencia.setor"
+                  :options="optionsSetor"
+                  error-message="Obrigatório"
+                  classe="form-input"
+                  label="Origem"
+                  @input="$v.correspondencia.setor.$touch()"
+                  required
+                />
+                <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
-              <div class="col-md-4">
-                <q-field class="form-input" label="Remetente" orientation="vertical">
-                  <q-input autocomplete="on" type="text" v-model="correspondencia.remetente" name="name"/>
-                </q-field>
+              <div class="col-md-3">
+                <q-input class="form-input" label="Remetente" autocomplete="on" type="text" v-model="correspondencia.remetente" name="name"/>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4">
-                <q-field class="form-input" label="É endereço cadastrado?" orientation="vertical">
-                  <q-btn-group  class="fit">
-                    <radio-button :status="correspondencia.enderecoCadastrado"
-                    @toggleRadioButton="toogleEnderecoCadastrado"
-                    :label="['Sim','Não']"
+              <div class="col-md-2">
+                <q-field class="form-input" label="É endereço cadastrado?" stack-label borderless>
+                  <q-option-group inline
+                    v-model="correspondencia.enderecoCadastrado"
+                    :options="[
+                      {
+                        label: 'Sim',
+                        value: '1'
+                      },
+                      {
+                        label: 'Não',
+                        value: '0'
+                      }
+                    ]"
+                    color="primary"
                   />
-                  </q-btn-group>
                 </q-field>
               </div>
 
-              <!-- <div class="col-md-8" v-show="enderecoCadastrado">
-                <q-field class="form-input"
-                  label="Origem"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.correspondencia.origem.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-select
-                    v-model="correspondencia.origem"
-                    :options="optionsEndereco"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione a Origem"
-                    name="select"
-                    @input="procuraEndereco"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
+              <div class="col-md-8" v-show="correspondencia.enderecoCadastrado === '1'">
+                <form-select
+                  label="Destino"
+                  hint="Obrigatório"
+                  :error="$v.correspondencia.destino.$error"
+                  error-message="Obrigatório"
+                  v-model="correspondencia.destino"
+                  :options="optionsEndereco"
+                  classe="form-input"
+                  @input="$v.correspondencia.destino.$touch()"
+                  required
+                />
+                <q-linear-progress indeterminate v-show="optionsLoading"/>
+              </div>
+
+              <!-- <div class="col-md-7" v-show="correspondencia.enderecoCadastrado">
+                <q-input class="form-input"
+                  label="Destino"
+                  hint="Obrigatório"
+                  :error="$v.correspondencia.destino.$error"
+                  error-message="Obrigatório" autocomplete="on" type="text" v-model="correspondencia.destino" name="destino" >
+                </q-input>
               </div> -->
 
-              <div class="col-md-8" v-show="correspondencia.enderecoCadastrado">
-                <q-field class="form-input"
+              <div class="col-md-8" v-show="correspondencia.enderecoCadastrado === '0'">
+                <q-input class="form-input"
                   label="Destino"
-                  orientation="vertical"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.correspondencia.destino.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="on" type="text" v-model="correspondencia.destino" name="destino" >
-                    <!-- <q-autocomplete
-                      :static-data="{field: 'value', list: optionsEndereco}"
-                      :min-characters="3"
-                      @selected="procurarEnderecoCadastrado"
-                    /> -->
-                    <q-autocomplete
-                      :min-characters="3"
-                      @selected="carregaEndereco"
-                      @search="procurarEnderecoCadastrado"
-                    />
-                  </q-input>
-                </q-field>
-              </div>
-
-              <div class="col-md-8" v-show="!correspondencia.enderecoCadastrado">
-                <q-field class="form-input"
-                  label="Destino"
-                  orientation="vertical"
-                  helper="Obrigatório"
-                  :error="$v.correspondencia.destino.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="on" type="text" v-model="correspondencia.destino" name="destino" >
-                    <!-- <q-autocomplete
-                      @search="search"
-                      :min-characters="3"
-                      @selected="selected"
-                    /> -->
-                  </q-input>
-                </q-field>
+                  error-message="Obrigatório" autocomplete="on" type="text" v-model="correspondencia.destino" name="destino" >
+                  <!-- <q-autocomplete
+                    @search="search"
+                    :min-characters="3"
+                    @selected="selected"
+                  /> -->
+                </q-input>
               </div>
             </div>
 
-            <q-collapsible label="Endereço" default-opened>
+            <q-expansion-item label="Endereço" default-opened>
               <div class="panel-body">
                 <div class="row">
 
                   <div class="col-md-3">
-                    <q-field class="form-input"
-                      label="Cep"
-                      orientation="vertical"
-                    >
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.cep" @input="procuraCep" v-mask="'99999-999'" placeholder="00000-000" name="cep"/>
-                    </q-field>
+                    <q-input class="form-input"
+                      label="Cep" autocomplete="off" type="text" v-model="correspondencia.cep" @input="procuraCep" v-mask="'99999-999'" placeholder="00000-000" name="cep"/>
                   </div>
 
                   <div class="col-md-7">
-                    <q-field class="form-input"
-                      label="Logradouro"
-                      orientation="vertical"
-                    >
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.logradouro" name="logradouro"/>
-                    </q-field>
+                    <q-input class="form-input"
+                      label="Logradouro" autocomplete="off" type="text" v-model="correspondencia.logradouro" name="logradouro"/>
                   </div>
                   <div class="col-md-2">
-                    <q-field class="form-input" label="Número" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.numero" name="numero"/>
-                    </q-field>
+                    <q-input class="form-input" label="Número" autocomplete="off" type="text" v-model="correspondencia.numero" name="numero"/>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Complemento" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.complemento" name="complemento"/>
-                    </q-field>
+                    <q-input class="form-input" label="Complemento" autocomplete="off" type="text" v-model="correspondencia.complemento" name="complemento"/>
                   </div>
 
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Referência" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.referencia" name="referencia"/>
-                    </q-field>
+                    <q-input class="form-input" label="Referência" autocomplete="off" type="text" v-model="correspondencia.referencia" name="referencia"/>
                   </div>
                   <div class="col-md-4">
-                    <q-field class="form-input" label="Bairro" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.bairro" name="bairro"/>
-                    </q-field>
+                    <q-input class="form-input" label="Bairro" autocomplete="off" type="text" v-model="correspondencia.bairro" name="bairro"/>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <q-field class="form-input" label="Cidade" orientation="vertical">
-                      <q-input autocomplete="off" type="text" v-model="correspondencia.cidade" name="cidade"/>
-                    </q-field>
+                    <q-input class="form-input" label="Cidade" autocomplete="off" type="text" v-model="correspondencia.cidade" name="cidade"/>
                   </div>
                   <div class="col-md-6">
-                    <q-field class="form-input" label="Estado" orientation="vertical">
-                      <q-select
-                        v-model="correspondencia.uf"
-                        :options="optionsEstados"
-                        filter
-                        autofocus-filter
-                        filter-placeholder="Digite o estado"
-                        name="uf"
-                      />
-                    </q-field>
+                    <form-select
+                      v-model="correspondencia.uf"
+                      :options="optionsEstados"
+                      classe="form-input"
+                      label="Estado"
+                      required
+                    />
                   </div>
                 </div>
 
@@ -250,51 +186,39 @@
               <q-inner-loading :visible="cepLoading">
                 <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
               </q-inner-loading>
-            </q-collapsible>
+            </q-expansion-item>
             <div class="row">
               <div class="col-md-4">
-                <q-field class="form-input" label="Tipo de Correspondência" orientation="vertical"
+                <form-select
+                  label="Tipo de Correspondência"
                   :error="$v.correspondencia.tipoCorrespondencia.$error"
-                  error-label="Obrigatório"
-                  helper="Obrigatório"
-                >
-                  <q-select
-                    v-model="correspondencia.tipoCorrespondencia"
-                    :options="optionsTipoCorrespondencia"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o tipo de correspondência"
-                    name="select"
-                    @input="somaTipoCorrespondencia"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
+                  error-message="Obrigatório"
+                  hint="Obrigatório"
+                  v-model="correspondencia.tipoCorrespondencia"
+                  :options="optionsTipoCorrespondencia"
+                  classe="form-input"
+                  required
+                  @input="somaTipoCorrespondencia"
+                />
+                <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
               <div class="col-md-4">
-                <q-field class="form-input" label="Tipo de Cobrança" orientation="vertical">
-                  <q-select
-                    v-model="correspondencia.tipoCobranca"
-                    :options="optionsTipoCobranca"
-                    filter
-                    autofocus-filter
-                    filter-placeholder="Selecione o tipo de cobrança"
-                    name="select"
-                    @input="somaTipoCobranca"
-                  />
-                  <q-progress indeterminate v-show="optionsLoading"/>
-                </q-field>
+                <form-select
+                  label="Tipo de Cobrança"
+                  v-model="correspondencia.tipoCobranca"
+                  :options="optionsTipoCobranca"
+                  classe="form-input"
+                  required
+                  @input="somaTipoCobranca"
+                />
+                <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
               <div class="col-md-4">
-                <q-field
-                  label="Valor Total"
-                  orientation="vertical"
+                <q-input label="Valor Total"
                   class="form-input"
-                  helper="Obrigatório"
+                  hint="Obrigatório"
                   :error="$v.correspondencia.valorTotal.$error"
-                  error-label="Obrigatório"
-                >
-                  <q-input autocomplete="off" type="tel" v-model.lazy="correspondencia.valorTotal" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money" @input="$v.correspondencia.valorTotal.$touch()"/>
-                </q-field>
+                  error-message="Obrigatório" autocomplete="off" type="tel" v-model.lazy="correspondencia.valorTotal" name="valor" prefix="R$" numeric-keyboard-toggle v-money="money" @input="$v.correspondencia.valorTotal.$touch()"/>
               </div>
             </div>
           </form>
@@ -306,6 +230,8 @@
 </template>
 
 <script>
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import ListaDeRegistros from './ListaCorrespondencias.vue'
 import { required } from 'vuelidate/lib/validators'
 import Correspondencia from './Correspondencia'
@@ -322,12 +248,14 @@ import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import TipoCorrespondencia from 'src/pages/cadastro/tipoCorrespondencia/TipoCorrespondencia'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import TipoCobranca from 'src/pages/cadastro/tipoCobranca/TipoCobranca'
-var timer
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'Cadastro-de-Correspondencias',
   components: {
-    ListaDeRegistros
+    ListaDeRegistros,
+    BodyTabs,
+    formSelect
   },
   directives: {
     'mask': AwesomeMask,
@@ -362,7 +290,8 @@ export default {
         suffix: '',
         precision: 2,
         masked: true /* doesn't work with directive */
-      }
+      },
+      timer: ''
     }
   },
   validations: {
@@ -432,8 +361,8 @@ export default {
       this.correspondencia.referencia = endereco.referencia
     },
     procuraCep () {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         if (this.correspondencia.cep.length === 9) {
           this.cepLoading = true
           this.correspondencia.logradouro = ''
@@ -490,10 +419,6 @@ export default {
       console.log(busca)
       console.log('procurando no select')
     },
-
-    toggleRadioButton () {
-      this.correspondencia.status = !this.correspondencia.status
-    },
     reset () {
       this.$v.correspondencia.$reset()
       this.correspondencia = new Correspondencia()
@@ -528,15 +453,15 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.correspondencia.$touch()
         if (this.$v.correspondencia.$error) {
           this.$q.loading.hide()
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
+          })
           return
         }
 
@@ -590,7 +515,7 @@ export default {
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
+        }).onOk(() => {
           this.$q.loading.show({
             message: 'Processando sua requisição',
             messageColor: 'white',

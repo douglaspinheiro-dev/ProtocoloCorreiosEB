@@ -9,7 +9,7 @@ export default class Correspondencia {
     this.setor = obj.setor || ''
     this.remetente = obj.remetente || ''
     this.destino = obj.destino || ''
-    this.enderecoCadastrado = obj.enderecoCadastrado || 0
+    this.enderecoCadastrado = obj.enderecoCadastrado || '0'
     this.usuarioCriador = obj.usuarioCriador || ''
     this.tipoCorrespondencia = obj.tipoCorrespondencia || ''
     this.tipoCobranca = obj.tipoCobranca || null

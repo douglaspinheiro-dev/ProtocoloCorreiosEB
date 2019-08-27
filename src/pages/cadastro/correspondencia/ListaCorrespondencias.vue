@@ -3,7 +3,6 @@
     ref="listaDeRegistros"
     labelHeader="Correspondências"
     @atualizaLista="atualizaLista"
-
   >
     <template slot="qItem">
       <!-- Content, in this case some <p> tags -->
