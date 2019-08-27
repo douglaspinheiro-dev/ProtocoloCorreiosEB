@@ -319,7 +319,6 @@
 
 <script>
 // import { required } from 'vuelidate/lib/validators'
-var timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 // import notify from 'src/tools/Notify'
 import { mask } from 'vue-the-mask'
@@ -340,6 +339,7 @@ export default {
   },
   data () {
     return {
+      timer: '',
       modalRelatorio: false,
       linkRelatorio: '',
       tipoDocumento: new TipoDocumento(),
@@ -484,8 +484,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         // this.$v.buscaProtocoloEntrada.$touch()
         // if (this.$v.buscaProtocoloEntrada.$error) {
         //   this.$q.loading.hide()
@@ -534,8 +534,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         buscaProtocoloEntradaService.relatorio(this.buscaProtocoloEntrada)
           .then(result => {
             this.$q.loading.hide()
