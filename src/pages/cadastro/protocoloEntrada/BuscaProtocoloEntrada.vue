@@ -283,36 +283,7 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky> -->
-    <q-dialog
-      ref="modalRelatorio"
-      maximized
-      v-model="modalRelatorio"
-    >
-      <q-layout
-        header-style="min-height: 100px"
-        content-class="{'bg-primary': isPrimary, 'some-class': someBoolean}"
-        footer-class="bg-primary some-class"
-        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-      >
-        <q-toolbar class="primary">
-          <q-btn
-            flat
-            @click="modalRelatorio = false"
-          >
-            <q-icon name="keyboard_arrow_left" />
-          </q-btn>
-          <div class="q-toolbar-title">
-            Relatório
-          </div>
-        </q-toolbar>
-        <iframe
-          class="full-width full-height"
-          :src="linkRelatorio"
-          frameborder="0"
-          allowfullscreen
-        ></iframe>
-      </q-layout>
-    </q-dialog>
+    <modal-pdf :link="linkRelatorio" :showModal="modalRelatorio" @hide="modalRelatorio = false"/>
 
   </q-page>
 </template>
@@ -328,6 +299,7 @@ import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
+import ModalPdf from 'src/components/modal/ModalPdf'
 
 export default {
   name: 'ConsultaProtocoloEntrada',
@@ -335,7 +307,8 @@ export default {
     mask
   },
   components: {
-    formSelect
+    formSelect,
+    ModalPdf
   },
   data () {
     return {

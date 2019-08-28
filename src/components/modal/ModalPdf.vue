@@ -50,7 +50,8 @@ export default {
   },
   computed: {
     linkPdf () {
-      return this.api + this.urlPdfViewer + this.link
+      // return this.api + this.urlPdfViewer + this.link
+      return this.link
     }
   },
   methods: {

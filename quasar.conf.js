@@ -111,7 +111,8 @@ module.exports = function (ctx) {
         'QLinearProgress'
       ],
       directives: [
-        'Ripple'
+        'Ripple',
+        'ClosePopup'
       ],
       // Quasar plugins
       plugins: [

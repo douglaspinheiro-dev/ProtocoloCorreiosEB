@@ -15,7 +15,9 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-
+Route::get('/pdfjs/web/viewer.html', function () {
+    return file_get_contents(public_path().'./pdfjs/web/viewer.html');
+});
 $router->post('auth/login', 'AuthController@authenticate');
 $router->post('auth/logged', 'AuthController@isLogged');
 $router->get('/busca-correspondencias/options/publico', 'BuscaCorrespondenciaController@options');
