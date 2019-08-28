@@ -1,79 +1,76 @@
 <template>
-  <div>
-    <q-layout-header>
-      <q-toolbar>
-        <q-toolbar-title>Protocolo de Entrada</q-toolbar-title>
-      </q-toolbar>
-
-    </q-layout-header>
-    <!-- content -->
-    <q-tabs position="top" no-pane-border inverted>
-      <!-- Tabs - notice slot="title" -->
-      <q-tab default slot="title" name="tab-1" icon="fas fa-file-contract" label="Cadastro"/>
-
-      <!-- Targets -->
-      <q-tab-pane name="tab-1">
-        <q-page class="q-pa-sm full-height">
-
-          <form @submit.prevent="salvarAlterar">
-            <div class="row barraBotoes">
-              <div class="col-md-6 linhaBotoes">
-                <q-btn small type="submit" icon="save" v-if="!protocoloEntrada.protocoloEntrada && possoGravarProtocoloEntrada" >Gravar</q-btn>
-                <q-btn small type="submit" icon="save" v-if="protocoloEntrada.protocoloEntrada && possoAlterarProtocoloEntrada" >Alterar</q-btn>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <q-field label="Nº" orientation="vertical" class="form-input">
-                {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
-              </q-field>
-            </div>
-            <div class="col-md-12">
-              <q-field
-                class="form-input"
-                label="Importação"
-                orientation="vertical"
-              >
-                <div class="row">
-
-                  <div class="col-6">Tipo: {{tipoDocumentoDescricao}}</div>
-                  <div class="col-6">Data: {{dataFormatada}}</div>
+  <q-layout
+    ref="layout"
+    view="lHr lpR lFr"
+    class="full-height"
+  >
+    <q-page-container>
+      <q-page>
+        <bodyTabs titulo="Protocolo de Entrada" :menuDireita="false" :menuEsquerda="false">
+          <template slot="tabHeader">
+            <!-- Tabs - notice slot="title" -->
+            <q-tab name="tab-1" icon="folder_shared" label="Cadastro" />
+          </template>
+          <template slot="tabPanel">
+            <!-- Targets -->
+            <q-tab-panel name="tab-1">
+              <form @submit.prevent="salvarAlterar">
+                <div class="row barraBotoes">
+                  <div class="col-md-6 linhaBotoes">
+                    <q-btn small type="submit" icon="save" v-if="!protocoloEntrada.protocoloEntrada && possoGravarProtocoloEntrada" >Gravar</q-btn>
+                    <q-btn small type="submit" icon="save" v-if="protocoloEntrada.protocoloEntrada && possoAlterarProtocoloEntrada" >Alterar</q-btn>
+                  </div>
                 </div>
-                <div class="row">
-                  <div class="col-6">Origem: {{protocoloEntrada.origem}}</div>
-                  <div class="col-6">Número: {{protocoloEntrada.numero}}</div>
+                <div class="col-md-12">
+                  <q-field label="Nº" class="form-input" stack-label>
+                    {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
+                  </q-field>
                 </div>
-                <div class="row">
-                  Assunto: {{protocoloEntrada.assunto}}
+                <div class="col-md-12">
+                  <q-field
+                    class="form-input"
+                    label="Importação"
+                    stack-label
+                  >
+                  </q-field>
+                  <div class="form-input row">Tipo: {{tipoDocumentoDescricao}}</div>
+                  <div class="form-input row">Data: {{dataFormatada}}</div>
+                  <div class="form-input row">Origem: {{protocoloEntrada.origem}}</div>
+                  <div class="form-input row">Número: {{protocoloEntrada.numero}}</div>
+                  <div class="form-input row">
+                    Assunto: {{protocoloEntrada.assunto}}
+                  </div>
                 </div>
-              </q-field>
-            </div>
-            <div class="col-md-12">
-              <q-field class="form-input" label="Destino" orientation="vertical"
-                :error="$v.protocoloEntrada.setor.$error"
-                error-label="Obrigatório"
-                helper="Obrigatório"
-              >
-                <q-select
-                  v-model="protocoloEntrada.setor"
-                  :options="optionsSetor"
-                  filter
-                  autofocus-filter
-                  filter-placeholder="Selecione o Destino"
-                  name="select"
-                  @input="$v.protocoloEntrada.setor.$touch()"
-                  autofocus
-                />
-                <q-progress indeterminate v-show="optionsLoading"/>
-              </q-field>
-            </div>
-          </form>
-        </q-page>
-      </q-tab-pane>
-    </q-tabs>
-  </div>
+                <div class="col-md-12">
+                  <form-select
+                    class="form-input"
+                    :error="$v.protocoloEntrada.setor.$error"
+                    error-message="Obrigatório"
+                    hint="Obrigatório"
+                    classe="form-input"
+                    label="Destino"
+                    v-model="protocoloEntrada.setor"
+                    :options="optionsSetor"
+                    @input="$v.protocoloEntrada.setor.$touch()"
+                    required
+                    autoFocus
+                  />
+                  <q-linear-progress indeterminate v-show="optionsLoading"/>
+                </div>
+              </form>
+            </q-tab-panel>
+          </template>
+        </bodyTabs>
+      </q-page>
+    </q-page-container>
+    <!-- <q-resize-observer @resize="onResize" /> -->
+  </q-layout>
+
 </template>
 
 <script>
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import dayJs from 'dayjs'
 import { required } from 'vuelidate/lib/validators'
 import ProtocoloEntrada from './ProtocoloEntrada'
@@ -81,12 +78,17 @@ import protocoloEntradaService from './ProtocoloEntradaService'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
-var timer
+import formSelect from 'src/components/form/select/QSelect'
 
 export default {
   name: 'ProtocoloEntradas-Extensao',
+  components: {
+    BodyTabs,
+    formSelect
+  },
   data () {
     return {
+      timer: '',
       json: '',
       protocoloEntrada: new ProtocoloEntrada(),
       setor: new Setor(),
@@ -137,8 +139,8 @@ export default {
         spinnerSize: 250, // in pixels
         spinnerColor: 'white'
       })
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$v.protocoloEntrada.$touch()
         if (this.$v.protocoloEntrada.$error) {
           this.$q.loading.hide()
@@ -193,6 +195,15 @@ export default {
       return ''
     }
   },
+  created () {
+    this.optionsLoading = true
+    protocoloEntradaService.getOptions()
+      .then(result => {
+        this.optionsLoading = false
+        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+        this.optionsSetor = this.setor.setOptions(result.data.setor)
+      })
+  },
   mounted () {
     this.$chrome.storage.sync.get(['protocoloEntrada'], (result) => {
       console.log('result ', result)
@@ -205,13 +216,6 @@ export default {
       console.log('this.protocoloEntrada ', this.protocoloEntrada)
       this.json = JSON.stringify(result.protocoloEntrada)
     })
-    this.optionsLoading = true
-    protocoloEntradaService.getOptions()
-      .then(result => {
-        this.optionsLoading = false
-        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
-        this.optionsSetor = this.setor.setOptions(result.data.setor)
-      })
   }
 }
 </script>

@@ -18,21 +18,18 @@
 
     </q-page-container>
     <!-- <q-resize-observer @resize="onResize" /> -->
-    <modal-pdf :link="linkRelatorio" :showModal="modalRelatorio" @hide="modalRelatorio = false" :tituloRelatorio="tituloRelatorio"></modal-pdf>
   </q-layout>
 </template>
 
 <script>
 // import rootHeader from 'src/components/rootHeader'
-import ModalPdf from 'src/components/modal/ModalPdf'
 import menuLeft from 'src/components/MenuLeft'
 import { mapGetters } from 'vuex'
 export default {
   name: 'LayoutRoot',
   components: {
     // rootHeader,
-    menuLeft,
-    ModalPdf
+    menuLeft
   },
   data () {
     return {

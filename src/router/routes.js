@@ -2,6 +2,8 @@
 export default [
   { path: '/', component: () => import('pages/login') },
   { path: '/consulta', component: () => import('pages/cadastro/correspondencia/consultaCorrespondencia') },
+  { path: '/protocoloentradas/extensao', name: 'protocoloEntradaExtensao', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntradaExtensao.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true } },
+
   {
     path: '/root',
     component: () => import('layouts/root'),
@@ -23,7 +25,7 @@ export default [
       { path: '/setores', name: 'setor', component: () => import('pages/cadastro/setor/Setor.vue'), meta: { rota: 'setor', requerAutenticacao: true } },
       { path: '/setores/setor/:id', name: 'alterarSetor', component: () => import('pages/cadastro/setor/Setor.vue'), meta: { rota: 'setor', requerAutenticacao: true }, props: true },
       { path: '/protocoloentradas', name: 'protocoloEntrada', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntrada.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true } },
-      { path: '/protocoloentradas/extensao', name: 'protocoloEntradaExtensao', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntradaExtensao.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true } },
+      // { path: '/protocoloentradas/extensao', name: 'protocoloEntradaExtensao', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntradaExtensao.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true } },
       { path: '/protocoloentradas/protocoloentrada/:id', name: 'alterarProtocoloEntrada', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntrada.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true }, props: true },
       { path: '/rotas', name: 'rota', component: () => import('pages/cadastro/rota/Rota.vue'), meta: { rota: 'rota', requerAutenticacao: true } },
       { path: '/rotas/rota/:id', name: 'alterarRota', component: () => import('pages/cadastro/rota/Rota.vue'), meta: { rota: 'rota', requerAutenticacao: true }, props: true },

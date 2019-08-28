@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-page :titulo="titulo" :menuDireita="menuDireita"/>
+    <header-page :titulo="titulo" :menuDireita="menuDireita" :menuEsquerda="menuEsquerda"/>
     <header-tabs :tabAtiva="tab" ref="headerTabs" @trocandoAba="trocandoAba">
       <slot name="tabHeader"/>
     </header-tabs>
@@ -28,7 +28,7 @@ export default {
     HeaderTabs,
     TabPanels
   },
-  props: ['titulo', 'icone', 'corIcone', 'menuEsquerda', 'menuDireita', 'tabAtiva'],
+  props: ['titulo', 'icone', 'corIcone', 'menuDireita', 'tabAtiva', 'menuEsquerda'],
   methods: {
     trocandoAba (event) {
       this.tab = event

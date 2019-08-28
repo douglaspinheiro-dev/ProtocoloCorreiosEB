@@ -20,6 +20,7 @@
         @input="selecionado"
         :filter-placeholder="placeholder"
         :disable="disable"
+        :autofocus="autoFocus"
       >
         <template v-if="select" v-slot:append>
           <q-icon name="cancel" @click.stop="limpaSelect" class="cursor-pointer" />
@@ -51,7 +52,8 @@ export default {
     'error',
     'value',
     'placeholder',
-    'disable'
+    'disable',
+    'autoFocus'
   ],
   data () {
     return {
