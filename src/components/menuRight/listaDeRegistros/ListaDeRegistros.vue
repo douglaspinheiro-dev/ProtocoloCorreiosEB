@@ -2,6 +2,7 @@
   <q-drawer
     v-model="mostraMenuRight"
     side="right"
+    :width="tamanho"
   >
     <q-list
       no-border
@@ -51,7 +52,7 @@ export default {
       busca: ''
     }
   },
-  props: ['labelHeader', 'stopInfinitScroll', 'placeholder', 'hint'],
+  props: ['labelHeader', 'stopInfinitScroll', 'placeholder', 'hint', 'tamanho'],
   methods: {
     onLoad  (index, done) {
       console.log('vou atualizar a lista ede registros')

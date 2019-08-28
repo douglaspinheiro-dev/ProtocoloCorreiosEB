@@ -3,16 +3,21 @@
     ref="listaDeRegistros"
     labelHeader="Correspondências"
     @atualizaLista="atualizaLista"
+    :tamanho="500"
+    placeholder="Rastreio ou Protocolo"
   >
     <template slot="qItem">
       <!-- Content, in this case some <p> tags -->
       <q-item class="item-lista" multiline v-for="(correspondencia, index) in getRegistros" :class="index%2 ? 'bg-blue-grey-1' : 'bg-blue-grey-2'" item :to="{ name: 'alterarCorrespondencia', params: { id: correspondencia.correspondencia} }" exact :key="index">
-        <q-item-label>
-          <q-item-section v-show="!correspondencia.correspondencia" header> {{ correspondencia.assunto }}</q-item-section>
-          <q-item-section caption v-show="correspondencia.correspondencia">{{ correspondencia.setorDescricao }} >>> {{ correspondencia.destino }}</q-item-section>
-          <q-item-section caption v-show="correspondencia.correspondencia" >{{ correspondencia.tipoDocumentoDescricao }} {{correspondencia.numeroDocumento}} | Rastreio: {{correspondencia.codigoRastreio}}</q-item-section>
-          <q-item-section caption v-show="correspondencia.correspondencia"  right :stamp="`Prot: ${correspondencia.anoCadastro}-${correspondencia.protocolo}`"/>
-        </q-item-label>
+        <q-item-section top>
+          <q-item-label>{{ correspondencia.codigoRastreio }}</q-item-label>
+          <q-item-label>{{ correspondencia.setorDescricao }} >>> {{ correspondencia.destino }}</q-item-label>
+          <q-item-label caption>{{ correspondencia.tipoDocumentoDescricao }} {{correspondencia.numeroDocumento}}</q-item-label>
+        </q-item-section>
+        <q-item-section side top>
+          <q-item-label>Prot: {{correspondencia.anoCadastro}} - {{ correspondencia.protocolo }}</q-item-label>
+        </q-item-section>
+
       </q-item>
     </template>
   </lista-de-registros>
