@@ -30,6 +30,7 @@ class MaloteDocumentoDao extends Dao
   JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = maloteDocumentos.categoriaDocumento
   JOIN setores ON setores.setor = maloteDocumentos.setor
   AND maloteDocumentos.malote = '{$id}' ORDER BY maloteDocumentos.maloteDocumento desc");
+
   }
 
   public static function seleciona($id) {

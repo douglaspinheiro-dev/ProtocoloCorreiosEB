@@ -145,7 +145,7 @@ export default {
   },
   data () {
     return {
-      tab: 'protocoloEntrada',
+      tab: 'correspondencia',
       modalPrimeiroAcesso: false,
       loadingVisible: false,
       form: {

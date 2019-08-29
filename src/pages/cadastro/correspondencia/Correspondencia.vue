@@ -108,7 +108,7 @@
                   v-model="correspondencia.destino"
                   :options="optionsEndereco"
                   classe="form-input"
-                  @input="$v.correspondencia.destino.$touch()"
+                  @input="procurarEnderecoCadastrado"
                   required
                 />
                 <q-linear-progress indeterminate v-show="optionsLoading"/>
@@ -306,6 +306,11 @@ export default {
     }
   },
   methods: {
+    // enderecoCadastradoSelecionado () {
+    //   this.$v.correspondencia.destino.$touch()
+    //   // get endereco
+    //   console.log('pegar o endereco do back')
+    // },
     preparaDocSemelhante () {
       this.$v.correspondencia.$reset()
       this.$router.push({name: 'correspondencia'})
@@ -348,9 +353,7 @@ export default {
         this.correspondencia.destino = ''
       }
     },
-    carregaEndereco () {
-      console.log('carregando endereco quartel')
-      let endereco = this.optionsEndereco.filter(endereco => endereco.value === this.correspondencia.destino)[0]
+    carregaEndereco (endereco) {
       this.correspondencia.logradouro = endereco.logradouro
       this.correspondencia.numero = endereco.numero
       this.correspondencia.complemento = endereco.complemento
@@ -401,7 +404,8 @@ export default {
         }
       })
     },
-    procurarEnderecoCadastrado (terms, done) {
+    procurarEnderecoCadastrado () {
+      this.$v.correspondencia.destino.$touch()
       // search do autocomplete
       setTimeout(() => {
         console.log('selecionei quartel')
@@ -409,8 +413,10 @@ export default {
           .buscaEnderecoPorCodigo(this.correspondencia.destino)
           .then(result => {
             console.log('peguei o correspondencia com sucesso')
-            this.optionsEndereco = this.endereco.setOptions(result.data)
-            done(this.optionsEndereco)
+            this.carregaEndereco(result.data[0])
+
+            // this.optionsEndereco = this.endereco.setOptions(result.data)
+            // done(this.optionsEndereco)
           })
       }, 300)
     },

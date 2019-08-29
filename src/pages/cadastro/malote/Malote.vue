@@ -25,7 +25,7 @@
               <q-expansion-item label="Dados Gerais" default-opened>
                 <div class="row">
                   <div class="col-md-2">
-                    <q-field label="Nº"  class="form-input">
+                    <q-field label="Nº"  class="form-input" stack-label>
                       {{malote.protocolo}}
                     </q-field>
                   </div>

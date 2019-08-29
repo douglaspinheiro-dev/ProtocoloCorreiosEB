@@ -14,7 +14,7 @@ export default class RotaEndereco {
       enderecos.map(option => optionsRotaEndereco.push(
         {
           label: `${option.codigoReduzido} - ${option.descricao}`,
-          value: option.endereco
+          value: option.rotaEndereco
         }
       ))
     } else {
