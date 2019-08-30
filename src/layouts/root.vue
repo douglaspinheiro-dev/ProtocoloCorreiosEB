@@ -18,6 +18,8 @@
 
     </q-page-container>
     <!-- <q-resize-observer @resize="onResize" /> -->
+    <modal-pdf :link="storeModalPdf.link" :showModal="storeModalPdf.ativo" @hide="$store.commit('modalPdf/setAtivo', false)" :tituloRelatorio="storeModalPdf.titulo"></modal-pdf>
+
   </q-layout>
 </template>
 
@@ -25,11 +27,14 @@
 // import rootHeader from 'src/components/rootHeader'
 import menuLeft from 'src/components/MenuLeft'
 import { mapGetters } from 'vuex'
+import ModalPdf from 'src/components/modal/ModalPdf'
+
 export default {
   name: 'LayoutRoot',
   components: {
     // rootHeader,
-    menuLeft
+    menuLeft,
+    ModalPdf
   },
   data () {
     return {
@@ -52,7 +57,8 @@ export default {
       }
     },
     ...mapGetters({
-      getUserId: 'login/getUserId'
+      getUserId: 'login/getUserId',
+      storeModalPdf: 'modalPdf/getModalPdf'
     })
   },
   sockets: {

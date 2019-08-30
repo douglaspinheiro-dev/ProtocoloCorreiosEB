@@ -5,6 +5,7 @@ import login from './login'
 import menuRight from './menuRight'
 import listaDeRegistros from './listaDeRegistros'
 import tabs from './tabs'
+import modalPdf from './modalPdf'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ const store = new Vuex.Store({
     login,
     menuRight,
     listaDeRegistros,
-    tabs
+    tabs,
+    modalPdf
   }
 })
 

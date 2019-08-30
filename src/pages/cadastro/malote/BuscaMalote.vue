@@ -210,7 +210,6 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky> -->
-    <modal-pdf :link="linkRelatorio" :showModal="modalRelatorio" @hide="modalRelatorio = false"/>
 
   </q-page>
 </template>
@@ -229,7 +228,6 @@ import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
-import ModalPdf from 'src/components/modal/ModalPdf'
 
 export default {
   name: 'ConsultaMalote',
@@ -237,14 +235,11 @@ export default {
     mask
   },
   components: {
-    formSelect,
-    ModalPdf
+    formSelect
   },
   data () {
     return {
       timer: '',
-      modalRelatorio: false,
-      linkRelatorio: '',
       valorTotal: 0,
       tipoDocumento: new TipoDocumento(),
       endereco: new Endereco(),
@@ -254,54 +249,55 @@ export default {
       optionsLoading: false,
       optionsSetor: [],
       optionsAno: [],
-      optionsMes: [{
-        label: 'Janeiro',
-        value: '1'
-      },
-      {
-        label: 'Fevereiro',
-        value: '2'
-      },
-      {
-        label: 'Março',
-        value: '3'
-      },
-      {
-        label: 'Abril',
-        value: '4'
-      },
-      {
-        label: 'Maio',
-        value: '5'
-      },
-      {
-        label: 'junho',
-        value: '6'
-      },
-      {
-        label: 'julho',
-        value: '7'
-      },
-      {
-        label: 'Agosto',
-        value: '8'
-      },
-      {
-        label: 'Setembro',
-        value: '9'
-      },
-      {
-        label: 'Outubro',
-        value: '10'
-      },
-      {
-        label: 'Novembro',
-        value: '11'
-      },
-      {
-        label: 'Dezembro',
-        value: '12'
-      }
+      optionsMes: [
+        {
+          label: 'Janeiro',
+          value: '1'
+        },
+        {
+          label: 'Fevereiro',
+          value: '2'
+        },
+        {
+          label: 'Março',
+          value: '3'
+        },
+        {
+          label: 'Abril',
+          value: '4'
+        },
+        {
+          label: 'Maio',
+          value: '5'
+        },
+        {
+          label: 'junho',
+          value: '6'
+        },
+        {
+          label: 'julho',
+          value: '7'
+        },
+        {
+          label: 'Agosto',
+          value: '8'
+        },
+        {
+          label: 'Setembro',
+          value: '9'
+        },
+        {
+          label: 'Outubro',
+          value: '10'
+        },
+        {
+          label: 'Novembro',
+          value: '11'
+        },
+        {
+          label: 'Dezembro',
+          value: '12'
+        }
       ],
       optionsRotaEndereco: [],
       optionsTipoDocumento: [],
@@ -474,8 +470,10 @@ export default {
               console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
-              this.linkRelatorio = result.data.link
-              this.modalRelatorio = true
+              this.$store.commit('modalPdf/setModalPdf', {
+                link: result.data.link,
+                ativo: true
+              })
               this.$q.notify({
                 type: 'positive',
                 message: 'Estes foram os registros encontrados.',

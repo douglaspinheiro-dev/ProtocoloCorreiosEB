@@ -5,7 +5,7 @@ import store from '../store'
 export const connection = axios.create(
   {
     baseURL: process.env.API,
-    timeout: 20000,
+    timeout: 180000,
     headers: {
       'Content-type': 'application/json'
     }

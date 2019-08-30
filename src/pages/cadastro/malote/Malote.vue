@@ -19,6 +19,9 @@
                 <q-btn small type="submit" icon="save" v-if="malote.malote && possoAlterarMalote" >Alterar</q-btn>
                 <q-btn small type="button" icon="delete" @click="excluir" v-if="possoExcluirMalote" >Excluir</q-btn>
               </div>
+              <div class="col-md-6 text-right">
+                <q-btn small type="button" icon="print" @click="imprimir" v-if="malote.malote && possoAlterarMalote">Imprimir</q-btn>
+              </div>
             </div>
 
             <q-list>
@@ -99,6 +102,7 @@ import notify from 'src/tools/Notify'
 import {mask} from 'vue-the-mask'
 import Rota from 'src/pages/cadastro/rota/Rota'
 import formSelect from 'src/components/form/select/QSelect'
+import buscaMaloteService from 'src/pages/cadastro/malote/BuscaMaloteService'
 
 export default {
   name: 'Malote',
@@ -292,6 +296,27 @@ export default {
     confereAlterarExcluir () {
       this.possoAlterarMalote = permissoes.alterar('malote')
       this.possoExcluirMalote = permissoes.excluir('malote')
+    },
+    imprimir () {
+      buscaMaloteService.relatorio({
+        protocolo: this.malote.protocolo,
+        ano: this.malote.anoCadastro
+      })
+        .then(result => {
+          this.$q.loading.hide()
+          console.log('buscaMalote alterado com sucesso')
+          // this.listaDocumentos()
+          console.log(result.data)
+          this.$store.commit('modalPdf/setModalPdf', {
+            link: result.data.link,
+            ativo: true
+          })
+          this.$q.notify({
+            type: 'positive',
+            message: 'Estes foram os registros encontrados.',
+            timeout: 5000
+          })
+        })
     }
   },
   computed: {
