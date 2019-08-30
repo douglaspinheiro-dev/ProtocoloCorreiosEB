@@ -200,6 +200,7 @@ export default {
           this.selectedTab = 'tab-1'
           if (this.$refs.formMaloteDocumento) {
             this.$refs.formMaloteDocumento.listaDocumentos(id)
+            this.$refs.formMaloteDocumento.setOptions(this.malote.rota)
           }
         })
     },

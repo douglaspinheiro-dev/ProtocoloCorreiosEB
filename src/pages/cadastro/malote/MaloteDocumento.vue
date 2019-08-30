@@ -315,6 +315,15 @@ export default {
         })
       })
       this.listaDeMaloteDocumentos = lista
+    },
+    setOptions (rota) {
+      maloteDocumentoService.getOptions(rota)
+        .then(result => {
+          this.optionsLoading = false
+          this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+          this.optionsRotaEndereco = this.rotaEndereco.setOptions(result.data.rotaEndereco)
+          this.optionsSetor = this.setor.setOptions(result.data.setor)
+        })
     }
   },
   props: [
@@ -333,13 +342,7 @@ export default {
 
     this.optionsLoading = true
     this.maloteDocumento.malote = this.malote
-    maloteDocumentoService.getOptions(this.rota)
-      .then(result => {
-        this.optionsLoading = false
-        this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
-        this.optionsRotaEndereco = this.rotaEndereco.setOptions(result.data.rotaEndereco)
-        this.optionsSetor = this.setor.setOptions(result.data.setor)
-      })
+    this.setOptions(this.rota)
   }
 }
 </script>
