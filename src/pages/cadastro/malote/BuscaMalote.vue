@@ -5,7 +5,7 @@
         <div class="col-md-6 linhaBotoes">
           <q-btn small type="reset" @click="reset" icon="add">Novo</q-btn>
           <q-btn small type="submit" icon="search">Procurar</q-btn>
-          <q-btn small type="button" @click="gerarRelatorio" icon="print">Gerar
+          <q-btn small type="button" @click="gerarRelatorio" icon="print" v-show="tipoConsulta !== 'documento'">Gerar
             Relatório</q-btn>
         </div>
       </div>
@@ -190,26 +190,6 @@
         <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
       </q-inner-loading> -->
     </div>
-
-    <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="
-      possoGravarMalote ||
-      possoExcluirMalote
-    ">
-      <q-fab color="primary" active-icon="close" direction="up" icon="expand less">
-        <q-tooltip slot="tooltip" anchor="center left" self="center right" :offset="[20, 0]">
-          Botões de ação
-        </q-tooltip>
-        <q-fab-action color="positive" icon="save" @click="salvarAlterar" v-if="possoGravarMalote || possoAlterarMalote">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">{{ botaoSalvarAlterar }}</q-tooltip>
-        </q-fab-action>
-        <q-fab-action color="secondary" type="reset" @click="reset" icon="add" v-if="possoGravarMalote">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Novo</q-tooltip>
-        </q-fab-action>
-        <q-fab-action color="negative" type="button" @click="excluir" icon="delete" v-if="possoExcluirMalote">
-          <q-tooltip anchor="center left" self="center right" :offset="[20, 0]">Excluir</q-tooltip>
-        </q-fab-action>
-      </q-fab>
-    </q-page-sticky> -->
 
   </q-page>
 </template>
@@ -486,9 +466,10 @@ export default {
               this.$q.loading.hide()
               console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
-              console.log(result.data)
-              this.linkRelatorio = result.data.link
-              this.modalRelatorio = true
+              this.$store.commit('modalPdf/setModalPdf', {
+                link: result.data.link,
+                ativo: true
+              })
               this.$q.notify({
                 type: 'positive',
                 message: 'Estes foram os registros encontrados.',

@@ -1,66 +1,27 @@
 <template>
   <div>
-    <header-page
-      titulo="Consultas"
-      :menuDireita="false"
-    />
-    <!-- content -->
-    <q-tabs v-model="tab"
-      dense
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="justify"
-      narrow-indicator
-    >
-      <!-- Tabs - notice slot="title" -->
-      <q-tab
-        name="correspondencia"
-        icon="mail_outline"
-        label="Correspondências"
-        v-if="getPermissoes.correspondencia.abrir"
-      />
-      <q-tab
-        name="protocoloEntrada"
-        icon="fas fa-file-alt"
-        label="Entradas"
-        v-if="getPermissoes.protocoloEntrada.abrir"
-      />
-      <q-tab
-        name="malote"
-        icon="move_to_inbox"
-        label="Malotes"
-        v-if="getPermissoes.malote.abrir"
-      />
+    <bodyTabs titulo="Consultas" :menuDireita="false">
+      <template slot="tabHeader">
+        <!-- Tabs - notice slot="title" -->
+        <q-tab name="tab-1" icon="mail_outline" label="Correspondências" v-if="getPermissoes.correspondencia.abrir"/>
+        <q-tab name="tab-2" icon="fas fa-file-alt" label="Entradas" v-if="getPermissoes.protocoloEntrada.abrir"/>
+        <q-tab name="tab-3" icon="move_to_inbox" label="Malotes" v-if="getPermissoes.malote.abrir"/>
+      </template>
 
-    </q-tabs>
-    <!-- Targets -->
-    <q-tab-panels
-      v-model="tab"
-      animated
-    >
+      <template slot="tabPanel">
         <!-- Targets -->
-      <q-tab-panel
-        name="correspondencia"
-        v-if="getPermissoes.correspondencia.abrir"
-      >
-        <consulta-correspondencia></consulta-correspondencia>
-      </q-tab-panel>
+        <q-tab-panel name="tab-1" v-if="getPermissoes.correspondencia.abrir">
+          <consulta-correspondencia></consulta-correspondencia>
+        </q-tab-panel>
+        <q-tab-panel name="tab-2" v-if="getPermissoes.protocoloEntrada.abrir">
+          <consulta-protocolo-entrada></consulta-protocolo-entrada>
+        </q-tab-panel>
+        <q-tab-panel name="tab-3" v-if="getPermissoes.malote.abrir">
+          <consulta-malote></consulta-malote>
+        </q-tab-panel>
 
-      <q-tab-panel
-        name="protocoloEntrada"
-        v-if="getPermissoes.protocoloEntrada.abrir"
-      >
-        <consulta-protocolo-entrada></consulta-protocolo-entrada>
-      </q-tab-panel>
-
-      <q-tab-panel
-        name="malote"
-        v-if="getPermissoes.malote.abrir"
-      >
-        <consulta-malote></consulta-malote>
-      </q-tab-panel>
-    </q-tab-panels>
+      </template>
+    </bodyTabs>
     <q-dialog
       maximized
       v-model="modalPrimeiroAcesso"
@@ -119,12 +80,14 @@
 
       </form>
     </q-dialog>
+    <!-- <lista-de-registros /> -->
   </div>
 
 </template>
 
 <script>
-import HeaderPage from 'src/components/header/HeaderPage.vue'
+import BodyTabs from 'src/components/body/BodyTabs'
+
 import { mapGetters } from 'vuex'
 import {
   required,
@@ -138,14 +101,14 @@ import consultaProtocoloEntrada from 'src/pages/cadastro/protocoloEntrada/BuscaP
 export default {
   name: 'Dashboard',
   components: {
-    HeaderPage,
+    BodyTabs,
     consultaCorrespondencia,
     consultaMalote,
     consultaProtocoloEntrada
   },
   data () {
     return {
-      tab: 'correspondencia',
+      tab: 'tab-1',
       modalPrimeiroAcesso: false,
       loadingVisible: false,
       form: {

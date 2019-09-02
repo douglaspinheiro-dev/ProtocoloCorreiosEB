@@ -26,7 +26,7 @@
 
             <tr class="rows row">
                 <td><?= $row->tipoDocumento; ?></td>
-                <td style="width: 10%">><?= $row->numeroDocumento; ?></td>
+                <td style="width: 10%"><?= $row->numeroDocumento; ?></td>
                 <td><?= $row->origemRemetente; ?></td>
                 <td><?= $row->destino; ?></td>
                 <td style="width: 8%"><?= $row->cep; ?></td>
