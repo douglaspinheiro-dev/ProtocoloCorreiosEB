@@ -37,25 +37,50 @@ class ProtocoloEntradaDao extends Dao
 
     public static function procura($obj) {
         return DB::select("SELECT
-        protocoloEntrada,
-        protocolo,
-        anoCadastro,
-        numero,
-        assunto,
-        categoriasDocumentos.codigo as tipoDocumentoDescricao,
-        DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
-        origem,
-        setores.codigo as setorDescricao
-        FROM protocoloEntradas
-        JOIN categoriasDocumentos on protocoloEntradas.categoriaDocumento = categoriasDocumentos.categoriaDocumento
-        JOIN setores on protocoloEntradas.setor = setores.setor
-        AND
-        (
-            protocoloEntradas.numero LIKE '%{$obj['busca']}%' OR
-            protocoloEntradas.protocoloEntrada LIKE '%{$obj['busca']}%'
+            protocoloEntrada,
+            protocolo,
+            anoCadastro,
+            numero,
+            assunto,
+            categoriasDocumentos.codigo as tipoDocumentoDescricao,
+            DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
+            origem,
+            setores.codigo as setorDescricao
+            FROM protocoloEntradas
+            JOIN categoriasDocumentos on protocoloEntradas.categoriaDocumento = categoriasDocumentos.categoriaDocumento
+            JOIN setores on protocoloEntradas.setor = setores.setor
+            AND
+            (
+                protocoloEntradas.numero LIKE '%{$obj['busca']}%' OR
+                protocoloEntradas.protocoloEntrada LIKE '%{$obj['busca']}%'
             )
-            AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT {$obj['inicio']}, {$obj['fim']}");
-        }
+            AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT {$obj['inicio']}, {$obj['fim']}"
+        );
+    }
+    public static function sugereDestino($assunto) {
+        return DB::select(
+            // "SELECT
+            //     count(protocolo) as frequencia,
+            //     assunto,
+            //     setor
+            // FROM sysprot.protocoloEntradas
+            // WHERE assunto like '%{$assunto}%'
+            // group by assunto, setor
+            // order by frequencia desc
+            // limit 1"
+            "SELECT
+                count(protocoloEntradas.protocolo) as frequencia,
+                protocoloEntradas.assunto,
+                protocoloEntradas.setor,
+                setores.codigo
+            FROM protocoloEntradas
+            join setores on protocoloEntradas.setor = setores.setor and protocoloEntradas.assunto like '%{$assunto}%'
+            group by protocoloEntradas.assunto, protocoloEntradas.setor
+            order by frequencia desc
+            limit 1"
+        );
+    }
+
 
         public static function seleciona($id) {
             return DB::select("SELECT

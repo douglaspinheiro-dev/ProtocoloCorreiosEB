@@ -23,6 +23,7 @@ $router->post('auth/logged', 'AuthController@isLogged');
 $router->get('/busca-correspondencias/options/publico', 'BuscaCorrespondenciaController@options');
 $router->get('/busca-correspondencias/correspondencia/publico', 'BuscaCorrespondenciaController@procuraCorrespondenciaPublico');
 $router->get('/busca-correspondencias/relatorio/publico', 'BuscaCorrespondenciaController@relatorioPublico');
+$router->get('/bot/protocoloentrada/destino', 'BotController@sugereDestino');
 
 
 $router->group(

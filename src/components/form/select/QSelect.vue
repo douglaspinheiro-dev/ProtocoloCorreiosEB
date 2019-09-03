@@ -22,6 +22,9 @@
         :disable="disable"
         :autofocus="autoFocus"
       >
+        <template v-slot:before>
+          <slot name="before"/>
+        </template>
         <template v-if="select" v-slot:append>
           <q-icon name="cancel" @click.stop="limpaSelect" class="cursor-pointer" />
         </template>
@@ -32,6 +35,7 @@
             </q-item-section>
           </q-item>
         </template>
+        <slot name="embutir"/>
       </q-select>
     <!-- </template> -->
 

@@ -64,7 +64,9 @@
                   class="form-input"
                   hint="Obrigatório"
                   :error="$v.protocoloEntrada.assunto.$error"
-                  error-message="Obrigatório" autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()" name="assunto"/>
+                  error-message="Obrigatório" autocomplete="on" type="text" v-model="protocoloEntrada.assunto" @input="$v.protocoloEntrada.assunto.$touch()"
+                  @change="sugereDestino" name="assunto"
+                  />
               </div>
             </div>
             <div class="row">
@@ -75,7 +77,6 @@
                   :error="$v.protocoloEntrada.origem.$error"
                   error-message="Obrigatório"
                   autocomplete="on" type="text" v-model="protocoloEntrada.origem" name="origem" >
-
                 </q-input>
               </div>
 
@@ -91,7 +92,15 @@
                   :options="optionsSetor"
                   @input="$v.protocoloEntrada.setor.$touch()"
                   required
-                />
+                >
+                  <template slot="embutir">
+                    <q-popup-proxy>
+                      <q-banner @click="protocoloEntrada.setor = destino.setor" cliclable>
+                        Sugiro selecionar: {{destino.codigo}}.
+                      </q-banner>
+                    </q-popup-proxy>
+                  </template>
+                </form-select>
                 <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
             </div>
@@ -117,7 +126,7 @@ import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
-
+import botService from 'src/services/bot/BotService'
 export default {
   name: 'Cadastro-de-ProtocoloEntradas',
   components: {
@@ -138,7 +147,11 @@ export default {
       optionsEndereco: [],
       optionsSetor: [],
       optionsLoading: false,
-      timer: ''
+      timer: '',
+      destino: {
+        codigo: '',
+        setor: ''
+      }
     }
   },
   validations: {
@@ -152,6 +165,15 @@ export default {
     }
   },
   methods: {
+    sugereDestino () {
+      botService.sugereDestino(this.protocoloEntrada.assunto)
+        .then(result => {
+          if (result.data.length) {
+            this.destino.setor = result.data[0].setor
+            this.destino.codigo = result.data[0].codigo
+          }
+        })
+    },
     preparaDocSemelhante () {
       this.$v.protocoloEntrada.$reset()
       this.$router.push({name: 'protocoloEntrada'})
