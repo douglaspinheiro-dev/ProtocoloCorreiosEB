@@ -143,6 +143,11 @@ class CorrespondenciaDao extends Dao
       if ($obj['destino']) {
         $destino = "correspondencias.destino LIKE '{$obj['destino']}' AND";
       }
+
+      $categoriaCorrespondencia = '';
+      if ($obj['tipoCorrespondencia']) {
+        $categoriaCorrespondencia = "correspondencias.categoriaCorrespondencia = '{$obj['tipoCorrespondencia']}' AND";
+      }
       return DB::select("
         SELECT
           correspondencias.protocolo,
@@ -168,6 +173,7 @@ class CorrespondenciaDao extends Dao
           correspondencias.numero LIKE '%{$obj['numero']}%' AND
           {$setor}
           {$destino}
+          {$categoriaCorrespondencia}
           {$obj['consultaData']}
         )
         AND correspondencias.ativo = 1 ORDER BY correspondencias.dataCadastro desc
@@ -214,7 +220,7 @@ class CorrespondenciaDao extends Dao
         AND correspondencias.codigoRastreio <> ''
         ORDER BY correspondencias.codigoRastreio
         ");
-     
+
     }
 
     public static function procuraCorrespondenciaComRastreioPublico($obj) {

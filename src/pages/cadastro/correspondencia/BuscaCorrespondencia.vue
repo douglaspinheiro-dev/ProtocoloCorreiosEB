@@ -48,15 +48,19 @@
         <div v-show="tipoConsulta === 'documento'">
 
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <q-input label="Código de Rastreio" class="form-input" autocomplete="off" type="text"
                 v-model="buscaCorrespondencia.codigoRastreio" name="text" />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <q-input label="Remetente" class="form-input" type="text" v-model="buscaCorrespondencia.remetente" name="text" />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <q-input label="Número do Documento" class="form-input" autocomplete="off" type="text" v-model="buscaCorrespondencia.numero" name="number" />
+            </div>
+            <div class="col-md-3">
+              <form-select classe="form-input" label="Tipo de Correspondência" v-model="buscaCorrespondencia.tipoCorrespondencia"
+              :options="optionsTipoCorrespondencia"/>
             </div>
 
           </div>
@@ -200,6 +204,7 @@ import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
 import ModalPdf from 'src/components/modal/ModalPdf'
+import TipoCorrespondencia from '../tipoCorrespondencia/TipoCorrespondencia'
 
 export default {
   name: 'ConsultaCorrespondencia',
@@ -217,6 +222,7 @@ export default {
       linkRelatorio: '',
       valorTotal: 0,
       tipoDocumento: new TipoDocumento(),
+      tipoCorrespondencia: new TipoCorrespondencia(),
       endereco: new Endereco(),
       setor: new Setor(),
       optionsLoading: false,
@@ -224,6 +230,7 @@ export default {
       optionsAno: [],
       optionsEndereco: [],
       optionsTipoDocumento: [],
+      optionsTipoCorrespondencia: [],
       busca: '',
       buscaCorrespondencia: new BuscaCorrespondencia(),
       carregandoLista: false,
@@ -425,6 +432,7 @@ export default {
         this.optionsLoading = false
         this.setOptionsAno(result.data.anos)
         this.optionsTipoDocumento = this.tipoDocumento.setOptions(result.data.tipoDocumento)
+        this.optionsTipoCorrespondencia = this.tipoCorrespondencia.setOptions(result.data.tipoCorrespondencia)
         this.optionsEndereco = this.endereco.setOptions(result.data.endereco)
         this.optionsSetor = this.setor.setOptions(result.data.setor)
       })

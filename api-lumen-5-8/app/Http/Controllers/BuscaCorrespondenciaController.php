@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Dao\CorrespondenciaDao;
 use App\Http\Dao\TipoDocumentoDao;
+use App\Http\Dao\TipoCorrespondenciaDao;
 use App\Http\Dao\EnderecoDao;
 use App\Http\Dao\SetorDao;
 use Illuminate\Http\Request;
@@ -226,12 +227,14 @@ class BuscaCorrespondenciaController extends Controller
   public function options()
   {
     $tipoDocumento = TipoDocumentoDao::options();
+    $tipoCorrespondencia = TipoCorrespondenciaDao::options();
     $endereco = EnderecoDao::options();
     $setor = SetorDao::options();
     $anos = CorrespondenciaDao::listaAnos();
     return response()->json([
       'anos' => $anos,
       'tipoDocumento' => $tipoDocumento,
+      'tipoCorrespondencia' => $tipoCorrespondencia,
       'endereco' => $endereco,
       'setor' => $setor,
     ], 200);

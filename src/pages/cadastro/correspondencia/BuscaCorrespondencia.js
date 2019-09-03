@@ -10,6 +10,7 @@ export default class BuscaCorrespondencia {
     this.estado = obj.estado || ''
     this.tipoDocumento = obj.tipoDocumento || ''
     this.tipoCobranca = obj.tipoCobranca || ''
+    this.tipoCorrespondencia = obj.tipoCorrespondencia || ''
     this.codigoRastreio = obj.codigoRastreio || ''
     this.dataCadastro = obj.dataCadastro || dayjs().format('YYYY-MM-DD')
     this.tipoData = obj.tipoData || 'mes'
