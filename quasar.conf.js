@@ -110,7 +110,8 @@ module.exports = function (ctx) {
         'QBtnDropdown',
         'QLinearProgress',
         'QPopupProxy',
-        'QBanner'
+        'QBanner',
+        'QImg'
       ],
       directives: [
         'Ripple',

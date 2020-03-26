@@ -49,6 +49,16 @@
           </q-item>
 
         </q-expansion-item>
+
+          <!-- <q-item v-ripple link :to="{name: 'scanner'}">
+            <q-item-section>
+              <q-item-label>Escanear Doc</q-item-label>
+              <q-item-label caption>Escanear com webcam para pdf</q-item-label>
+            </q-item-section>
+            <q-item-section side top>
+              <q-icon color="primary" name="print" />
+            </q-item-section>
+          </q-item> -->
       </q-list>
     </q-scroll-area>
 

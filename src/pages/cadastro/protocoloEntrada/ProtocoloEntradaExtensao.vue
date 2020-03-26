@@ -53,7 +53,6 @@
                     :options="optionsSetor"
                     @input="$v.protocoloEntrada.setor.$touch()"
                     required
-                    autoFocus
                   />
                   <q-linear-progress indeterminate v-show="optionsLoading"/>
                 </div>
@@ -79,6 +78,7 @@ import permissoes from 'src/services/permissoes/ValidaPermissoes'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import formSelect from 'src/components/form/select/QSelect'
+import botService from 'src/services/bot/BotService'
 
 export default {
   name: 'ProtocoloEntradas-Extensao',
@@ -88,6 +88,7 @@ export default {
   },
   data () {
     return {
+      botDestino: '',
       timer: '',
       json: '',
       protocoloEntrada: new ProtocoloEntrada(),
@@ -112,6 +113,18 @@ export default {
     }
   },
   methods: {
+    sugereDestino (assunto) {
+      botService.sugereDestino(assunto)
+        .then(result => {
+          if (result.data.length) {
+            this.protocoloEntrada.setor = result.data[0].setor
+            this.botDestino = result.data[0].setor + result.data[0].codigo
+            console.log('BOT DESTINO', this.protocoloEntrada)
+
+            // this.destino.codigo = result.data[0].codigo
+          }
+        })
+    },
     preencheJson () {
       let dados = ''
       try {
@@ -120,6 +133,7 @@ export default {
         return false
       }
       this.protocoloEntrada.assunto = dados.assunto
+      this.sugereDestino(dados.assunto)
       this.protocoloEntrada.dataDocumento = dados.dataDocumento
       this.protocoloEntrada.numero = dados.numero
       this.protocoloEntrada.origem = dados.origem
@@ -209,6 +223,7 @@ export default {
       console.log('result ', result)
       console.log('result.protocoloEntrada ', result.protocoloEntrada)
       this.protocoloEntrada.assunto = result.protocoloEntrada.assunto
+      this.sugereDestino(result.protocoloEntrada.assunto)
       this.protocoloEntrada.dataDocumento = result.protocoloEntrada.dataDocumento
       this.protocoloEntrada.numero = result.protocoloEntrada.numero
       this.protocoloEntrada.origem = result.protocoloEntrada.origem

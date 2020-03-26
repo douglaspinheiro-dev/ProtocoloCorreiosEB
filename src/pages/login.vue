@@ -152,12 +152,7 @@
     <q-footer class="desktop-only">
       <q-toolbar >
         <q-toolbar-title class="text-center">
-          Copyright &copy; 2019 - Exército Brasileiro - 1ª Região Militar.
-          <span slot="subtitle">
-            <div class="q-subheading">
-              Desenvolvido por ST Moreira
-            </div>
-          </span>
+          Copyright &copy; 2019 - Exército Brasileiro - 1ª RM. - Desenvolvido por ST Moreira
         </q-toolbar-title>
       </q-toolbar>
     </q-footer>

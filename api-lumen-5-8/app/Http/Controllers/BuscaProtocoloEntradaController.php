@@ -99,7 +99,8 @@ class BuscaProtocoloEntradaController extends Controller
             $caminhoPdfInterno = '../public/pdf/relatorio-protocolo-entrada.pdf';
             $caminhoPdfExterno = $url.'/pdf/relatorio-protocolo-entrada.pdf';
             if(file_exists($caminhoPdfInterno)){ unlink($caminhoPdfInterno); }
-            PDF::loadHTML(view('ListagemProtocoloEntrada', ['dados' => $results]))
+            $snappy = new PDF(env('CAMINHO_PDF'));
+            $snappy::loadHTML(view('ListagemProtocoloEntrada', ['dados' => $results]))
             ->setPaper('a4')
             ->setOrientation('portrait')
             ->setOption('margin-bottom', 1)
