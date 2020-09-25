@@ -179,9 +179,9 @@ export default {
     primeiroLogin: {}
   },
   mounted () {
-    if (this.primeiroLogin) {
-      this.modalPrimeiroAcesso = true
-    }
+    // if (this.primeiroLogin) {
+    //   this.modalPrimeiroAcesso = true
+    // }
   }
 }
 </script>

@@ -21,7 +21,7 @@ export default class TipoDocumento {
       ))
     } else {
       optionsTipoDocumento = [{
-        label: 'Sem registros cadastrados',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Tipos de Documentos',
         value: ''
       }]
     }

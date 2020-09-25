@@ -19,7 +19,7 @@ export default class TipoCorrespondencia {
       ))
     } else {
       optionsTipoCorrespondencia = [{
-        label: 'Sem registros cadastrados',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Tipos de Correspondências',
         value: ''
       }]
     }

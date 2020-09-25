@@ -32,16 +32,108 @@ module.exports = function (ctx) {
           loader: 'eslint-loader',
           exclude: /(node_modules|quasar)/
         })
+
+        cfg.module.rules.push({
+          // fixes https://github.com/graphql/graphql-js/issues/1272
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
+        })
+        if (!ctx.dev) {
+          // DESATIVANDO PARA COLOCAR FRONT DENTRO DA API
+          const CopyWebpackPlugin = require('copy-webpack-plugin')
+          cfg.plugins.push(
+            new CopyWebpackPlugin({
+              patterns: [
+                {
+                  from: './api/captain-definition',
+                  to: '../../api/build/captain-definition',
+                  toType: 'file'
+                }
+              ]
+            })
+          )
+
+          // const TarGzPlugin = require('webpack-tar-gz-plugin')
+          // cfg.plugins.push(
+          //   new TarGzPlugin(tarGzStream => {
+          //     tarGzStream.pipe(require('fs').createWriteStream('./dist/web.tar.gz'))
+          //   })
+          // )
+
+          const FileManagerPlugin = require('filemanager-webpack-plugin')
+          cfg.plugins.push(
+            new FileManagerPlugin({
+              onEnd: [
+                {
+                  delete: [
+                    './api/public/pdf/*.*'
+                  ]
+                },
+                {
+                  copy: [
+                    { source: './api/deploy', destination: './api/build/deploy' },
+                    { source: './api/app', destination: './api/build/app' },
+                    { source: './api/bootstrap', destination: './api/build/bootstrap' },
+                    { source: './api/config', destination: './api/build/config' },
+                    { source: './api/database', destination: './api/build/database' },
+                    { source: './api/database', destination: './api/build/database' },
+                    { source: './api/public', destination: './api/build/public' },
+                    { source: './dist/spa', destination: './api/build/public/web' },
+                    { source: './api/resources', destination: './api/build/resources' },
+                    { source: './api/routes', destination: './api/build/routes' },
+                    { source: './api/storage', destination: './api/build/storage' },
+                    { source: './api/tests', destination: './api/build/tests' },
+                    { source: './api/.styleci.yml', destination: './api/build/' },
+                    { source: './api/artisan', destination: './api/build/' },
+                    { source: './api/composer.json', destination: './api/build/' },
+                    { source: './api/composer.lock', destination: './api/build/' },
+                    { source: './api/phpunit.xml', destination: './api/build/' }
+                  ]
+                },
+                {
+                  delete: [
+                    './dist/**.*'
+                  ]
+                },
+                {
+                  archive: [
+                    {
+                      source: './api/build',
+                      destination: './dist/api.tar.gz',
+                      format: 'tar',
+                      options: {
+                        gzip: true,
+                        gzipOptions: {
+                          level: 1
+                        },
+                        globOptions: {
+                          nomount: true
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  delete: [
+                    './dist/spa',
+                    './api/build/'
+                  ]
+                }
+              ]
+            })
+          )
+        }
       },
       sourceMap: false,
       minify: true,
       webpackManifest: true,
       env: ctx.dev
         ? { // so on dev we'll have
-          API: JSON.stringify('http://localhost:8000')
+          API: JSON.stringify('http://localhost:80/api')
         }
         : { // and on build (production):
-          API: JSON.stringify('http://10.1.9.21/sysprot/api/public/index.php')
+          API: JSON.stringify('http://10.1.9.21/api')
         }
     },
     devServer: {

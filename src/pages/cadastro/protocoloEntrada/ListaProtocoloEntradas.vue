@@ -8,8 +8,8 @@
     <template slot="qItem">
       <q-item class="item-lista" multiline v-for="(protocoloEntrada, index) in getRegistros" :class="index%2 ? 'bg-blue-grey-1' : 'bg-blue-grey-2'" item :to="{ name: 'alterarProtocoloEntrada', params: { id: protocoloEntrada.protocoloEntrada} }" exact :key="index">
         <q-item-section>
-          <q-item-label> {{ `${protocoloEntrada.dataDocumento} | ${protocoloEntrada.origem}` }}</q-item-label>
-          <q-item-label caption lines="2">{{`${protocoloEntrada.tipoDocumentoDescricao} ${protocoloEntrada.numero} | ${protocoloEntrada.assunto}` }} </q-item-label>
+          <q-item-label v-show="protocoloEntrada.dataDocumento"> {{ `${protocoloEntrada.dataDocumento} | ${protocoloEntrada.origem}` }}</q-item-label>
+          <q-item-label caption lines="2">{{`${protocoloEntrada.tipoDocumentoDescricao} ${protocoloEntrada.numero} ${protocoloEntrada.assunto}` }} </q-item-label>
         </q-item-section>
       </q-item>
     </template>
@@ -40,6 +40,8 @@ export default {
         service: protocoloEntradaService,
         semRegistros: [{
           tipoDocumentoDescricao: 'Sem registros encontrados',
+          numero: '',
+          assunto: '',
           dataDocumento: ''
         }],
         self: this,

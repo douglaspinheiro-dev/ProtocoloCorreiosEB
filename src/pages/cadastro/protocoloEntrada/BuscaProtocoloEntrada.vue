@@ -100,8 +100,7 @@
                     v-model="buscaProtocoloEntrada.tipoData"
                     :options="[
                       {label: 'Data', value: 'data'},
-                      {label: 'Período', value: 'periodo'},
-                      {label: 'Mês', value: 'mes'}
+                      {label: 'Período', value: 'periodo'}
                     ]"
                     color="primary"
                   />
@@ -149,7 +148,7 @@
                   name="date"
                 />
               </div>
-              <div
+              <!-- <div
                 class="col-md-4"
                 v-show="buscaProtocoloEntrada.tipoData === 'mes'"
               >
@@ -161,7 +160,7 @@
                   v-model="buscaProtocoloEntrada.mesCadastro"
                   name="date"
                 />
-              </div>
+              </div> -->
             </div>
             <div class="row">
               <div class="col-md-6">

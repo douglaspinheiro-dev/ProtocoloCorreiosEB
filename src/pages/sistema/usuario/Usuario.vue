@@ -299,7 +299,7 @@ export default {
               })
               this.$q.notify({
                 type: 'warning',
-                message: 'Foi criado uma senha automática: 12345. Será necessário a troca da senha no primeiro login deste usuário.',
+                message: 'Foi criado uma senha automática: 12345.',
                 timeout: 10000
               })
               this.$root.$emit('adicionaRegistroNaLista', this.usuario)

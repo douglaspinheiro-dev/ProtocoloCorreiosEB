@@ -52,21 +52,59 @@
           <div class="row" v-show="tipoConsulta === 'protocolo'">
 
             <div class="col-md-3">
-                <q-input label="Número de Protocolo"  class="form-input"
-                :error="$v.buscaMalote.protocolo.$error" error-label="Obrigatório" helper="Obrigatório" autocomplete="off" type="text" v-model="buscaMalote.protocolo" name="number"
-                  @input="$v.buscaMalote.protocolo.$touch()" />
+              <q-input label="Número de Protocolo"
+                class="form-input"
+                error-label="Obrigatório"
+                helper="Obrigatório"
+                autocomplete="off"
+                type="text"
+                v-model="buscaMalote.protocolo"
+                @input="$v.buscaMalote.protocolo.$touch()"
+                :error="$v.buscaMalote.protocolo.$error"
+                error-message="Obrigatório"
+
+                hint="Obrigatório"
+              />
             </div>
             <div class="col-md-3">
-              <form-select classe="form-input" label="Ano" v-model="buscaMalote.ano" :options="optionsAno" />
+              <form-select
+                classe="form-input"
+                label="Ano"
+                v-model="buscaMalote.ano"
+                :options="optionsAno"
+                :error="$v.buscaMalote.ano.$error"
+                error-message="Obrigatório"
+
+                hint="Obrigatório"
+              />
             </div>
           </div>
           <div class="row" v-show="tipoConsulta === 'mes'">
 
             <div class="col-md-3">
-              <form-select classe="form-input" label="Mês" v-model="buscaMalote.mes" :options="optionsMes" @input="$v.buscaMalote.protocolo.$touch()"/>
+              <form-select
+                classe="form-input"
+                label="Mês"
+                v-model="buscaMalote.mes"
+                :options="optionsMes"
+                @input="$v.buscaMalote.mes.$touch()"
+                :error="$v.buscaMalote.mes.$error"
+                error-message="Obrigatório"
+
+              />
             </div>
             <div class="col-md-3">
-              <form-select classe="form-input" label="Ano" v-model="buscaMalote.ano" :options="optionsAno" @input="$v.buscaMalote.protocolo.$touch()"/>
+              <form-select
+                classe="form-input"
+                label="Ano"
+                v-model="buscaMalote.ano"
+                :options="optionsAno"
+                @input="$v.buscaMalote.ano.$touch()"
+                :error="$v.buscaMalote.ano.$error"
+                error-message="Obrigatório"
+
+                hint="Obrigatório"
+              />
             </div>
           </div>
           <div v-show="tipoConsulta === 'documento'">
@@ -76,7 +114,7 @@
                 <form-select classe="form-input" label="Tipo do Documento" v-model="buscaMalote.tipoDocumento" :options="optionsTipoDocumento"/>
               </div>
               <div class="col-md-2">
-                <q-input label="Número do Documento"  class="form-input" autocomplete="off" type="text" v-model="buscaMalote.numero" name="number" />
+                <q-input label="Número"  class="form-input" autocomplete="off" type="text" v-model="buscaMalote.numero" />
               </div>
 
               <!-- <div class="row">
@@ -196,6 +234,8 @@
 
 <script>
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
+import { requiredIf } from 'vuelidate/lib/validators'
+
 // import notify from 'src/tools/Notify'
 import {
   mask
@@ -311,8 +351,21 @@ export default {
   },
   validations: {
     buscaMalote: {
-      ano: {},
-      protocolo: {}
+      ano: {
+        required: requiredIf(function () {
+          return this.tipoConsulta !== 'documento'
+        })
+      },
+      protocolo: {
+        required: requiredIf(function () {
+          return this.tipoConsulta === 'protocolo'
+        })
+      },
+      mes: {
+        required: requiredIf(function () {
+          return this.tipoConsulta === 'mes'
+        })
+      }
     }
   },
   methods: {

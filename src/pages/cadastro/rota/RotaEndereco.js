@@ -19,7 +19,7 @@ export default class RotaEndereco {
       ))
     } else {
       optionsRotaEndereco = [{
-        label: 'Sem registros cadastrados, confira o cadastro de Rotas',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Rotas > Endereços',
         value: ''
       }]
     }

@@ -9,7 +9,6 @@
     <!-- <template v-slot:control> -->
       <q-select
         :class="classe" :label="label"
-        :hint="hint"
         :error-message="errorMessage"
         :error="error"
         v-model="select"
@@ -20,11 +19,7 @@
         @input="selecionado"
         :filter-placeholder="placeholder"
         :disable="disable"
-        :autofocus="autoFocus"
       >
-        <template v-slot:before>
-          <slot name="before"/>
-        </template>
         <template v-if="select" v-slot:append>
           <q-icon name="cancel" @click.stop="limpaSelect" class="cursor-pointer" />
         </template>
@@ -35,7 +30,11 @@
             </q-item-section>
           </q-item>
         </template>
-        <slot name="embutir"/>
+        <template v-slot:hint>
+          <div>
+            <slot name="embutir"/>
+          </div>
+        </template>
       </q-select>
     <!-- </template> -->
 
@@ -56,8 +55,7 @@ export default {
     'error',
     'value',
     'placeholder',
-    'disable',
-    'autoFocus'
+    'disable'
   ],
   data () {
     return {
@@ -103,10 +101,22 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    'options': {
+      handler: function (options) {
+        for (let index = 0; index < options.length; index++) {
+          const opt = options[index]
+          if (opt.value === this.select.value) {
+            if (opt.label === this.select.label) return
+            this.select = opt
+            return
+          }
+        }
+        this.select = ''
+      },
+      deep: true,
+      immediate: true
     }
   }
 }
 </script>
-
-<style>
-</style>

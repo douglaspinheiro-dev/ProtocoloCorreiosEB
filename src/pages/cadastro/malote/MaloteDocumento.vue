@@ -27,11 +27,17 @@
           </div>
 
           <div class="col-md-9">
-            <q-input label="Número"
+            <q-input
+              label="Número"
               class="form-input"
               hint="Obrigatório"
               :error="$v.maloteDocumento.numero.$error"
-              error-message="Obrigatório" type="tel" v-model="maloteDocumento.numero" @input="$v.maloteDocumento.numero.$touch()" name="numero"/>
+              error-message="Obrigatório"
+              type="text"
+              v-model="maloteDocumento.numero"
+              @input="$v.maloteDocumento.numero.$touch()"
+              required
+            />
           </div>
         </div>
         <div class="row">

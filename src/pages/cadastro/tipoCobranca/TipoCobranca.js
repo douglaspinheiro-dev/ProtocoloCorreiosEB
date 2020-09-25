@@ -26,7 +26,7 @@ export default class TipoCobranca {
       ))
     } else {
       optionsTipoCobranca = [{
-        label: 'Sem registros cadastrados',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Tipos de Cobranças',
         value: null
       }]
     }

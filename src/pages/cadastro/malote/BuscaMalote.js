@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 export default class BuscaMalote {
   constructor (obj = {}) {
-    this.ano = obj.ano || dayjs().format('YYYY')
+    this.ano = obj.ano || ''
     this.destino = obj.destino || ''
     this.setor = obj.setor || ''
     this.numero = obj.numero || ''

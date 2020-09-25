@@ -71,8 +71,7 @@
                   v-model="buscaCorrespondencia.tipoData"
                   :options="[
                     {label: 'Data', value: 'data'},
-                    {label: 'Período', value: 'periodo'},
-                    {label: 'Mês', value: 'mes'}
+                    {label: 'Período', value: 'periodo'}
                   ]"
                   color="primary"
                 />
@@ -87,9 +86,9 @@
             <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'periodo'">
                 <q-input stack-label="" label="Data Final" class="form-input" autocomplete="off" type="date" v-model="buscaCorrespondencia.dataFinal" name="date" />
             </div>
-            <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'mes'">
+            <!-- <div class="col-md-4" v-show="buscaCorrespondencia.tipoData === 'mes'">
                 <q-input stack-label="" label="Mês do cadastro" class="form-input" autocomplete="off" type="month" v-model="buscaCorrespondencia.mesCadastro" name="date" />
-            </div>
+            </div> -->
           </div>
           <div class="row">
             <div class="col-md-6">
@@ -295,9 +294,11 @@ export default {
 
     reset () {
       this.buscaCorrespondencia = new BuscaCorrespondencia()
+      this.buscaCorrespondencia.tipoRelatorio = 'listagemDeCorrespondencia'
+      this.trocaRelatorio()
       this.registros = []
-      this.tabelaColunas = this.buscaCorrespondencia.setTabelaColunasListagemCorrespondencias()
-      this.colunasVisiveis = this.buscaCorrespondencia.setColunasVisiveisListagemCorrespondencias()
+      // this.tabelaColunas = this.buscaCorrespondencia.setTabelaColunasListagemCorrespondencias()
+      // this.colunasVisiveis = this.buscaCorrespondencia.setColunasVisiveisListagemCorrespondencias()
     },
     trocaRelatorio () {
       if (this.buscaCorrespondencia.tipoRelatorio === 'controleDeRegistroDePostagem') {

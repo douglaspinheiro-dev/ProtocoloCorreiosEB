@@ -113,7 +113,6 @@ import {
   minLength
 } from 'vuelidate/lib/validators'
 import usuarioService from 'src/pages/sistema/usuario/UsuarioService'
-import loginService from 'src/services/login/LoginService'
 
 export default {
   name: 'MenuLeft',
@@ -151,25 +150,10 @@ export default {
   },
   methods: {
     logout () {
-      console.log('teste')
-      console.log(this.getGrupoLogin)
-
-      this.$q.loading.show({
-        message: 'Saindo do sistema',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
-      loginService.deslogar(this.getLogin)
-        .then(result => {
-          this.$q.loading.hide()
-          if (result.status === 200) {
-            this.$store.commit('login/removeToken', '')
-            this.$store.commit('login/setLogin', '')
-            this.$store.commit('login/setSessaoInvalida', false)
-            this.$router.push('/')
-          }
-        })
+      this.$store.commit('login/removeToken', '')
+      this.$store.commit('login/setLogin', '')
+      this.$store.commit('login/setSessaoInvalida', false)
+      this.$router.push('/')
     },
     submit () {
       this.$v.form.$touch()

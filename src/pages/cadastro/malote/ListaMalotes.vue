@@ -9,8 +9,8 @@
       <!-- Content, in this case some <p> tags -->
       <q-item class="item-lista" multiline v-for="(malote, index) in getRegistros" :class="index%2 ? 'bg-blue-grey-1' : 'bg-blue-grey-2'" item :to="{ name: 'alterarMalote', params: { id: malote.malote} }" exact :key="index">
         <q-item-label>
-          <q-item-section header> {{ `${malote.data} | ${malote.rotaDescricao}` }}</q-item-section>
-          <q-item-section caption>Prot: {{malote.protocolo}}</q-item-section>
+          <q-item-section header> {{ `${malote.data} ${malote.rotaDescricao}` }}</q-item-section>
+          <q-item-section caption v-show="malote.data">Prot: {{malote.protocolo}}</q-item-section>
         </q-item-label>
       </q-item>
     </template>

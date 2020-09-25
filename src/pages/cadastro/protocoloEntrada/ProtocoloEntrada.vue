@@ -23,33 +23,33 @@
             </div>
 
             <div class="row">
-              <div class="col-md-2">
+              <div class="col-sm-12 col-xs-12 col-md-2">
                 <q-field label="Nº"  class="form-input" stack-label>
                   {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
                 </q-field>
               </div>
-              <div class="col-md-4">
+              <div class="col-sm-12 col-xs-12 col-md-4">
                   <form-select
                     label="Tipo de Documento"
                     :error="$v.protocoloEntrada.tipoDocumento.$error"
                     error-message="Obrigatório"
-                    classe="form-input"
+                    required
                     hint="Obrigatório"
+                    classe="form-input"
                     v-model="protocoloEntrada.tipoDocumento"
                     :options="optionsTipoDocumento"
                     @input="$v.protocoloEntrada.tipoDocumento.$touch()"
-                    required
                   />
                   <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
-              <div class="col-md-3">
+              <div class="col-sm-12 col-xs-12 col-md-3">
                 <q-input label="Número"
                   class="form-input"
                   hint="Obrigatório"
                   :error="$v.protocoloEntrada.numero.$error"
                   error-message="Obrigatório" autocomplete="off" type="text" v-model="protocoloEntrada.numero" @input="$v.protocoloEntrada.numero.$touch()" name="number"/>
               </div>
-              <div class="col-md-3">
+              <div class="col-sm-12 col-xs-12 col-md-3">
                 <q-input label="Data do documento" class="form-input"
                   hint="Obrigatório" stack-label
                   :error="$v.protocoloEntrada.dataDocumento.$error"
@@ -58,7 +58,7 @@
 
             </div>
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-sm-12 col-xs-12 col-md-12">
                 <q-input
                   label="Assunto"
                   class="form-input"
@@ -70,7 +70,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-sm-12 col-xs-12 col-md-6">
                 <q-input label="Origem"
                   hint="Obrigatório"
                   class="form-input"
@@ -80,7 +80,7 @@
                 </q-input>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-sm-12 col-xs-12 col-md-6">
                 <form-select
                   class="form-input"
                   :error="$v.protocoloEntrada.setor.$error"
@@ -93,15 +93,29 @@
                   @input="$v.protocoloEntrada.setor.$touch()"
                   required
                 >
-                  <template slot="embutir">
+                  <!-- <template slot="embutir">
                     <q-popup-proxy>
-                      <q-banner @click="protocoloEntrada.setor = destino.setor" cliclable>
-                        Sugiro selecionar: {{destino.codigo}}.
-                      </q-banner>
-                    </q-popup-proxy>
-                  </template>
+
+                    /q-popup-proxy>
+                  </template> -->
                 </form-select>
                 <q-linear-progress indeterminate v-show="optionsLoading"/>
+              </div>
+            </div>
+            <div class="row">
+              <!-- <q-banner v-show="destinos.length">
+                Destinos Frequentes:.
+                <ul v-for="destino in destinos" :key="destino.setor">
+                  <li @click="protocoloEntrada.setor = destino.setor">{{destino.codigo}}</li>
+                </ul>
+              </q-banner> -->
+              <div class="col-12" v-show="destinos.length">
+                Destinos Frequentes:
+                <q-list bordered separator v-for="destino in destinos" :key="destino.setor">
+                  <q-item clickable v-ripple @click="protocoloEntrada.setor = destino.setor">
+                    <q-item-section>{{destino.codigo}}</q-item-section>
+                  </q-item>
+                </q-list>
               </div>
             </div>
           </form>
@@ -148,6 +162,7 @@ export default {
       optionsSetor: [],
       optionsLoading: false,
       timer: '',
+      destinos: [],
       destino: {
         codigo: '',
         setor: ''
@@ -169,8 +184,8 @@ export default {
       botService.sugereDestino(this.protocoloEntrada.assunto)
         .then(result => {
           if (result.data.length) {
-            this.destino.setor = result.data[0].setor
-            this.destino.codigo = result.data[0].codigo
+            this.protocoloEntrada.setor = result.data[0].setor
+            this.destinos = result.data
           }
         })
     },
@@ -216,8 +231,10 @@ export default {
       this.$router.push({name: 'protocoloEntrada'})
       this.possoAlterarProtocoloEntrada = false
       this.possoExcluirProtocoloEntrada = false
+      this.destinos = []
     },
     carrega (id) {
+      this.destinos = []
       console.log('vou carregar o protocoloEntrada')
       this.$q.loading.show({
         message: 'Localizando o registro',

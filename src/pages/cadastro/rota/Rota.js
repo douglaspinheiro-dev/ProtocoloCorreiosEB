@@ -18,7 +18,7 @@ export default class Rota {
       ))
     } else {
       optionsRota = [{
-        label: 'Sem registros cadastrados',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Rotas',
         value: ''
       }]
     }

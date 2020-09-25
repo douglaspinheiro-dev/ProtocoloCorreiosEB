@@ -38,10 +38,10 @@ class UsuarioService extends Service {
     })
   }
 
-  static alteraSenhaOutroUsuario (id, senha, usuarioCriador) {
+  static alteraSenhaOutroUsuario (id, password, usuarioCriador) {
     return this.put(`usuarios/trocasenha`, {
       id,
-      senha,
+      password,
       usuarioCriador
     })
   }

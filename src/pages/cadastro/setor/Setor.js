@@ -21,7 +21,7 @@ export default class Setor {
       ))
     } else {
       optionsSetor = [{
-        label: 'Sem registros cadastrados',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Setores Internos',
         value: ''
       }]
     }

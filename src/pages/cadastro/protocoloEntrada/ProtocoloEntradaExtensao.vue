@@ -79,7 +79,7 @@ import Setor from 'src/pages/cadastro/setor/Setor'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import formSelect from 'src/components/form/select/QSelect'
 import botService from 'src/services/bot/BotService'
-
+import { Platform } from 'quasar'
 export default {
   name: 'ProtocoloEntradas-Extensao',
   components: {
@@ -219,18 +219,20 @@ export default {
       })
   },
   mounted () {
-    this.$chrome.storage.sync.get(['protocoloEntrada'], (result) => {
-      console.log('result ', result)
-      console.log('result.protocoloEntrada ', result.protocoloEntrada)
-      this.protocoloEntrada.assunto = result.protocoloEntrada.assunto
-      this.sugereDestino(result.protocoloEntrada.assunto)
-      this.protocoloEntrada.dataDocumento = result.protocoloEntrada.dataDocumento
-      this.protocoloEntrada.numero = result.protocoloEntrada.numero
-      this.protocoloEntrada.origem = result.protocoloEntrada.origem
-      this.protocoloEntrada.tipoDocumento = result.protocoloEntrada.tipoDocumento
-      console.log('this.protocoloEntrada ', this.protocoloEntrada)
-      this.json = JSON.stringify(result.protocoloEntrada)
-    })
+    if (Platform.is.chrome) {
+      this.$chrome.storage.sync.get(['protocoloEntrada'], (result) => {
+        console.log('result ', result)
+        console.log('result.protocoloEntrada ', result.protocoloEntrada)
+        this.protocoloEntrada.assunto = result.protocoloEntrada.assunto
+        this.sugereDestino(result.protocoloEntrada.assunto)
+        this.protocoloEntrada.dataDocumento = result.protocoloEntrada.dataDocumento
+        this.protocoloEntrada.numero = result.protocoloEntrada.numero
+        this.protocoloEntrada.origem = result.protocoloEntrada.origem
+        this.protocoloEntrada.tipoDocumento = result.protocoloEntrada.tipoDocumento
+        console.log('this.protocoloEntrada ', this.protocoloEntrada)
+        this.json = JSON.stringify(result.protocoloEntrada)
+      })
+    }
   }
 }
 </script>

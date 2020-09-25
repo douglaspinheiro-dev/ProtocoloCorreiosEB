@@ -37,7 +37,7 @@ export default class Endereco {
       ))
     } else {
       optionsEndereco = [{
-        label: 'Sem registros cadastrados',
+        label: 'Sem registros. Cadastre primeiro em Cadastro de Endereços',
         value: ''
       }]
     }
