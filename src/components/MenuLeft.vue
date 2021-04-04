@@ -227,54 +227,54 @@ export default {
       return false
     },
     linksSistema: function () {
-      let links = [
+      const links = [
       // {
-      //   'rota': 'configuracaoSistema',
-      //   'titulo': 'Configuração do Sistema',
-      //   'subTitulo': 'Define configurações gerais para o sistema',
-      //   'icone': 'settings',
-      //   'corIcone': 'primary'
+      //   rota: 'configuracaoSistema',
+      //   titulo: 'Configuração do Sistema',
+      //   subTitulo: 'Define configurações gerais para o sistema',
+      //   icone: 'settings',
+      //   corIcone: 'primary'
       // },
         {
-          'rota': 'grupoUsuario',
-          'titulo': 'Grupos de Usuários',
-          'subTitulo': 'Organiza por grupo e cria permissões',
-          'icone': 'supervisor_account',
-          'corIcone': 'primary'
+          rota: 'grupoUsuario',
+          titulo: 'Grupos de Usuários',
+          subTitulo: 'Organiza por grupo e cria permissões',
+          icone: 'supervisor_account',
+          corIcone: 'primary'
         },
         {
-          'rota': 'usuario',
-          'titulo': 'Usuários',
-          'subTitulo': 'Cadastra usuários do sistema e gerencia acessos às empresas',
-          'icone': 'person',
-          'corIcone': 'primary'
+          rota: 'usuario',
+          titulo: 'Usuários',
+          subTitulo: 'Cadastra usuários do sistema e gerencia acessos às empresas',
+          icone: 'person',
+          corIcone: 'primary'
         }
       ]
 
       return links.filter((link) => this.getPermissoes[link.rota].abrir)
     },
     linksCadastro: function () {
-      let links = [
-        { 'rota': 'tipoDocumento', 'titulo': 'Tipos de Documentos', 'icone': 'fas fa-file-contract', 'corIcone': 'primary' },
-        { 'rota': 'tipoCorrespondencia', 'titulo': 'Tipos de Correspondencias', 'icone': 'fas fa-envelope', 'corIcone': 'primary' },
-        { 'rota': 'tipoCobranca', 'titulo': 'Tipos de Cobranças', 'icone': 'attach_money', 'corIcone': 'primary' },
-        { 'rota': 'endereco', 'titulo': 'Endereços', 'icone': 'fas fa-map-marked-alt', 'corIcone': 'primary' },
-        { 'rota': 'setor', 'titulo': 'Setores Internos', 'icone': 'work_outline', 'corIcone': 'primary' },
-        { 'rota': 'protocoloEntrada', 'titulo': 'Protocolo de Entrada', 'icone': 'fas fa-file-alt', 'corIcone': 'primary' },
-        { 'rota': 'rota', 'titulo': 'Rotas', 'icone': 'fas fa-map-marked-alt', 'corIcone': 'primary' },
-        { 'rota': 'malote', 'titulo': 'Malotes', 'icone': 'move_to_inbox', 'corIcone': 'primary' },
-        { 'rota': 'correspondencia', 'titulo': 'Correspondencias', 'icone': 'mail_outline', 'corIcone': 'primary' }
+      const links = [
+        { rota: 'tipoDocumento', titulo: 'Tipos de Documentos', icone: 'fas fa-file-contract', corIcone: 'primary' },
+        { rota: 'tipoCorrespondencia', titulo: 'Tipos de Correspondencias', icone: 'fas fa-envelope', corIcone: 'primary' },
+        { rota: 'tipoCobranca', titulo: 'Tipos de Cobranças', icone: 'attach_money', corIcone: 'primary' },
+        { rota: 'endereco', titulo: 'Endereços', icone: 'fas fa-map-marked-alt', corIcone: 'primary' },
+        { rota: 'setor', titulo: 'Setores Internos', icone: 'work_outline', corIcone: 'primary' },
+        { rota: 'protocoloEntrada', titulo: 'Protocolo de Entrada', icone: 'fas fa-file-alt', corIcone: 'primary' },
+        { rota: 'rota', titulo: 'Rotas', icone: 'fas fa-map-marked-alt', corIcone: 'primary' },
+        { rota: 'malote', titulo: 'Malotes', icone: 'move_to_inbox', corIcone: 'primary' },
+        { rota: 'correspondencia', titulo: 'Correspondencias', icone: 'mail_outline', corIcone: 'primary' }
         // {
-        //   'rota': 'membro',
-        //   'titulo': 'Membros',
-        //   'icone': 'fas fa-id-card',
-        //   'corIcone': 'primary'
+        //   rota: 'membro',
+        //   titulo: 'Membros',
+        //   icone: 'fas fa-id-card',
+        //   corIcone: 'primary'
         // },
         // {
-        //   'rota': 'igreja',
-        //   'titulo': 'Igrejas',
-        //   'icone': 'home',
-        //   'corIcone': 'primary'
+        //   rota: 'igreja',
+        //   titulo: 'Igrejas',
+        //   icone: 'home',
+        //   corIcone: 'primary'
         // }
       ]
 

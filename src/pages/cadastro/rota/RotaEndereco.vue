@@ -77,14 +77,14 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators'
-var timer
+let timer
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
-import {mask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 import rotaEnderecoService from 'src/pages/cadastro/rota/RotaEnderecoService'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import formSelect from 'src/components/form/select/QSelect'
+import tools from 'src/tools'
 
 export default {
   name: 'RotaEndereco',
@@ -202,17 +202,12 @@ export default {
     },
     carrega (id) {
       console.log('vou carregar o rotaEndereco')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       rotaEnderecoService
-        .seleciona({rotaEndereco: id, rota: this.rota})
+        .seleciona({ rotaEndereco: id, rota: this.rota })
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o rotaEndereco com sucesso')
           this.rotaEndereco = Object.assign({}, this.rotaEndereco, result.data)
           this.botaoSalvarAlterar = 'Alterar'
@@ -221,37 +216,23 @@ export default {
     },
     salvarAlterar () {
       this.rotaEndereco.rota = this.rota
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+
+      this.$v.rotaEndereco.$touch()
+      if (this.$v.rotaEndereco.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.rotaEndereco.$touch()
-        if (this.$v.rotaEndereco.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
         if (!this.rotaEndereco.rotaEndereco && this.possoGravarRotaEndereco) {
           rotaEnderecoService.grava(this.rotaEndereco)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('rotaEndereco criado com sucesso')
               this.rotaEndereco.rotaEndereco = result.data.rotaEndereco
               this.rotaEndereco.usuarioCriador = result.data.usuarioCriador
-              this.$q.notify({
-                type: 'positive',
-                message: 'RotaEndereco criado com sucesso.',
-                timeout: 5000
-              })
+              tools.Notify.positive('Endereço da Rota criado com sucesso.')
 
-              let enderecoDescricao = this.optionsEndereco.filter(endereco => endereco.value === this.rotaEndereco.endereco)
+              const enderecoDescricao = this.optionsEndereco.filter(endereco => endereco.value === this.rotaEndereco.endereco)
               this.listaDeRotaEnderecos.push({
                 id: this.rotaEndereco.rotaEndereco,
                 endereco: enderecoDescricao
@@ -260,7 +241,7 @@ export default {
               this.preencheListaTabela(result.data.rota.lista)
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -274,28 +255,20 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
-          rotaEnderecoService.apaga({rotaEndereco: id, rota: this.rota})
+          tools.Loadings.processando()
+          rotaEnderecoService.apaga({ rotaEndereco: id, rota: this.rota })
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('rotaEndereco removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'RotaEndereco removido com sucesso.',
-                timeout: 5000
-              })
-              let idRegistro = this.listaDeRotaEnderecos.filter(registro => registro.id === id)
+              tools.Notify.negative('Endereço da Rota removido com sucesso.')
+
+              const idRegistro = this.listaDeRotaEnderecos.filter(registro => registro.id === id)
               this.listaDeRotaEnderecos.splice(this.listaDeRotaEnderecos.indexOf(idRegistro[0]), 1)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     listaEnderecos (rota) {
@@ -309,7 +282,7 @@ export default {
         })
     },
     preencheListaTabela (registros) {
-      let lista = []
+      const lista = []
       registros.forEach(rotaEndereco => {
         lista.push({
           id: rotaEndereco.rotaEndereco,

@@ -248,6 +248,7 @@ import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
+import tools from 'src/tools'
 
 export default {
   name: 'ConsultaMalote',
@@ -381,7 +382,7 @@ export default {
     },
     setOptionsAno (anos) {
       if (anos.length > 0) {
-        let optionsAno = []
+        const optionsAno = []
         anos.map(ano => optionsAno.push({
           label: `${ano.ano}`,
           value: `${ano.ano}`
@@ -425,81 +426,52 @@ export default {
       })
     },
     procurar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.buscaMalote.$touch()
+      if (this.$v.buscaMalote.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.buscaMalote.$touch()
-        if (this.$v.buscaMalote.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => {}).catch(() => {})
-          return
-        }
-
         if (this.tipoConsulta === 'protocolo') {
           buscaMaloteService.seleciona(this.buscaMalote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data.maloteDocumentos
               this.malote = result.data.malote
 
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
+              tools.Notify.registrosEncontrados()
             })
         } else if (this.tipoConsulta === 'mes') {
           buscaMaloteService.procuraMes(this.buscaMalote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
+              tools.Notify.registrosEncontrados()
             })
         } else if (this.tipoConsulta === 'documento') {
           buscaMaloteService.procuraDocumento(this.buscaMalote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               // this.listaDocumentos()
               console.log(result.data)
               this.registros = result.data
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
+              tools.Notify.registrosEncontrados()
             })
         }
       }, 2000)
     },
     gerarRelatorio () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         if (this.tipoConsulta === 'protocolo') {
           buscaMaloteService.relatorio(this.buscaMalote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               console.log(result.data)
@@ -507,27 +479,19 @@ export default {
                 link: result.data.link,
                 ativo: true
               })
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
+              tools.Notify.registrosEncontrados()
             })
         } else if (this.tipoConsulta === 'mes') {
           buscaMaloteService.relatorioConsolidadoPorMes(this.buscaMalote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('buscaMalote alterado com sucesso')
               // this.listaDocumentos()
               this.$store.commit('modalPdf/setModalPdf', {
                 link: result.data.link,
                 ativo: true
               })
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
+              tools.Notify.registrosEncontrados()
             })
         }
       }, 2000)
@@ -543,7 +507,7 @@ export default {
         })
     },
     preencheListaTabela (registros) {
-      let lista = []
+      const lista = []
       registros.forEach(buscaMalote => {
         lista.push({
           id: buscaMalote.buscaMalote,

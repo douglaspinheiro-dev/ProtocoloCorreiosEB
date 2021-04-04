@@ -237,7 +237,6 @@ import { required } from 'vuelidate/lib/validators'
 import Correspondencia from './Correspondencia'
 import correspondenciaService from './CorrespondenciaService'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
@@ -249,6 +248,7 @@ import TipoCorrespondencia from 'src/pages/cadastro/tipoCorrespondencia/TipoCorr
 import Setor from 'src/pages/cadastro/setor/Setor'
 import TipoCobranca from 'src/pages/cadastro/tipoCobranca/TipoCobranca'
 import formSelect from 'src/components/form/select/QSelect'
+import tools from 'src/tools'
 
 export default {
   name: 'Cadastro-de-Correspondencias',
@@ -258,7 +258,7 @@ export default {
     formSelect
   },
   directives: {
-    'mask': AwesomeMask,
+    mask: AwesomeMask,
     money: VMoney
   },
   data () {
@@ -296,13 +296,13 @@ export default {
   },
   validations: {
     correspondencia: {
-      tipoDocumento: {required},
-      numeroDocumento: {required},
-      valorTotal: {required},
-      dataCadastro: {required},
-      destino: {required},
-      setor: {required},
-      tipoCorrespondencia: {required}
+      tipoDocumento: { required },
+      numeroDocumento: { required },
+      valorTotal: { required },
+      dataCadastro: { required },
+      destino: { required },
+      setor: { required },
+      tipoCorrespondencia: { required }
     }
   },
   methods: {
@@ -313,11 +313,11 @@ export default {
     // },
     preparaDocSemelhante () {
       this.$v.correspondencia.$reset()
-      this.$router.push({name: 'correspondencia'})
+      this.$router.push({ name: 'correspondencia' })
       this.possoAlterarCorrespondencia = false
       this.possoExcluirCorrespondencia = false
 
-      let correspondencia = new Correspondencia(this.correspondencia)
+      const correspondencia = new Correspondencia(this.correspondencia)
       correspondencia.protocolo = ''
       correspondencia.correspondencia = ''
       correspondencia.destino = ''
@@ -328,11 +328,11 @@ export default {
     },
     somaTipoCorrespondencia () {
       this.$v.correspondencia.tipoCorrespondencia.$touch()
-      this.valorTipoCorrespondencia = Number(this.optionsTipoCorrespondencia.filter(tipoCorrespondencia => tipoCorrespondencia.value === this.correspondencia.tipoCorrespondencia)[0]['valor'])
+      this.valorTipoCorrespondencia = Number(this.optionsTipoCorrespondencia.filter(tipoCorrespondencia => tipoCorrespondencia.value === this.correspondencia.tipoCorrespondencia)[0].valor)
       this.somaValores()
     },
     somaTipoCobranca () {
-      this.valorTipoCobranca = Number(this.optionsTipoCobranca.filter(tipoCobranca => tipoCobranca.value === this.correspondencia.tipoCobranca)[0]['valor'])
+      this.valorTipoCobranca = Number(this.optionsTipoCobranca.filter(tipoCobranca => tipoCobranca.value === this.correspondencia.tipoCobranca)[0].valor)
       this.somaValores()
     },
     somaValores () {
@@ -375,7 +375,7 @@ export default {
           cepService
             .procura(this.correspondencia.cep, this.cepLoading)
             .then(result => {
-              let cep = result
+              const cep = result
               this.correspondencia.logradouro = cep.logradouro
               this.correspondencia.bairro = cep.bairro
               this.correspondencia.cidade = cep.localidade
@@ -385,11 +385,7 @@ export default {
             .catch(error => {
               this.cepLoading = false
               console.log(error)
-              this.$q.notify({
-                type: 'warning',
-                message: 'Cep não encontrado',
-                timeout: 2000
-              })
+              tools.Notify.warning('Cep não encontrado.')
             })
         }
       }, 300)
@@ -428,65 +424,49 @@ export default {
     reset () {
       this.$v.correspondencia.$reset()
       this.correspondencia = new Correspondencia()
-      this.$router.push({name: 'correspondencia'})
+      this.$router.push({ name: 'correspondencia' })
       this.possoAlterarCorrespondencia = false
       this.possoExcluirCorrespondencia = false
     },
     carrega (id) {
       console.log('vou carregar o correspondencia')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       correspondenciaService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o correspondencia com sucesso')
           this.correspondencia = Object.assign({}, this.correspondencia, result.data)
-          this.$root.$emit('alteraUnicoRegistro', this.correspondencia)
-
+          this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+            registro: this.correspondencia,
+            id: 'correspondencia'
+          })
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.correspondencia.$touch()
+      if (this.$v.tabelacorrespondenciaAcessoEmpresa.$invalid) return tools.Dialogs.formInvalido()
+
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.correspondencia.$touch()
-        if (this.$v.correspondencia.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.correspondencia.correspondencia && this.possoAlterarCorrespondencia) {
           console.log('estou alterando o form')
           correspondenciaService.altera(this.correspondencia)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('correspondencia alterado com sucesso')
-              let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
-              let setorDescricao = this.optionsSetor.filter(tipo => tipo.value === this.correspondencia.setor)
+              const tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
+              const setorDescricao = this.optionsSetor.filter(tipo => tipo.value === this.correspondencia.setor)
               this.correspondencia.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
               this.correspondencia.setorDescricao = setorDescricao[0].label
-              this.$root.$emit('alteraUnicoRegistro', this.correspondencia)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Correspondência alterada com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.correspondencia,
+                id: 'correspondencia'
               })
+              tools.Notify.positive('Correspondência alterada com sucesso.')
             })
         } else if (!this.correspondencia.correspondencia && this.possoGravarCorrespondencia) {
           correspondenciaService.grava(this.correspondencia)
@@ -495,22 +475,19 @@ export default {
               this.correspondencia.correspondencia = result.data.correspondencia.correspondencia
               this.correspondencia.usuarioCriador = result.data.correspondencia.usuarioCriador
               this.$router.push('/correspondencias/correspondencia/' + result.data.correspondencia.correspondencia)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Correspondência criada com sucesso.',
-                timeout: 5000
-              })
-              let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
+              tools.Notify.positive('Correspondência criada com sucesso.')
+
+              const tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.tipoDocumento)
               this.correspondencia.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
 
-              let setorDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.setor)
+              const setorDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.correspondencia.setor)
               this.correspondencia.setorDescricao = setorDescricao[0].label
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.correspondencia)
 
-              this.$root.$emit('adicionaRegistroNaLista', this.correspondencia)
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -522,30 +499,22 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           correspondenciaService.apaga(this.correspondencia.correspondencia)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('correspondencia removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Correspondência removida com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Correspondência removida com sucesso.')
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.correspondencia.correspondencia,
+                id: 'correspondencia'
               })
-              this.$root.$emit('removeRegistro', this.correspondencia.correspondencia)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -557,12 +526,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   },
   computed: {

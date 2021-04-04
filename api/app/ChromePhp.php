@@ -1,6 +1,4 @@
 <?php
-namespace App;
-use \ReflectionClass, \ReflectionException, \ReflectionProperty;
 /**
  * Copyright 2010-2013 Craig Campbell
  *

@@ -26,7 +26,7 @@ export default {
       this.$root.$emit('toggleLeft')
     },
     toggleRight () {
-      let menu = !this.getListagemDeRegistros
+      const menu = !this.getListagemDeRegistros
       this.$store.commit('menuRight/setListagemDeRegistros', menu)
     }
   },
@@ -38,7 +38,7 @@ export default {
     })
   },
   created () {
-    let self = this
+    const self = this
     this.$root.$on('trocaTitulo', function (titulo) {
       self.tituloModulo = titulo
     })

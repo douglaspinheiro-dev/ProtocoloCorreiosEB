@@ -302,8 +302,9 @@ import GrupoUsuario from './GrupoUsuario'
 import grupoUsuarioService from './GrupoUsuarioService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
-var timer
+import tools from 'src/tools'
+
+let timer
 
 export default {
   name: 'Grupo-de-Usuarios',
@@ -327,7 +328,7 @@ export default {
       codigo: {
         required,
         isUnique (value) {
-          let codigo = value
+          const codigo = value
           // se for vazio, passo a bola pro validador required
           if (codigo === '') {
             this.errorCodigo = 'Preencha o código do grupo'
@@ -339,7 +340,7 @@ export default {
             opcao = 'alterar'
             id = this.grupoUsuario.grupoUsuario
           }
-          let retorno = confereRegistro('categoriasUsuarios', 'codigo', opcao, id, 'categoriaUsuario', codigo)
+          const retorno = confereRegistro('categoriasUsuarios', 'codigo', opcao, id, 'categoriaUsuario', codigo)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -362,23 +363,18 @@ export default {
     reset () {
       this.$v.grupoUsuario.$reset()
       this.grupoUsuario = new GrupoUsuario()
-      this.$router.push({name: 'grupoUsuario'})
+      this.$router.push({ name: 'grupoUsuario' })
       this.possoAlterarGrupoUsuario = false
       this.possoExcluirGrupoUsuario = false
     },
     carrega (id) {
       console.log('vou carregar o grupoUsuario')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       grupoUsuarioService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o grupoUsuario com sucesso')
           this.grupoUsuario.codigo = result.data.codigo
           this.grupoUsuario.descricao = result.data.descricao
@@ -390,36 +386,24 @@ export default {
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.grupoUsuario.$touch()
+      if (this.$v.grupoUsuario.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.grupoUsuario.$touch()
-        if (this.$v.grupoUsuario.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
-          return
-        }
-
         if (this.grupoUsuario.grupoUsuario && this.possoAlterarGrupoUsuario) {
           console.log('estou alterando o form')
           grupoUsuarioService.altera(this.grupoUsuario)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('grupousuario alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.grupoUsuario)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Grupo de Usuário alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.grupoUsuario,
+                id: 'grupoUsuario'
               })
+
+              tools.Notify.positive('Grupo de Usuário alterado com sucesso.')
 
               if (this.getCategoriaUsuario === this.grupoUsuario.grupoUsuario) {
                 this.$store.commit('login/setPermissoes', result.data.permissoes)
@@ -432,17 +416,15 @@ export default {
               this.grupoUsuario.grupoUsuario = result.data.grupoUsuario.grupoUsuario
               this.grupoUsuario.usuarioCriador = result.data.grupoUsuario.usuarioCriador
               this.$router.push('/grupousuarios/grupousuario/' + result.data.grupoUsuario.grupoUsuario)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Grupo de Usuários criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.grupoUsuario)
+              tools.Notify.positive('Grupo de Usuário criado com sucesso.')
+
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.grupoUsuario)
+
               this.confereAlterarExcluir()
-              // this.$q.loading.hide() nao precisa, pois ele carrega o registro em seguida
+              // tools.Loadings.hide() nao precisa, pois ele carrega o registro em seguida
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -454,31 +436,25 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).then(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           grupoUsuarioService.apaga(this.grupoUsuario.grupoUsuario)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('grupoUsuario removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Grupo de Usuário removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Grupo de Usuário removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.grupoUsuario.grupoUsuario,
+                id: 'grupoUsuario'
               })
-              this.$root.$emit('removeRegistro', this.grupoUsuario.grupoUsuario)
-              // this.$store.commit('menuRight/removeRegistro', this.id)
               this.reset()
             })
         }).catch(() => {
           // Picked "Cancel" or dismissed
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {

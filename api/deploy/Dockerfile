@@ -33,18 +33,18 @@ RUN install-php-extensions intl bcmath gd pdo_mysql opcache uuid exif pcntl zip
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install composer & app dependencies
-COPY --from=composer:1.10.5 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 COPY composer.json composer.json
 COPY composer.lock composer.lock
 # TODO remove prestissimo when composer hits v2
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts
+# RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader && rm -rf /root/.composer
 # Copy app
-COPY --chown=www-data:www-data . $LARAVEL_PATH/
+COPY . $LARAVEL_PATH/
 COPY ./deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 RUN chmod -R 775 $LARAVEL_PATH/storage
 
 RUN composer dump-autoload --no-interaction --no-dev --optimize
 # Start app
-EXPOSE 8000
-CMD php -S 0.0.0.0:8000 -t public
+EXPOSE 80
+CMD php -S 0.0.0.0:80 -t public

@@ -1,5 +1,6 @@
 export const removeRegistro = (state, obj) => {
-  let idRegistro = state.registros.filter(registro => registro[obj.id] === obj.registro)
+  console.log('remover registro', obj)
+  const idRegistro = state.registros.filter(registro => registro[obj.id] === obj.registro)
   state.registros.splice(state.registros.indexOf(idRegistro[0]), 1)
   if (state.registros.length === 0) {
     state.semRegistros = true
@@ -7,12 +8,12 @@ export const removeRegistro = (state, obj) => {
 }
 
 export const alteraUnicoRegistro = (state, obj) => {
-  let idRegistro = state.registros.filter(registro => {
+  const idRegistro = state.registros.filter(registro => {
     return registro[obj.id] === obj.registro[obj.id]
   })
-  let id = state.registros.indexOf(idRegistro[0])
-  let keys = Object.keys(obj.registro)
-  keys.map(key => {
+  const id = state.registros.indexOf(idRegistro[0])
+  const keys = Object.keys(obj.registro)
+  keys.forEach(key => {
     state.registros[id][key] = obj.registro[key]
   })
 }

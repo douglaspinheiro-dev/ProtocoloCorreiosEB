@@ -24,6 +24,7 @@ class ProtocoloEntradaDao extends Dao
         anoCadastro,
         numero,
         assunto,
+        identificador,
         categoriasDocumentos.descricao as tipoDocumentoDescricao,
         DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
         origem,
@@ -42,6 +43,7 @@ class ProtocoloEntradaDao extends Dao
             anoCadastro,
             numero,
             assunto,
+            identificador,
             categoriasDocumentos.codigo as tipoDocumentoDescricao,
             DATE_FORMAT(dataDocumento, '%d/%m/%Y') as dataDocumento,
             origem,
@@ -51,7 +53,7 @@ class ProtocoloEntradaDao extends Dao
             JOIN setores on protocoloEntradas.setor = setores.setor
             AND
             (
-                protocoloEntradas.numero LIKE '%{$obj['busca']}%' OR
+                protocoloEntradas.identificador LIKE '%{$obj['busca']}%' OR
                 protocoloEntradas.protocoloEntrada LIKE '%{$obj['busca']}%'
             )
             AND protocoloEntradas.ativo = 1 ORDER BY protocoloEntradas.dataDocumento desc LIMIT {$obj['inicio']}, {$obj['fim']}"
@@ -97,6 +99,7 @@ class ProtocoloEntradaDao extends Dao
             protocoloEntradas.protocolo,
             protocoloEntradas.protocoloEntrada,
             protocoloEntradas.numero,
+            protocoloEntradas.identificador,
             DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
             protocoloEntradas.origem,
             protocoloEntradas.assunto,
@@ -125,7 +128,8 @@ class ProtocoloEntradaDao extends Dao
                 origem,
                 setor,
                 assunto,
-                usuarioCriador
+                usuarioCriador,
+                identificador
                 ) values
                 (
                     '{$dados['protocoloEntrada']}',
@@ -136,7 +140,8 @@ class ProtocoloEntradaDao extends Dao
                     '{$dados['origem']}',
                     '{$dados['setor']}',
                     '{$dados['assunto']}',
-                    '{$dados['usuarioCriador']}'
+                    '{$dados['usuarioCriador']}',
+                    '{$dados['identificador']}'
                     )");
                 }
 
@@ -148,7 +153,8 @@ class ProtocoloEntradaDao extends Dao
                     origem = '{$dados['origem']}',
                     setor = '{$dados['setor']}',
                     assunto = '{$dados['assunto']}',
-                    usuarioAlterador = '{$dados['usuarioAlterador']}'
+                    usuarioAlterador = '{$dados['usuarioAlterador']}',
+                    identificador = '{$dados['identificador']}'
                     where protocoloEntrada = '{$dados['protocoloEntrada']}'");
                 }
 
@@ -162,6 +168,7 @@ class ProtocoloEntradaDao extends Dao
                     SELECT
                     protocoloEntradas.protocolo,
                     protocoloEntradas.protocoloEntrada,
+                    protocoloEntradas.identificador,
                     protocoloEntradas.numero,
                     DATE_FORMAT(protocoloEntradas.dataDocumento, '%d/%m/%Y') as dataDocumento,
                     DATE_FORMAT(protocoloEntradas.dataCadastro, '%d/%m/%Y') as dataCadastro,

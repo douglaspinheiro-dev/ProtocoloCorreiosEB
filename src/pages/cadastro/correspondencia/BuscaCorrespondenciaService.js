@@ -37,10 +37,11 @@ class BuscaCorrespondenciaService extends Service {
   }
 
   static getOptions () {
-    return this.get(`busca-correspondencias/options`)
+    return this.get('busca-correspondencias/options')
   }
+
   static getOptionsPublico () {
-    return this.get(`busca-correspondencias/options/publico`)
+    return this.get('busca-correspondencias/options/publico')
   }
 }
 export default BuscaCorrespondenciaService

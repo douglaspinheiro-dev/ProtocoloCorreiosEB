@@ -73,7 +73,7 @@ import TipoDocumento from './TipoDocumento'
 import tipoDocumentoService from './TipoDocumentoService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
+import tools from 'src/tools'
 
 export default {
   name: 'Cadastro-de-TipoDocumentos',
@@ -92,11 +92,11 @@ export default {
   },
   validations: {
     tipoDocumento: {
-      codigo: {required},
+      codigo: { required },
       descricao: {
         required,
         isUnique (value) {
-          let descricao = value
+          const descricao = value
           // se for vazio, passo a bola pro validador required
           if (descricao === '') {
             return true
@@ -107,7 +107,7 @@ export default {
             opcao = 'alterar'
             id = this.tipoDocumento.tipoDocumento
           }
-          let retorno = confereRegistro('categoriasDocumentos', 'descricao', opcao, id, 'categoriaDocumento', descricao)
+          const retorno = confereRegistro('categoriasDocumentos', 'descricao', opcao, id, 'categoriaDocumento', descricao)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -127,59 +127,41 @@ export default {
     reset () {
       this.$v.tipoDocumento.$reset()
       this.tipoDocumento = new TipoDocumento()
-      this.$router.push({name: 'tipoDocumento'})
+      this.$router.push({ name: 'tipoDocumento' })
       this.possoAlterarTipoDocumento = false
       this.possoExcluirTipoDocumento = false
     },
     carrega (id) {
       console.log('vou carregar o tipoDocumento')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       tipoDocumentoService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o tipoDocumento com sucesso')
           this.tipoDocumento = Object.assign({}, this.tipoDocumento, result.data)
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.tipoDocumento.$touch()
+      if (this.$v.tipoDocumento.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.tipoDocumento.$touch()
-        if (this.$v.tipoDocumento.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.tipoDocumento.tipoDocumento && this.possoAlterarTipoDocumento) {
           console.log('estou alterando o form')
           tipoDocumentoService.altera(this.tipoDocumento)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('tipoDocumento alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.tipoDocumento)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Tipo de Documento alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.tipoDocumento,
+                id: 'tipoDocumento'
               })
+              tools.Notify.positive('Tipo de Documento alterado com sucesso.')
             })
         } else if (!this.tipoDocumento.tipoDocumento && this.possoGravarTipoDocumento) {
           tipoDocumentoService.grava(this.tipoDocumento)
@@ -188,16 +170,14 @@ export default {
               this.tipoDocumento.tipoDocumento = result.data.tipoDocumento.tipoDocumento
               this.tipoDocumento.usuarioCriador = result.data.tipoDocumento.usuarioCriador
               this.$router.push('/tipoDocumentos/tipoDocumento/' + result.data.tipoDocumento.tipoDocumento)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Tipo de Documento criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.tipoDocumento)
+              tools.Notify.positive('Tipo de Documento criado com sucesso.')
+
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.tipoDocumento)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -209,28 +189,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           tipoDocumentoService.apaga(this.tipoDocumento.tipoDocumento)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('tipoDocumento removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Tipo de Documento removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Tipo de Documento removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.tipoDocumento.tipoDocumento,
+                id: 'tipoDocumento'
               })
-              this.$root.$emit('removeRegistro', this.tipoDocumento.tipoDocumento)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -242,12 +217,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   },
   computed: {

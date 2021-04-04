@@ -1,9 +1,9 @@
 import Service from 'src/services/Service'
 const rotasTipoCorrespondencia = {
-  procura: `/tipocorrespondencias`,
-  grava: `/tipocorrespondencias/tipocorrespondencia`,
+  procura: '/tipocorrespondencias',
+  grava: '/tipocorrespondencias/tipocorrespondencia',
   cadastro: (id) => `/tipocorrespondencias/tipocorrespondencia/${id}`,
-  options: `/grupousuarios/options`
+  options: '/grupousuarios/options'
 }
 
 class TipoCorrespondenciaService extends Service {
@@ -24,6 +24,7 @@ class TipoCorrespondenciaService extends Service {
   static altera (tipoCorrespondencia) {
     return this.put(rotasTipoCorrespondencia.cadastro(tipoCorrespondencia.tipoCorrespondencia), tipoCorrespondencia)
   }
+
   static seleciona (id) {
     return this.get(rotasTipoCorrespondencia.cadastro(id))
   }

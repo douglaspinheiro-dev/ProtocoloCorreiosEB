@@ -1,16 +1,42 @@
-import { Dialog, Loading } from 'quasar'
-const MsgDialog = function (res, local) {
-  Loading.hide()
-  console.log('Erro', res)
-  let message = ``
-  if (res.data.status === 'validacao') { message = 'Alguns campos precisam ser corrigidos.' } else if (res.status === 401) { message = 'Dados de acesso inválidos, Login ou senha incorretos' } else if (res.status === 403) { message = 'Seu grupo de usuário não tem permissão para esta operação' }
+import { Dialog } from 'quasar'
 
-  Dialog.create({
-    title: 'Atenção',
-    message: message,
-    buttons: [
-      'Certo'
-    ]
-  })
+const Dialogs = {
+
+  formInvalido: () => {
+    Dialog.create({
+      title: 'Atenção',
+      message: 'Alguns campos precisam ser corrigidos.',
+      buttons: [
+        'OK'
+      ]
+    })
+  },
+  erroServidor: (erro) => {
+    Dialog.create({
+      title: 'Atenção',
+      message: 'O servidor respondeu erro interno, contate o suporte e informe o erro:' + erro,
+      buttons: [
+        'Certo'
+      ]
+    })
+  },
+  atencao: (msg) => {
+    Dialog.create({
+      title: 'Atenção',
+      message: msg,
+      buttons: [
+        'OK'
+      ]
+    })
+  },
+  confirmaExcluir: () =>
+    Dialog.create({
+      title: 'Tem certeza?',
+      message: 'Ao confirmar esta operação, não poderá desfazer.',
+      ok: 'Sim, excluir',
+      cancel: 'Cancelar'
+    })
+
 }
-export default MsgDialog
+
+export default Dialogs

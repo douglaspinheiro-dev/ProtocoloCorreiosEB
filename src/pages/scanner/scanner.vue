@@ -91,7 +91,7 @@ export default {
 
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        let dados = {
+        const dados = {
           scanner: Scanner.setTypes(this.scanner)
         }
         // preparando a imagem

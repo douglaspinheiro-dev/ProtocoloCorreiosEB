@@ -1,8 +1,8 @@
 
 import Service from 'src/services/Service'
 const rotasSetor = {
-  setor: `/setores`,
-  grava: `/setores/setor`,
+  setor: '/setores',
+  grava: '/setores/setor',
   cadastro: (id) => `/setores/setor/${id}`
 }
 class SetorService extends Service {

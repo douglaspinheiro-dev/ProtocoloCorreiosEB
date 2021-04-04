@@ -18,15 +18,17 @@ yarn-error.log*
 *.njsproj
 *.sln
 
-apiEventos/logs/*
+api/logs/*
+api/web
+api/public/web
 
 *.log
 
-api-protocolo/api-protocolo\.tar
+api/api\.tar
 
-api-protocolo/vendor\.tar
+api/vendor\.tar
 
-api-protocolo\.tar
+api\.tar
 
 src/pages/login\.vue
 

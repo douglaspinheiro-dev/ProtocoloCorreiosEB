@@ -1,4 +1,8 @@
 <?php
+
+/**
+* Location: /app/Http/Middleware
+*/
 namespace App\Http\Middleware;
 
 use Closure;
@@ -14,21 +18,12 @@ class CorsMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // $headers = [
-        //     'Access-Control-Allow-Origin'      => '*',
-        //     'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
-        //     'Access-Control-Allow-Credentials' => 'true',
-        //     'Access-Control-Max-Age'           => '86400',
-        //     'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, token'
-        // ];
-        
         $headers = [
             'Access-Control-Allow-Origin'      => '*',
-            'Access-Control-Allow-Methods'     => 'GET, PUT, POST, DELETE, HEAD, OPTIONS, PATCH',
+            'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
             'Access-Control-Allow-Credentials' => 'true',
-            'Access-Control-Expose-Headers'=> '*',
             'Access-Control-Max-Age'           => '86400',
-            'Access-Control-Allow-Headers'     => '*'
+            'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, token'
         ];
 
         if ($request->isMethod('OPTIONS'))

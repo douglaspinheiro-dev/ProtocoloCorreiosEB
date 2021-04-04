@@ -71,10 +71,10 @@ import TipoCobranca from './TipoCobranca'
 import tipoCobrancaService from './TipoCobrancaService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 import VMoney from 'src/tools/money'
+import tools from 'src/tools'
 
-var timer
+let timer
 
 export default {
   name: 'Cadastro-de-TipoCobrancas',
@@ -107,7 +107,7 @@ export default {
       descricao: {
         required,
         isUnique (value) {
-          let descricao = value
+          const descricao = value
           // se for vazio, passo a bola pro validador required
           if (descricao === '') {
             return true
@@ -118,7 +118,7 @@ export default {
             opcao = 'alterar'
             id = this.tipoCobranca.tipoCobranca
           }
-          let retorno = confereRegistro('categoriasCobrancas', 'descricao', opcao, id, 'categoriaCobranca', descricao)
+          const retorno = confereRegistro('categoriasCobrancas', 'descricao', opcao, id, 'categoriaCobranca', descricao)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -141,59 +141,40 @@ export default {
     reset () {
       this.$v.tipoCobranca.$reset()
       this.tipoCobranca = new TipoCobranca()
-      this.$router.push({name: 'tipoCobranca'})
+      this.$router.push({ name: 'tipoCobranca' })
       this.possoAlterarTipoCobranca = false
       this.possoExcluirTipoCobranca = false
     },
     carrega (id) {
       console.log('vou carregar o tipoCobranca')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       tipoCobrancaService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o tipoCobranca com sucesso')
           this.tipoCobranca = Object.assign({}, this.tipoCobranca, result.data)
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.tipoCobranca.$touch()
+      if (this.$v.tipoCobranca.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
       clearTimeout(timer)
       timer = setTimeout(() => {
-        this.$v.tipoCobranca.$touch()
-        if (this.$v.tipoCobranca.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.tipoCobranca.tipoCobranca && this.possoAlterarTipoCobranca) {
           console.log('estou alterando o form')
           tipoCobrancaService.altera(this.tipoCobranca)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('tipoCobranca alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.tipoCobranca)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Tipo de Cobrança alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.tipoCobranca,
+                id: 'tipoCobranca'
               })
+              tools.Notify.positive('Tipo de Cobrança alterado com sucesso.')
             })
         } else if (!this.tipoCobranca.tipoCobranca && this.possoGravarTipoCobranca) {
           tipoCobrancaService.grava(this.tipoCobranca)
@@ -202,16 +183,14 @@ export default {
               this.tipoCobranca.tipoCobranca = result.data.tipoCobranca.tipoCobranca
               this.tipoCobranca.usuarioCriador = result.data.tipoCobranca.usuarioCriador
               this.$router.push('/tipoCobrancas/tipoCobranca/' + result.data.tipoCobranca.tipoCobranca)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Tipo de Cobrança criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.tipoCobranca)
+              tools.Notify.positive('Tipo de Cobrança criado com sucesso.')
+
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.tipoCobranca)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -223,30 +202,25 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           tipoCobrancaService.apaga(this.tipoCobranca.tipoCobranca)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('tipoCobranca removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Tipo de Cobrança removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Tipo de Cobrança removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.tipoCobranca.tipoCobranca,
+                id: 'tipoCobranca'
               })
-              this.$root.$emit('removeRegistro', this.tipoCobranca.tipoCobranca)
               this.reset()
             })
         }).catch(() => {
           // Picked "Cancel" or dismissed
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -258,12 +232,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   },
   computed: {

@@ -21,7 +21,7 @@ class MaloteDocumentoService extends Service {
   }
 
   static grava (maloteDocumento) {
-    return this.post(`malotedocumentos/malotedocumento`, maloteDocumento)
+    return this.post('malotedocumentos/malotedocumento', maloteDocumento)
   }
 
   static altera (maloteDocumento) {
@@ -32,6 +32,7 @@ class MaloteDocumentoService extends Service {
     console.log(obj)
     return this.delete(`malotedocumentos/malotedocumento/${obj}`)
   }
+
   static getOptions (rota) {
     return this.get(`malotedocumentos/options/${rota}`)
   }

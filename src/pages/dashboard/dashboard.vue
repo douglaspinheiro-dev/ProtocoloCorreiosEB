@@ -98,6 +98,8 @@ import usuarioService from 'src/pages/sistema/usuario/UsuarioService'
 import consultaCorrespondencia from 'src/pages/cadastro/correspondencia/BuscaCorrespondencia.vue'
 import consultaMalote from 'src/pages/cadastro/malote/BuscaMalote.vue'
 import consultaProtocoloEntrada from 'src/pages/cadastro/protocoloEntrada/BuscaProtocoloEntrada.vue'
+import tools from 'src/tools/index'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -155,7 +157,7 @@ export default {
         })
         usuarioService.alteraSenha('12345', this.form.senhaNova)
           .then(result => {
-            this.$q.loading.hide()
+            tools.Loadings.hide()
             if (result.status === 202) {
               this.$q.notify({
                 type: 'positive',

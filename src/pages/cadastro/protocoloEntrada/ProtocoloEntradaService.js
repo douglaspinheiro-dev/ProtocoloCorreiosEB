@@ -11,7 +11,7 @@ class ProtocoloEntradaService extends Service {
   }
 
   static grava (protocoloentrada) {
-    return this.post(`protocoloentradas/protocoloentrada`, protocoloentrada)
+    return this.post('protocoloentradas/protocoloentrada', protocoloentrada)
   }
 
   static altera (protocoloentrada) {
@@ -25,8 +25,9 @@ class ProtocoloEntradaService extends Service {
   static seleciona (id) {
     return this.get(`protocoloentradas/protocoloentrada/${id}`)
   }
+
   static getOptions () {
-    return this.get(`protocoloentradas/options`)
+    return this.get('protocoloentradas/options')
   }
 }
 export default ProtocoloEntradaService

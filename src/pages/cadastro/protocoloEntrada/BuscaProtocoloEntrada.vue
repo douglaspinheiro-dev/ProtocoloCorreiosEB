@@ -299,6 +299,7 @@ import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
 import ModalPdf from 'src/components/modal/ModalPdf'
+import tools from 'src/tools'
 
 export default {
   name: 'ConsultaProtocoloEntrada',
@@ -426,7 +427,7 @@ export default {
     },
     setOptionsAno (anos) {
       if (anos.length > 0) {
-        let optionsAno = []
+        const optionsAno = []
         anos.map(ano => optionsAno.push(
           {
             label: `${ano.ano}`,
@@ -450,77 +451,53 @@ export default {
       this.$router.push({ name: 'alterarProtocoloEntrada', params: { id } })
     },
     procurar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        // this.$v.buscaProtocoloEntrada.$touch()
-        // if (this.$v.buscaProtocoloEntrada.$error) {
-        //   this.$q.loading.hide()
-        //   this.$q.dialog({
-        //     title: 'Atenção',
-        //     message: 'Alguns campos precisam ser corrigidos.'
-        //   }).then(() => { }).catch(() => { })
-        //   return
-        // }
+        const funcaoBusca = this.buscaProtocoloEntrada.protocolo ? 'seleciona' : 'procuraDocumento'
+        buscaProtocoloEntradaService[funcaoBusca](this.buscaProtocoloEntrada)
+          .then(result => {
+            tools.Loadings.hide()
+            this.registros = result.data
+            tools.Notify.registrosEncontrados()
+          })
 
-        if (this.buscaProtocoloEntrada.protocolo) {
-          buscaProtocoloEntradaService.seleciona(this.buscaProtocoloEntrada)
-            .then(result => {
-              this.$q.loading.hide()
-              console.log('buscaProtocoloEntrada alterado com sucesso')
-              // this.listaDocumentos()
-              console.log(result.data)
-              this.registros = result.data
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
-            })
-        } else {
-          buscaProtocoloEntradaService.procuraDocumento(this.buscaProtocoloEntrada)
-            .then(result => {
-              this.$q.loading.hide()
-              console.log('buscaProtocoloEntrada alterado com sucesso')
-              // this.listaDocumentos()
-              console.log(result.data)
-              this.registros = result.data
-              this.$q.notify({
-                type: 'positive',
-                message: 'Estes foram os registros encontrados.',
-                timeout: 5000
-              })
-            })
-        }
+        // if (this.buscaProtocoloEntrada.protocolo) {
+        //   buscaProtocoloEntradaService.seleciona(this.buscaProtocoloEntrada)
+        //     .then(result => {
+        //       tools.Loadings.hide()
+        //       console.log('buscaProtocoloEntrada alterado com sucesso')
+        //       // this.listaDocumentos()
+        //       console.log(result.data)
+        //       this.registros = result.data
+        //       tools.Notify.registrosEncontrados()
+        //     })
+        // } else {
+        //   buscaProtocoloEntradaService.procuraDocumento(this.buscaProtocoloEntrada)
+        //     .then(result => {
+        //       tools.Loadings.hide()
+        //       console.log('buscaProtocoloEntrada alterado com sucesso')
+        //       // this.listaDocumentos()
+        //       console.log(result.data)
+        //       this.registros = result.data
+        //       tools.Notify.registrosEncontrados()
+        //     })
+        // }
       }, 2000)
     },
     gerarRelatorio () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         buscaProtocoloEntradaService.relatorio(this.buscaProtocoloEntrada)
           .then(result => {
-            this.$q.loading.hide()
+            tools.Loadings.hide()
             console.log('buscaProtocoloEntrada alterado com sucesso')
             // this.listaDocumentos()
             console.log(result.data)
             this.linkRelatorio = result.data.link
             this.modalRelatorio = true
-            this.$q.notify({
-              type: 'positive',
-              message: 'Estes foram os registros encontrados.',
-              timeout: 5000
-            })
+            tools.positive.registrosEncontrados()
           })
       }, 2000)
     },
@@ -535,7 +512,7 @@ export default {
         })
     },
     preencheListaTabela (registros) {
-      let lista = []
+      const lista = []
       registros.forEach(buscaProtocoloEntrada => {
         lista.push({
           id: buscaProtocoloEntrada.buscaProtocoloEntrada,

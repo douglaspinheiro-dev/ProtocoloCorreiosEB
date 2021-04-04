@@ -19,7 +19,8 @@ const Router = new VueRouter({
   // Leave as is and change from quasar.conf.js instead!
   mode: process.env.VUE_ROUTER_MODE,
   base: process.env.VUE_ROUTER_BASE,
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({ x: 0, y: 0 }),
+
   routes
 })
 
@@ -32,13 +33,13 @@ Router.beforeEach((to, from, next) => {
   }
 
   // gambi para extensao
-  let query = location.search.slice(1)
-  let partes = query.split('&')
-  let data = {}
+  const query = location.search.slice(1)
+  const partes = query.split('&')
+  const data = {}
   partes.forEach(parte => {
-    let chaveValor = parte.split('=')
-    let chave = chaveValor[0]
-    let valor = chaveValor[1]
+    const chaveValor = parte.split('=')
+    const chave = chaveValor[0]
+    const valor = chaveValor[1]
     data[chave] = valor
   })
   if (data.modo === 'extensao' && !store.getters['login/isLogged']) {
@@ -98,10 +99,14 @@ Router.beforeEach((to, from, next) => {
               }
             })
         } else {
+          console.log('nada a removeToken')
+
           store.commit('login/removeToken')
           next('/')
         }
       } else {
+        console.log('nada a toggleLeft')
+
         Event.$emit('toggleLeft')
         next()
       }

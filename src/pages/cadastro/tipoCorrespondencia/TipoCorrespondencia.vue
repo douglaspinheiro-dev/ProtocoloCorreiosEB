@@ -71,8 +71,8 @@ import TipoCorrespondencia from './TipoCorrespondencia'
 import tipoCorrespondenciaService from './TipoCorrespondenciaService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 import VMoney from 'src/tools/money'
+import tools from 'src/tools'
 
 export default {
   name: 'Cadastro-de-TipoCorrespondencias',
@@ -106,7 +106,7 @@ export default {
       descricao: {
         required,
         isUnique (value) {
-          let descricao = value
+          const descricao = value
           // se for vazio, passo a bola pro validador required
           if (descricao === '') {
             return true
@@ -117,7 +117,7 @@ export default {
             opcao = 'alterar'
             id = this.tipoCorrespondencia.tipoCorrespondencia
           }
-          let retorno = confereRegistro('categoriasCorrespondencias', 'descricao', opcao, id, 'categoriaCorrespondencia', descricao)
+          const retorno = confereRegistro('categoriasCorrespondencias', 'descricao', opcao, id, 'categoriaCorrespondencia', descricao)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -137,59 +137,41 @@ export default {
     reset () {
       this.$v.tipoCorrespondencia.$reset()
       this.tipoCorrespondencia = new TipoCorrespondencia()
-      this.$router.push({name: 'tipoCorrespondencia'})
+      this.$router.push({ name: 'tipoCorrespondencia' })
       this.possoAlterarTipoCorrespondencia = false
       this.possoExcluirTipoCorrespondencia = false
     },
     carrega (id) {
       console.log('vou carregar o tipoCorrespondencia')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       tipoCorrespondenciaService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o tipoCorrespondencia com sucesso')
           this.tipoCorrespondencia = Object.assign({}, this.tipoCorrespondencia, result.data)
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.tipoCorrespondencia.$touch()
+      if (this.$v.tipoCorrespondencia.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.tipoCorrespondencia.$touch()
-        if (this.$v.tipoCorrespondencia.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.tipoCorrespondencia.tipoCorrespondencia && this.possoAlterarTipoCorrespondencia) {
           console.log('estou alterando o form')
           tipoCorrespondenciaService.altera(this.tipoCorrespondencia)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('tipoCorrespondencia alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.tipoCorrespondencia)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Tipo de Correspondência alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.tipoCorrespondencia,
+                id: 'tipoCorrespondencia'
               })
+              tools.Notify.positive('Tipo de Correspondência alterado com sucesso.')
             })
         } else if (!this.tipoCorrespondencia.tipoCorrespondencia && this.possoGravarTipoCorrespondencia) {
           tipoCorrespondenciaService.grava(this.tipoCorrespondencia)
@@ -198,16 +180,14 @@ export default {
               this.tipoCorrespondencia.tipoCorrespondencia = result.data.tipoCorrespondencia.tipoCorrespondencia
               this.tipoCorrespondencia.usuarioCriador = result.data.tipoCorrespondencia.usuarioCriador
               this.$router.push('/tipoCorrespondencias/tipoCorrespondencia/' + result.data.tipoCorrespondencia.tipoCorrespondencia)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Tipo de Correspondência criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.tipoCorrespondencia)
+              tools.Notify.positive('Tipo de Correspondência criado com sucesso.')
+
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.tipoCorrespondencia)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -219,28 +199,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           tipoCorrespondenciaService.apaga(this.tipoCorrespondencia.tipoCorrespondencia)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('tipoCorrespondencia removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Tipo de Correspondência removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Tipo de Correspondência removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.tipoCorrespondencia.tipoCorrespondencia,
+                id: 'tipoCorrespondencia'
               })
-              this.$root.$emit('removeRegistro', this.tipoCorrespondencia.tipoCorrespondencia)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -252,12 +227,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   },
   computed: {

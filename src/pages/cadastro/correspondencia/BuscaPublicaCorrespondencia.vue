@@ -209,10 +209,11 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators'
-var timer
+let timer
 import BuscaCorrespondencia from './BuscaCorrespondencia'
 import buscaCorrespondenciaService from './BuscaCorrespondenciaService'
 import Setor from 'src/pages/cadastro/setor/Setor'
+import tools from 'src/tools'
 
 export default {
   name: 'ConsultaCorrespondencia',
@@ -231,18 +232,18 @@ export default {
       tabelaSeparador: 'horizontal',
       colunasVisiveis: new BuscaCorrespondencia().setColunasVisiveisControleDeRegistroDePostagem(),
       optionsMes: [
-        {label: 'Janeiro', value: '01'},
-        {label: 'Fevereiro', value: '02'},
-        {label: 'Março', value: '03'},
-        {label: 'Abril', value: '04'},
-        {label: 'Maio', value: '05'},
-        {label: 'Junho', value: '06'},
-        {label: 'Julho', value: '07'},
-        {label: 'Agosto', value: '08'},
-        {label: 'Setembro', value: '09'},
-        {label: 'Outubro', value: '10'},
-        {label: 'Novembro', value: '11'},
-        {label: 'Dezembro', value: '12'}
+        { label: 'Janeiro', value: '01' },
+        { label: 'Fevereiro', value: '02' },
+        { label: 'Março', value: '03' },
+        { label: 'Abril', value: '04' },
+        { label: 'Maio', value: '05' },
+        { label: 'Junho', value: '06' },
+        { label: 'Julho', value: '07' },
+        { label: 'Agosto', value: '08' },
+        { label: 'Setembro', value: '09' },
+        { label: 'Outubro', value: '10' },
+        { label: 'Novembro', value: '11' },
+        { label: 'Dezembro', value: '12' }
       ],
       optionsAno: [],
       tabelaColunas: [
@@ -310,7 +311,7 @@ export default {
   methods: {
     setOptionsAno (anos) {
       if (anos.length > 0) {
-        let optionsAno = []
+        const optionsAno = []
         anos.map(ano => optionsAno.push(
           {
             label: `${ano.ano}`,
@@ -328,7 +329,7 @@ export default {
     procurar () {
       this.$v.buscaCorrespondencia.$touch()
       if (this.$v.buscaCorrespondencia.$error) {
-        this.$q.loading.hide()
+        tools.Loadings.hide()
         this.$q.dialog({
           title: 'Atenção',
           message: 'Alguns campos precisam ser corrigidos.'
@@ -336,17 +337,12 @@ export default {
         return
       }
       this.buscaCorrespondencia.mesCadastro = `${this.buscaCorrespondencia.ano}-${this.buscaCorrespondencia.mes}`
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
       clearTimeout(timer)
       timer = setTimeout(() => {
         buscaCorrespondenciaService.procuraDocumentoPublico(this.buscaCorrespondencia)
           .then(result => {
-            this.$q.loading.hide()
+            tools.Loadings.hide()
             console.log('buscaCorrespondencia alterado com sucesso')
             // this.listaDocumentos()
             console.log(result.data)
@@ -363,25 +359,20 @@ export default {
     gerarRelatorio () {
       this.$v.buscaCorrespondencia.$touch()
       if (this.$v.buscaCorrespondencia.$error) {
-        this.$q.loading.hide()
+        tools.Loadings.hide()
         this.$q.dialog({
           title: 'Atenção',
           message: 'Alguns campos precisam ser corrigidos.'
         }).then(() => { }).catch(() => { })
         return
       }
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
       this.buscaCorrespondencia.mesCadastro = `${this.buscaCorrespondencia.ano}-${this.buscaCorrespondencia.mes}`
       clearTimeout(timer)
       timer = setTimeout(() => {
         buscaCorrespondenciaService.relatorioPublico(this.buscaCorrespondencia)
           .then(result => {
-            this.$q.loading.hide()
+            tools.Loadings.hide()
             console.log('buscaCorrespondencia alterado com sucesso')
             // this.listaDocumentos()
             console.log(result.data)
@@ -396,7 +387,7 @@ export default {
       }, 2000)
     },
     preencheListaTabela (registros) {
-      let lista = []
+      const lista = []
       registros.forEach(buscaCorrespondencia => {
         lista.push({
           id: buscaCorrespondencia.buscaCorrespondencia,

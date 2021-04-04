@@ -107,6 +107,7 @@ import {
   minLength
 } from 'vuelidate/lib/validators'
 import usuarioService from 'src/pages/sistema/usuario/UsuarioService'
+import tools from 'src/tools/index'
 export default {
   name: 'Dashboard',
   components: {
@@ -161,7 +162,7 @@ export default {
         })
         usuarioService.alteraSenha('12345', this.form.senhaNova)
           .then(result => {
-            this.$q.loading.hide()
+            tools.Loadings.hide()
             if (result.status === 202) {
               this.$q.notify({
                 type: 'positive',

@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-md-12">
                   <q-field label="Nº" class="form-input" stack-label>
-                    {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
+                    {{protocoloEntrada.anoCadastro}}-{{protocoloEntrada.protocolo}} - {{protocoloEntrada.identificador}}
                   </q-field>
                 </div>
                 <div class="col-md-12">
@@ -80,6 +80,8 @@ import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import formSelect from 'src/components/form/select/QSelect'
 import botService from 'src/services/bot/BotService'
 import { Platform } from 'quasar'
+import tools from 'src/tools/index'
+
 export default {
   name: 'ProtocoloEntradas-Extensao',
   components: {
@@ -104,12 +106,12 @@ export default {
   },
   validations: {
     protocoloEntrada: {
-      tipoDocumento: {required},
-      numero: {required},
-      dataDocumento: {required},
-      origem: {required},
-      assunto: {required},
-      setor: {required}
+      tipoDocumento: { required },
+      numero: { required },
+      dataDocumento: { required },
+      origem: { required },
+      assunto: { required },
+      setor: { required }
     }
   },
   methods: {
@@ -147,17 +149,12 @@ export default {
       this.possoExcluirProtocoloEntrada = false
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.$v.protocoloEntrada.$touch()
         if (this.$v.protocoloEntrada.$error) {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           this.$q.dialog({
             title: 'Atenção',
             message: 'Alguns campos precisam ser corrigidos.'
@@ -175,7 +172,7 @@ export default {
             protocoloEntradaService
               .seleciona(result.data.protocoloEntrada.protocoloEntrada)
               .then(result => {
-                this.$q.loading.hide()
+                tools.Loadings.hide()
                 this.protocoloEntrada = Object.assign({}, this.protocoloEntrada, result.data)
                 this.$q.notify({
                   type: 'positive',
@@ -201,7 +198,7 @@ export default {
       return ''
     },
     tipoDocumentoDescricao: function () {
-      let descricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
+      const descricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
       console.log(descricao)
       if (descricao.length !== 0) {
         return descricao[0].label
@@ -227,6 +224,7 @@ export default {
         this.sugereDestino(result.protocoloEntrada.assunto)
         this.protocoloEntrada.dataDocumento = result.protocoloEntrada.dataDocumento
         this.protocoloEntrada.numero = result.protocoloEntrada.numero
+        this.protocoloEntrada.identificador = result.protocoloEntrada.identificador
         this.protocoloEntrada.origem = result.protocoloEntrada.origem
         this.protocoloEntrada.tipoDocumento = result.protocoloEntrada.tipoDocumento
         console.log('this.protocoloEntrada ', this.protocoloEntrada)

@@ -9,6 +9,7 @@
     <!-- <template v-slot:control> -->
       <q-select
         :class="classe" :label="label"
+        :hint="hint"
         :error-message="errorMessage"
         :error="error"
         v-model="select"
@@ -29,11 +30,6 @@
               Sem registros encontrados
             </q-item-section>
           </q-item>
-        </template>
-        <template v-slot:hint>
-          <div>
-            <slot name="embutir"/>
-          </div>
         </template>
       </q-select>
     <!-- </template> -->
@@ -91,7 +87,7 @@ export default {
     }
   },
   watch: {
-    'value': {
+    value: {
       handler: function (value) {
         if (value) {
           this.select = this.options.filter(v => v.value === value)[0]
@@ -102,7 +98,7 @@ export default {
       deep: true,
       immediate: true
     },
-    'options': {
+    options: {
       handler: function (options) {
         for (let index = 0; index < options.length; index++) {
           const opt = options[index]

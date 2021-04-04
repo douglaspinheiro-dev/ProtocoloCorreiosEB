@@ -2,7 +2,7 @@ import http from 'src/boot/axios'
 import {
   Dialog
 } from 'quasar'
-var timer
+let timer
 const confereRegistro = function (tabela, campo, opcao, id, campoId, valor, campo2, valor2) {
   return new Promise((resolve, reject) => {
     clearTimeout(timer)

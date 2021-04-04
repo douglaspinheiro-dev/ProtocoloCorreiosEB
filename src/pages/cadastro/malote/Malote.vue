@@ -65,6 +65,11 @@
                       v-model="malote.rota"
                       :options="optionsRota"
                       @input="$v.malote.rota.$touch()"
+
+                      :service="rotaService"
+                      methodService="preencheSelect"
+                      :optSelecionado="malote._rota"
+
                       required
                     />
                     <q-linear-progress indeterminate v-show="optionsLoading"/>
@@ -97,12 +102,13 @@ import formMaloteDocumento from './MaloteDocumento.vue'
 import confereRegistro from 'src/services/confereRegistro'
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 // import RadioButton from 'src/components/form/radios/RadioButton'
-import {mask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
 import Rota from 'src/pages/cadastro/rota/Rota'
-import formSelect from 'src/components/form/select/QSelect'
+import formSelect from 'src/components/form/select/qSelect-lazy'
 import buscaMaloteService from 'src/pages/cadastro/malote/BuscaMaloteService'
+import rotaService from 'src/pages/cadastro/rota/RotaService'
+import tools from 'src/tools'
 
 export default {
   name: 'Malote',
@@ -123,7 +129,8 @@ export default {
       selectedTab: 'tab-1',
       optionsRota: [],
       optionsLoading: false,
-      timer: ''
+      timer: '',
+      rotaService
     }
   },
   validations: {
@@ -132,7 +139,7 @@ export default {
       data: { required },
       lacre: {
         isUnique (value) {
-          let lacre = value
+          const lacre = value
           // se for vazio, passo a bola pro validador required
           if (lacre === '') {
             return true
@@ -143,7 +150,7 @@ export default {
             opcao = 'alterar'
             id = this.malote.malote
           }
-          let retorno = confereRegistro('malotes', 'lacre', opcao, id, 'malote', lacre)
+          const retorno = confereRegistro('malotes', 'lacre', opcao, id, 'malote', lacre)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -171,7 +178,7 @@ export default {
     reset () {
       this.$v.malote.$reset()
       this.malote = new Malote()
-      this.$router.push({name: 'malote'})
+      this.$router.push({ name: 'malote' })
       this.possoAlterarMalote = false
       this.possoExcluirMalote = false
       this.possoAlterarMaloteDocumento = false
@@ -179,23 +186,24 @@ export default {
     },
     carrega (id) {
       console.log('vou carregar a malote')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       maloteService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o malote com sucesso')
           this.malote = Object.assign({}, this.malote, result.data)
+          this.malote._rota = {
+            value: result.data.rota,
+            label: result.data.rotaDescricao
+          }
           console.log(result.data)
 
-          this.$root.$emit('alteraUnicoRegistro', this.malote)
-
+          // this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+          //   registro: this.malote,
+          //   id: 'malote'
+          // })
           this.confereAlterarExcluir()
           this.selectedTab = 'tab-1'
           if (this.$refs.formMaloteDocumento) {
@@ -205,36 +213,23 @@ export default {
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.malote.$touch()
+      if (this.$v.malote.$invalid) return tools.Dialogs.formInvalido()
+
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.malote.$touch()
-        if (this.$v.malote.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.malote.malote && this.possoAlterarMalote) {
           console.log('estou alterando o form')
           maloteService.altera(this.malote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('malote alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.malote)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Malote alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.malote,
+                id: 'malote'
               })
+              tools.Notify.positive('Malote alterado com sucesso.')
             })
         } else if (!this.malote.malote && this.possoGravarMalote) {
           maloteService.grava(this.malote)
@@ -245,19 +240,17 @@ export default {
               this.malote.malote = result.data.malote.malote
               this.malote.usuarioCriador = result.data.malote.usuarioCriador
 
-              let rotaDescricao = this.optionsRota.filter(rota => rota.value === this.malote.rota)
+              const rotaDescricao = this.optionsRota.filter(rota => rota.value === this.malote.rota)
               this.malote.rotaDescricao = rotaDescricao[0].label
               this.$router.push('/malotes/malote/' + result.data.malote.malote)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Malote criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.malote)
+              tools.Notify.positive('Malote criado com sucesso.')
+
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.malote)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -269,29 +262,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           maloteService.apaga(this.malote.malote)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('malote removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Malote removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Malote removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.malote.malote,
+                id: 'malote'
               })
-              this.$root.$emit('removeRegistro', this.malote.malote)
-              // this.$store.commit('menuRight/removeRegistro', this.id)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -304,7 +291,7 @@ export default {
         ano: this.malote.anoCadastro
       })
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('buscaMalote alterado com sucesso')
           // this.listaDocumentos()
           console.log(result.data)
@@ -325,23 +312,20 @@ export default {
     possoAbrirMaloteDocumento: () => permissoes.abrir('maloteDocumento')
   },
   mounted () {
-    this.optionsLoading = true
-    maloteService.getOptions()
-      .then(result => {
-        this.optionsLoading = false
-        this.optionsRota = this.rota.setOptions(result.data.rotas)
-      })
+    // this.optionsLoading = true
+    // maloteService.getOptions()
+    //   .then(result => {
+    //     this.optionsLoading = false
+    //     this.optionsRota = this.rota.setOptions(result.data.rotas)
+    //     console.log('montado')
+    //   })
   },
   props: {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   }
 }

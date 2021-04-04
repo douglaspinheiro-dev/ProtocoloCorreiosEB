@@ -12,7 +12,7 @@ export default class TipoCobranca {
     if (tiposCobrancas.length > 0) {
       optionsTipoCobranca.push(
         {
-          label: `-------`,
+          label: '-------',
           value: '',
           valor: 0.00
         }

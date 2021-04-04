@@ -38,7 +38,7 @@ class UsuarioDao extends Dao
 
   public static function alteraSenha($dados)
   {
-    $dados['password'] = Hash::make($dados['password']);
+    // $dados['password'] = Hash::make($dados['password']);
     return DB::update("UPDATE usuarios SET password = '{$dados['password']}', usuarioAlterador = {$dados['usuarioAlterador']}, primeiroLogin = 0 WHERE usuario = {$dados['id']}");
   }
 

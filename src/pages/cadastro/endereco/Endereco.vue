@@ -158,12 +158,12 @@ import Endereco from './Endereco'
 import enderecoService from './EnderecoService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 import cepService from 'src/services/cep/CepService'
 import optionsEstados from 'src/services/classes/EstadosBr'
 import AwesomeMask from 'awesome-mask'
 import Rota from 'src/pages/cadastro/rota/Rota'
 import formSelect from 'src/components/form/select/QSelect'
+import tools from 'src/tools'
 
 export default {
   name: 'Cadastro-de-Enderecos',
@@ -173,7 +173,7 @@ export default {
     formSelect
   },
   directives: {
-    'mask': AwesomeMask
+    mask: AwesomeMask
   },
   data () {
     return {
@@ -191,11 +191,12 @@ export default {
   },
   validations: {
     endereco: {
-      codigo: {required},
+      malote: { required },
+      codigo: { required },
       descricao: {
         required,
         isUnique (value) {
-          let descricao = value
+          const descricao = value
           // se for vazio, passo a bola pro validador required
           if (descricao === '') {
             return true
@@ -206,7 +207,7 @@ export default {
             opcao = 'alterar'
             id = this.endereco.endereco
           }
-          let retorno = confereRegistro('enderecos', 'descricao', opcao, id, 'endereco', descricao)
+          const retorno = confereRegistro('enderecos', 'descricao', opcao, id, 'endereco', descricao)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -240,7 +241,7 @@ export default {
           cepService
             .procura(this.endereco.cep, this.cepLoading)
             .then(result => {
-              let cep = result
+              const cep = result
               this.endereco.logradouro = cep.logradouro
               this.endereco.bairro = cep.bairro
               this.endereco.cidade = cep.localidade
@@ -250,11 +251,7 @@ export default {
             .catch(error => {
               this.cepLoading = false
               console.log(error)
-              this.$q.notify({
-                type: 'warning',
-                message: 'Cep não encontrado',
-                timeout: 2000
-              })
+              tools.Notify.warning('Cep não encontrado')
             })
         }
       }, 300)
@@ -263,23 +260,18 @@ export default {
       this.$v.endereco.$reset()
       this.endereco = new Endereco()
       this.botaoSalvarAlterar = 'Gravar'
-      this.$router.push({name: 'endereco'})
+      this.$router.push({ name: 'endereco' })
       this.possoAlterarEndereco = false
       this.possoExcluirEndereco = false
     },
     carrega (id) {
       console.log('vou carregar o endereco')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       enderecoService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o endereco com sucesso')
           this.endereco = Object.assign({}, this.endereco, result.data)
           this.botaoSalvarAlterar = 'Alterar'
@@ -287,36 +279,23 @@ export default {
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.endereco.$touch()
+      if (this.$v.endereco.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.endereco.$touch()
-        if (this.$v.endereco.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.endereco.endereco && this.possoAlterarEndereco) {
           console.log('estou alterando o form')
           enderecoService.altera(this.endereco)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('endereco alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.endereco)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Endereco alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.endereco,
+                id: 'endereco'
               })
+              tools.Notify.positive('Endereco alterado com sucesso')
             })
         } else if (!this.endereco.endereco && this.possoGravarEndereco) {
           enderecoService.grava(this.endereco)
@@ -325,16 +304,14 @@ export default {
               this.endereco.endereco = result.data.endereco.endereco
               this.endereco.usuarioCriador = result.data.endereco.usuarioCriador
               this.$router.push('/enderecos/endereco/' + result.data.endereco.endereco)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Endereco criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.endereco)
+              tools.Notify.positive('Endereco criado com sucesso')
+
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.endereco)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -346,28 +323,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           enderecoService.apaga(this.endereco.endereco)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('endereco removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Endereco removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Endereco removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.endereco.endereco,
+                id: 'endereco'
               })
-              this.$root.$emit('removeRegistro', this.endereco.endereco)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -380,12 +352,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   },
   computed: {

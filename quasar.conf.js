@@ -134,6 +134,8 @@ module.exports = function (ctx) {
         }
         : { // and on build (production):
           API: JSON.stringify('http://10.1.9.21/api')
+          // API: JSON.stringify('https://www.correio1rm.com.br/api')
+          // API: JSON.stringify('https://api.correio1rm.com.br')
         }
     },
     devServer: {

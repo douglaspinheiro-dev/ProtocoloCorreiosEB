@@ -21,7 +21,7 @@ class RotaEnderecoService extends Service {
   }
 
   static grava (rotaEndereco) {
-    return this.post(`rotasenderecos/rotaendereco`, rotaEndereco)
+    return this.post('rotasenderecos/rotaendereco', rotaEndereco)
   }
 
   static altera (rotaEndereco) {
@@ -31,8 +31,9 @@ class RotaEnderecoService extends Service {
   static apaga (obj) {
     return this.delete(`rotasenderecos/rotaendereco/${obj.rotaEndereco}`)
   }
+
   static getOptions () {
-    return this.get(`rotasenderecos/options`)
+    return this.get('rotasenderecos/options')
   }
 }
 export default RotaEnderecoService

@@ -107,18 +107,18 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
-import {mask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
 import MaloteDocumento from './MaloteDocumento'
 import maloteDocumentoService from './MaloteDocumentoService'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import RotaEndereco from 'src/pages/cadastro/rota/RotaEndereco'
 import formSelect from 'src/components/form/select/QSelect'
+import tools from 'src/tools'
 
 export default {
   name: 'MaloteDocumento',
-  components: {formSelect},
+  components: { formSelect },
   directives: {
     mask
   },
@@ -195,17 +195,12 @@ export default {
     },
     carrega (id) {
       console.log('vou carregar o maloteDocumento')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       maloteDocumentoService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o maloteDocumento com sucesso')
           this.maloteDocumento = Object.assign({}, this.maloteDocumento, result.data)
           this.botaoSalvarAlterar = 'Alterar'
@@ -213,56 +208,38 @@ export default {
     },
     salvarAlterar () {
       this.maloteDocumento.rota = this.rota
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+
+      this.$v.maloteDocumento.$touch()
+      if (this.$v.maloteDocumento.$invalid) return tools.Dialogs.formInvalido()
+
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.maloteDocumento.$touch()
-        if (this.$v.maloteDocumento.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
         if (this.maloteDocumento.maloteDocumento && this.possoAlterarMaloteDocumento) {
           console.log('estou alterando o form')
           maloteDocumentoService.altera(this.maloteDocumento)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('maloteDocumento alterado com sucesso')
               this.listaDocumentos(this.malote)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Documento do malote alterado com sucesso.',
-                timeout: 5000
-              })
+              tools.Notify.positive('Documento do malote alterado com sucesso.')
             })
         } else if (!this.maloteDocumento.maloteDocumento && this.possoGravarMaloteDocumento) {
           this.maloteDocumento.malote = this.malote
           maloteDocumentoService.grava(this.maloteDocumento)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('maloteDocumento criado com sucesso')
               this.maloteDocumento.maloteDocumento = result.data.maloteDocumento
               this.maloteDocumento.usuarioCriador = result.data.usuarioCriador
-              this.$q.notify({
-                type: 'positive',
-                message: 'Documento do malote criado com sucesso.',
-                timeout: 5000
-              })
+              tools.Notify.positive('Documento do malote criado com sucesso.')
 
               // limpando o form
               this.reset()
               this.preencheListaTabela(result.data.maloteDocumento.lista)
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -274,29 +251,21 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           maloteDocumentoService.apaga(this.maloteDocumento.maloteDocumento)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('maloteDocumento removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'MaloteDocumento removido com sucesso.',
-                timeout: 5000
-              })
-              let idRegistro = this.listaDeMaloteDocumentos.filter(registro => registro.id === this.maloteDocumento.maloteDocumento)
+              tools.Notify.negative('Documento do malote removido com sucesso.')
+
+              const idRegistro = this.listaDeMaloteDocumentos.filter(registro => registro.id === this.maloteDocumento.maloteDocumento)
               this.listaDeMaloteDocumentos.splice(this.listaDeMaloteDocumentos.indexOf(idRegistro[0]), 1)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     listaDocumentos (malote) {
@@ -310,7 +279,7 @@ export default {
         })
     },
     preencheListaTabela (registros) {
-      let lista = []
+      const lista = []
       registros.forEach(maloteDocumento => {
         lista.push({
           id: maloteDocumento.maloteDocumento,

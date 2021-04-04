@@ -8,7 +8,6 @@ use App\Http\Dao\TipoDocumentoDao;
 use App\Http\Dao\SetorDao;
 use App\Http\Dao\RotaEnderecoDao;
 use Illuminate\Http\Request;
-use App\ChromePhp;
 
 
 class MaloteDocumentoController extends Controller
@@ -85,6 +84,7 @@ class MaloteDocumentoController extends Controller
 
   public function options($rota)
   {
+
     $tipoDocumento = TipoDocumentoDao::options();
     $setor = SetorDao::options();
     $rotaEndereco = RotaEnderecoDao::options($rota);

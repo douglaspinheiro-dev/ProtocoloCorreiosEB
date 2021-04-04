@@ -5,7 +5,7 @@ class PermissoesService extends Service {
   }
 
   static grava (grupoUsuario) {
-    return this.post(`grupousuarios/permissoes`, grupoUsuario)
+    return this.post('grupousuarios/permissoes', grupoUsuario)
   }
 
   static altera (grupoUsuario) {

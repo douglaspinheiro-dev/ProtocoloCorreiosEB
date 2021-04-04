@@ -164,6 +164,7 @@
 import recuperarSenhaService from 'src/services/recuperarSenha/RecuperarSenhaService'
 import loginService from 'src/services/login/LoginService'
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
+import tools from 'src/tools/index'
 export default {
   name: 'Login',
   data () {
@@ -269,7 +270,7 @@ export default {
       })
       loginService.logar(this.form)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log(result.data)
           if (result.status === 200) {
             // confirma token

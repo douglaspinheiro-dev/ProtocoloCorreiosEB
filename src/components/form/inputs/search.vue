@@ -41,7 +41,7 @@ export default {
     }
   },
   created () {
-    let self = this
+    const self = this
     this.$root.$on('trocaTextoDaPesquisa', (obj) => {
       self.textoDaPesquisa = obj.texto
       self.icone = obj.icone

@@ -16,8 +16,9 @@ $router->get('/api', function () use ($router) {
 });
 
 $router->get('/', function () use ($router) {
-    // return view('./web/index.html');
-    return $router->app->version();
+    return redirect()->to('./web/index.html');
+
+    // return $router->app->version();
 
 });
 
@@ -30,6 +31,7 @@ $router->get('/sysprot', function () use ($router) {
 Route::get('/api/pdfjs/web/viewer.html', function () {
     return file_get_contents(public_path().'./pdfjs/web/viewer.html');
 });
+
 $router->post('/api/auth/login', 'AuthController@authenticate');
 $router->post('/api/auth/logged', 'AuthController@isLogged');
 $router->get('/api/busca-correspondencias/options/publico', 'BuscaCorrespondenciaController@options');
@@ -234,7 +236,7 @@ $router->group(
             function() use ($router) {
                 $router->delete('/api/malotedocumentos/malotedocumento/{id}', 'MaloteDocumentoController@apaga');
                 $router->get('/api/malotedocumentos/malote/{id}', 'MaloteDocumentoController@lista');
-                $router->get('/api/malotedocumentos/options/{id}', 'MaloteDocumentoController@options');
+                $router->get('/api/malotedocumentos/options/{rota}', 'MaloteDocumentoController@options');
                 $router->get('/api/malotedocumentos/malotedocumento/{id}', 'MaloteDocumentoController@seleciona');
                 $router->post('/api/malotedocumentos/malotedocumento', 'MaloteDocumentoController@salva');
                 $router->put('/api/malotedocumentos/malotedocumento/{id}', 'MaloteDocumentoController@altera');

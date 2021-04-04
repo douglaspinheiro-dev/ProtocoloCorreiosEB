@@ -11,11 +11,11 @@ class UsuarioService extends Service {
   }
 
   static grava (usuario) {
-    return this.post(`usuarios/usuario`, usuario)
+    return this.post('usuarios/usuario', usuario)
   }
 
   static gravaAcessoEmpresa (acessoEmpresa) {
-    return this.post(`usuarios/acessoempresa`, acessoEmpresa)
+    return this.post('usuarios/acessoempresa', acessoEmpresa)
   }
 
   static altera (usuario) {
@@ -31,7 +31,7 @@ class UsuarioService extends Service {
   }
 
   static alteraSenha (senhaAtual, senhaNova, grupo) {
-    return this.put(`usuarios/senha`, {
+    return this.put('usuarios/senha', {
       senhaAtual: senhaAtual,
       senhaNova: senhaNova,
       grupo: grupo
@@ -39,7 +39,7 @@ class UsuarioService extends Service {
   }
 
   static alteraSenhaOutroUsuario (id, password, usuarioCriador) {
-    return this.put(`usuarios/trocasenha`, {
+    return this.put('usuarios/trocasenha', {
       id,
       password,
       usuarioCriador
@@ -47,7 +47,7 @@ class UsuarioService extends Service {
   }
 
   static buscalogin (login) {
-    return this.get(`usuarios/buscalogin`, {
+    return this.get('usuarios/buscalogin', {
       params: {
         login: login
       }
@@ -65,7 +65,7 @@ class UsuarioService extends Service {
   }
 
   static getOptions () {
-    return this.get(`usuarios/options`)
+    return this.get('usuarios/options')
   }
 }
 export default UsuarioService

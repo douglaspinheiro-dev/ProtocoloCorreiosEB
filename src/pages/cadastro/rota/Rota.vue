@@ -85,8 +85,8 @@ import formRotaEndereco from './RotaEndereco.vue'
 import confereRegistro from 'src/services/confereRegistro'
 // import AwesomeMask from 'awesome-mask'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
-import {mask} from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
+import tools from 'src/tools'
 
 export default {
   name: 'Rota',
@@ -110,11 +110,11 @@ export default {
   },
   validations: {
     rota: {
-      descricao: {required},
+      descricao: { required },
       codigo: {
         required,
         isUnique (value) {
-          let codigo = value
+          const codigo = value
           // se for vazio, passo a bola pro validador required
           if (codigo === '') {
             return true
@@ -125,7 +125,7 @@ export default {
             opcao = 'alterar'
             id = this.rota.rota
           }
-          let retorno = confereRegistro('rotas', 'codigo', opcao, id, 'rota', codigo)
+          const retorno = confereRegistro('rotas', 'codigo', opcao, id, 'rota', codigo)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -153,7 +153,7 @@ export default {
     reset () {
       this.$v.rota.$reset()
       this.rota = new Rota()
-      this.$router.push({name: 'rota'})
+      this.$router.push({ name: 'rota' })
       this.possoAlterarRota = false
       this.possoExcluirRota = false
       this.possoAlterarRotaEndereco = false
@@ -161,17 +161,12 @@ export default {
     },
     carrega (id) {
       console.log('vou carregar a rota')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       rotaService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o rota com sucesso')
           this.rota = Object.assign({}, this.rota, result.data)
           this.confereAlterarExcluir()
@@ -182,36 +177,23 @@ export default {
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.rota.$touch()
+      if (this.$v.rota.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.rota.$touch()
-        if (this.$v.rota.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.rota.rota && this.possoAlterarRota) {
           console.log('estou alterando o form')
           rotaService.altera(this.rota)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('rota alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.rota)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Rota alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.rota,
+                id: 'rota'
               })
+              tools.Notify.positive('Rota alterada com sucesso.')
             })
         } else if (!this.rota.rota && this.possoGravarRota) {
           rotaService.grava(this.rota)
@@ -220,16 +202,13 @@ export default {
               this.rota.rota = result.data.rota.rota
               this.rota.usuarioCriador = result.data.rota.usuarioCriador
               this.$router.push('/rotas/rota/' + result.data.rota.rota)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Rota criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.rota)
+              tools.Notify.positive('Rota criada com sucesso.')
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.rota)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -241,29 +220,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           rotaService.apaga(this.rota.rota)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('rota removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Rota removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Rota removida com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.rota.rota,
+                id: 'rota'
               })
-              this.$root.$emit('removeRegistro', this.rota.rota)
-              // this.$store.commit('menuRight/removeRegistro', this.id)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -279,12 +252,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   }
 }

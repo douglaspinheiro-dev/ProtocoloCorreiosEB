@@ -10,5 +10,6 @@ export default class ProtocoloEntrada {
     this.setor = obj.setor || ''
     this.dataDocumento = obj.dataDocumento || ''
     this.usuarioCriador = obj.usuarioCriador || ''
+    this.identificador = obj.identificador || ''
   }
 }

@@ -8,6 +8,7 @@ export default class Rota {
   }
 
   setOptions (rotas) {
+    console.log('rotas', rotas)
     let optionsRota = []
     if (rotas.length > 0) {
       rotas.map(option => optionsRota.push(

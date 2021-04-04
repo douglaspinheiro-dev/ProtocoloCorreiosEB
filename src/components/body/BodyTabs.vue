@@ -36,7 +36,7 @@ export default {
     }
   },
   watch: {
-    'tabAtiva': {
+    tabAtiva: {
       handler: function (id) {
         if (id) {
           this.tab = id

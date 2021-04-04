@@ -20,7 +20,7 @@ export const setSessaoInvalida = (state, valor) => {
 }
 
 export const setAuth = (state, token) => {
-  http.defaults.headers.common['token'] = token
+  http.defaults.headers.common.token = token
 }
 
 export const setLinks = (state, links) => {

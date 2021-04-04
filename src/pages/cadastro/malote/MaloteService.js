@@ -1,10 +1,10 @@
 import Service from 'src/services/Service'
 const rotasMalote = {
-  malote: `/malotes`,
-  grava: `/malotes/malote`,
-  lista: `/malotes`,
+  malote: '/malotes',
+  grava: '/malotes/malote',
+  lista: '/malotes',
   cadastro: (id) => `/malotes/malote/${id}`,
-  options: `/malotes/options`
+  options: '/malotes/options'
 }
 
 class MaloteService extends Service {
@@ -39,8 +39,17 @@ class MaloteService extends Service {
   static apaga (id) {
     return this.delete(rotasMalote.cadastro(id))
   }
+
   static getOptions () {
     return this.get(rotasMalote.options)
+      .then(result => {
+        console.log('result', result.data.rotas)
+        return result.data.rotas.map(rota => ({
+          label: rota.descricao,
+          value: rota.rota
+        }))
+        // return result.data.rotas
+      })
   }
 }
 export default MaloteService

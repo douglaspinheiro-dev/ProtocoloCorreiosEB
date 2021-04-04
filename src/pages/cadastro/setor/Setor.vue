@@ -72,7 +72,7 @@ import Setor from './Setor'
 import setorService from './SetorService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
+import tools from 'src/tools'
 
 export default {
   name: 'Cadastro-de-Setores',
@@ -91,11 +91,11 @@ export default {
   },
   validations: {
     setor: {
-      codigo: {required},
+      codigo: { required },
       descricao: {
         required,
         isUnique (value) {
-          let descricao = value
+          const descricao = value
           // se for vazio, passo a bola pro validador required
           if (descricao === '') {
             return true
@@ -106,7 +106,7 @@ export default {
             opcao = 'alterar'
             id = this.setor.setor
           }
-          let retorno = confereRegistro('categoriasDocumentos', 'descricao', opcao, id, 'categoriaDocumento', descricao)
+          const retorno = confereRegistro('categoriasDocumentos', 'descricao', opcao, id, 'categoriaDocumento', descricao)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -129,59 +129,40 @@ export default {
     reset () {
       this.$v.setor.$reset()
       this.setor = new Setor()
-      this.$router.push({name: 'setor'})
+      this.$router.push({ name: 'setor' })
       this.possoAlterarSetor = false
       this.possoExcluirSetor = false
     },
     carrega (id) {
       console.log('vou carregar o setor')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       setorService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o setor com sucesso')
           this.setor = Object.assign({}, this.setor, result.data)
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.setor.$touch()
+      if (this.$v.setor.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.setor.$touch()
-        if (this.$v.setor.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.setor.setor && this.possoAlterarSetor) {
           console.log('estou alterando o form')
           setorService.altera(this.setor)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('setor alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.setor)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Setor alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.setor,
+                id: 'setor'
               })
+              tools.Notify.positive('Setor Alterado com sucesso.')
             })
         } else if (!this.setor.setor && this.possoGravarSetor) {
           setorService.grava(this.setor)
@@ -190,16 +171,13 @@ export default {
               this.setor.setor = result.data.setor.setor
               this.setor.usuarioCriador = result.data.setor.usuarioCriador
               this.$router.push('/setores/setor/' + result.data.setor.setor)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Setor criado com sucesso.',
-                timeout: 5000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.setor)
+              tools.Notify.positive('Setor criado com sucesso.')
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.setor)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -211,28 +189,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           setorService.apaga(this.setor.setor)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('setor removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Setor removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Setor removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.setor.setor,
+                id: 'setor'
               })
-              this.$root.$emit('removeRegistro', this.setor.setor)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -244,12 +217,8 @@ export default {
     id: {}
   },
   watch: {
-    '$route.params.id': {
-      handler: function (id) {
-        if (id) { this.carrega(id) }
-      },
-      deep: true,
-      immediate: true
+    id: function (id) {
+      if (id) this.carrega(id)
     }
   },
   computed: {

@@ -15,12 +15,13 @@ class GrupoUsuarioService extends Service {
   static lista () {
     return this.get('grupousuarios/lista')
   }
+
   static seleciona (id) {
     return this.get(`grupousuarios/grupousuario/${id}`)
   }
 
   static grava (grupoUsuario) {
-    return this.post(`grupousuarios/grupousuario`, grupoUsuario)
+    return this.post('grupousuarios/grupousuario', grupoUsuario)
   }
 
   static altera (grupoUsuario) {

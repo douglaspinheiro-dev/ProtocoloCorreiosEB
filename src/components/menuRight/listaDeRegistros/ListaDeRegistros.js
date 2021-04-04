@@ -2,9 +2,9 @@ import store from 'src/store'
 export const ListaDeRegistrosService = {
 
   atualizaLista (obj) {
-    let inicio = store.getters['listaDeRegistros/getInicio']
-    let fim = store.getters['listaDeRegistros/getFim']
-    let busca = store.getters['listaDeRegistros/getBusca']
+    const inicio = store.getters['listaDeRegistros/getInicio']
+    const fim = store.getters['listaDeRegistros/getFim']
+    const busca = store.getters['listaDeRegistros/getBusca']
     console.log('vou atualizar a lista')
     obj.service.procura(busca, inicio, fim)
       .then(result => {

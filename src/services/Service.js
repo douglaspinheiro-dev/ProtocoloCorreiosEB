@@ -1,16 +1,17 @@
 import http from 'src/boot/axios'
 import { Dialog, Loading } from 'quasar'
-import Notify from 'src/tools/Notify'
+import Notify from 'src/tools/notify'
+import tools from '../tools/index'
 const notificaErro = (error, rota) => {
   console.log(error)
 
   Loading.hide()
   if (error.response.status === 401) {
-    Notify.semPermissao()
+    tools.Notify.semPermissao()
   } else {
     Dialog.create({
       title: 'Atenção',
-      message: `Alguma coisa deu errado, contate o suporte e informe o erro:`
+      message: 'Alguma coisa deu errado, contate o suporte e informe o erro:'
     })
     console.warn('Rota :', rota)
     console.warn(error.response.data)

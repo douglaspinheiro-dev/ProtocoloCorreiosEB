@@ -11,7 +11,7 @@ class TipoCobrancaService extends Service {
   }
 
   static grava (tipocobranca) {
-    return this.post(`tipocobrancas/tipocobranca`, tipocobranca)
+    return this.post('tipocobrancas/tipocobranca', tipocobranca)
   }
 
   static altera (tipoCobranca) {

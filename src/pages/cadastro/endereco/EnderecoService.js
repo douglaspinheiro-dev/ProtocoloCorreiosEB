@@ -11,7 +11,7 @@ class EnderecoService extends Service {
   }
 
   static grava (endereco) {
-    return this.post(`enderecos/endereco`, endereco)
+    return this.post('enderecos/endereco', endereco)
   }
 
   static altera (endereco) {
@@ -21,11 +21,13 @@ class EnderecoService extends Service {
   static apaga (id) {
     return this.delete(`enderecos/endereco/${id}`)
   }
+
   static seleciona (id) {
     return this.get(`enderecos/endereco/${id}`)
   }
+
   static getOptions () {
-    return this.get(`enderecos/options`)
+    return this.get('enderecos/options')
   }
 
   static buscaEnderecoPorCodigo (id) {

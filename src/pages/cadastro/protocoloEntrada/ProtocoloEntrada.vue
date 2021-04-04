@@ -28,7 +28,12 @@
                   {{protocoloEntrada.anoCadastro+'-'+protocoloEntrada.protocolo}}
                 </q-field>
               </div>
-              <div class="col-sm-12 col-xs-12 col-md-4">
+              <div class="col-sm-12 col-xs-12 col-md-2">
+                <q-input label="Identificador"
+                  class="form-input"
+                  autocomplete="off" type="tel" v-model="protocoloEntrada.identificador" name="number"/>
+              </div>
+              <div class="col-sm-12 col-xs-12 col-md-3">
                   <form-select
                     label="Tipo de Documento"
                     :error="$v.protocoloEntrada.tipoDocumento.$error"
@@ -42,7 +47,7 @@
                   />
                   <q-linear-progress indeterminate v-show="optionsLoading"/>
               </div>
-              <div class="col-sm-12 col-xs-12 col-md-3">
+              <div class="col-sm-12 col-xs-12 col-md-2">
                 <q-input label="Número"
                   class="form-input"
                   hint="Obrigatório"
@@ -135,12 +140,13 @@ import { required } from 'vuelidate/lib/validators'
 import ProtocoloEntrada from './ProtocoloEntrada'
 import protocoloEntradaService from './ProtocoloEntradaService'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 import TipoDocumento from 'src/pages/cadastro/tipoDocumento/TipoDocumento'
 import Endereco from 'src/pages/cadastro/endereco/Endereco'
 import Setor from 'src/pages/cadastro/setor/Setor'
 import formSelect from 'src/components/form/select/QSelect'
 import botService from 'src/services/bot/BotService'
+import tools from 'src/tools'
+
 export default {
   name: 'Cadastro-de-ProtocoloEntradas',
   components: {
@@ -171,12 +177,12 @@ export default {
   },
   validations: {
     protocoloEntrada: {
-      tipoDocumento: {required},
-      numero: {required},
-      dataDocumento: {required},
-      origem: {required},
-      assunto: {required},
-      setor: {required}
+      tipoDocumento: { required },
+      numero: { required },
+      dataDocumento: { required },
+      origem: { required },
+      assunto: { required },
+      setor: { required }
     }
   },
   methods: {
@@ -191,11 +197,11 @@ export default {
     },
     preparaDocSemelhante () {
       this.$v.protocoloEntrada.$reset()
-      this.$router.push({name: 'protocoloEntrada'})
+      this.$router.push({ name: 'protocoloEntrada' })
       this.possoAlterarProtocoloEntrada = false
       this.possoExcluirProtocoloEntrada = false
 
-      let protocolo = new ProtocoloEntrada(this.protocoloEntrada)
+      const protocolo = new ProtocoloEntrada(this.protocoloEntrada)
       protocolo.protocolo = ''
       protocolo.protocoloEntrada = ''
       protocolo.numero = ''
@@ -228,7 +234,7 @@ export default {
     reset () {
       this.$v.protocoloEntrada.$reset()
       this.protocoloEntrada = new ProtocoloEntrada()
-      this.$router.push({name: 'protocoloEntrada'})
+      this.$router.push({ name: 'protocoloEntrada' })
       this.possoAlterarProtocoloEntrada = false
       this.possoExcluirProtocoloEntrada = false
       this.destinos = []
@@ -236,57 +242,38 @@ export default {
     carrega (id) {
       this.destinos = []
       console.log('vou carregar o protocoloEntrada')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       protocoloEntradaService
         .seleciona(id)
         .then(result => {
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o protocoloEntrada com sucesso')
           this.protocoloEntrada = Object.assign({}, this.protocoloEntrada, result.data)
-          this.$root.$emit('alteraUnicoRegistro', this.protocoloEntrada)
 
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.protocoloEntrada.$touch()
+      if (this.$v.protocoloEntrada.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.protocoloEntrada.$touch()
-        if (this.$v.protocoloEntrada.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          })
-          return
-        }
-
         if (this.protocoloEntrada.protocoloEntrada && this.possoAlterarProtocoloEntrada) {
           console.log('estou alterando o form')
           protocoloEntradaService.altera(this.protocoloEntrada)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('protocoloEntrada alterado com sucesso')
-              let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
+              const tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
               this.protocoloEntrada.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
-              this.$root.$emit('alteraUnicoRegistro', this.protocoloEntrada)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Protocolo de Entrada alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.protocoloEntrada,
+                id: 'protocoloEntrada'
               })
+
+              tools.Notify.positive('Protocolo de Entrada alterado com sucesso.')
             })
         } else if (!this.protocoloEntrada.protocoloEntrada && this.possoGravarProtocoloEntrada) {
           protocoloEntradaService.grava(this.protocoloEntrada)
@@ -297,18 +284,16 @@ export default {
               this.protocoloEntrada.protocoloEntrada = result.data.protocoloEntrada.protocoloEntrada
               this.protocoloEntrada.usuarioCriador = result.data.protocoloEntrada.usuarioCriador
               this.$router.push('/protocoloEntradas/protocoloEntrada/' + result.data.protocoloEntrada.protocoloEntrada)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Protocolo de Entrada criado com sucesso.',
-                timeout: 5000
-              })
-              let tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
+              tools.Notify.positive('Protocolo de Entrada criado com sucesso.')
+
+              const tipoDocumentoDescricao = this.optionsTipoDocumento.filter(tipo => tipo.value === this.protocoloEntrada.tipoDocumento)
               this.protocoloEntrada.tipoDocumentoDescricao = tipoDocumentoDescricao[0].label
-              this.$root.$emit('adicionaRegistroNaLista', this.protocoloEntrada)
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.protocoloEntrada)
+
               this.confereAlterarExcluir()
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -320,28 +305,23 @@ export default {
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
         }).onOk(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+          tools.Loadings.processando()
 
           protocoloEntradaService.apaga(this.protocoloEntrada.protocoloEntrada)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('protocoloEntrada removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Protocolo de Entrada removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Protocolo de Entrada removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.protocoloEntrada.protocoloEntrada,
+                id: 'protocoloEntrada'
               })
-              this.$root.$emit('removeRegistro', this.protocoloEntrada.protocoloEntrada)
               this.reset()
             })
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     confereAlterarExcluir () {
@@ -352,7 +332,9 @@ export default {
   watch: {
     '$route.params.id': {
       handler: function (id) {
-        if (id) { this.carrega(id) }
+        if (id) {
+          this.carrega(id)
+        }
       },
       deep: true,
       immediate: true

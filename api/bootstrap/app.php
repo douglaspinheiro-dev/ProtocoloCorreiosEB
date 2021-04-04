@@ -6,6 +6,9 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
+date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
+
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -20,6 +23,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
+
+
 
 $app->withFacades();
 
@@ -57,6 +62,7 @@ $app->singleton(
 |
 */
 
+
 $app->middleware([
     // App\Http\Middleware\ExampleMiddleware::class
     App\Http\Middleware\CorsMiddleware::class
@@ -64,6 +70,7 @@ $app->middleware([
 
 $app->routeMiddleware([
     // 'auth' => App\Http\Middleware\Authenticate::class,
+    // 'CorsMiddleware' => App\Http\Middleware\CorsMiddleware::class,
     'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
     'usuario' => App\Http\Middleware\UsuarioMiddleware::class,
     'grupoUsuario' => App\Http\Middleware\GrupoUsuarioMiddleware::class,
@@ -96,6 +103,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Barryvdh\Snappy\LumenServiceProvider::class);
 class_alias(Barryvdh\Snappy\Facades\SnappyPdf::class, 'PDF');
+// class_alias(App\ChromePhp::class, 'ChromePhp');
 class_alias(Barryvdh\Snappy\Facades\SnappyImage::class, 'SnappyImage');
 
 

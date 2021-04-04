@@ -3,6 +3,7 @@
 namespace App\Http\Dao;
 use App\Http\Dao\Dao;
 use Illuminate\Support\Facades\DB;
+use App\ChromePhp;
 
 class MaloteDocumentoDao extends Dao
 {
@@ -25,8 +26,7 @@ class MaloteDocumentoDao extends Dao
       categoriasDocumentos.descricao as tipoDocumentoDescricao,
       setores.descricao as setorDescricao
   FROM maloteDocumentos
-  JOIN rotasEnderecos ON maloteDocumentos.rotaEndereco = rotasEnderecos.rotaEndereco
-  JOIN enderecos ON enderecos.endereco = rotasEnderecos.endereco
+  JOIN enderecos ON enderecos.endereco = maloteDocumentos.rotaEndereco
   JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = maloteDocumentos.categoriaDocumento
   JOIN setores ON setores.setor = maloteDocumentos.setor
   AND maloteDocumentos.malote = '{$id}' ORDER BY maloteDocumentos.maloteDocumento desc");
@@ -67,9 +67,7 @@ class MaloteDocumentoDao extends Dao
   }
 
   public static function procuraDocumento($obj) {
-
-    return DB::select(
-      "SELECT
+      $sql = "SELECT
         maloteDocumentos.*,
         maloteDocumentos.categoriaDocumento as tipoDocumento,
         malotes.rota,
@@ -94,14 +92,12 @@ class MaloteDocumentoDao extends Dao
         maloteDocumentos.setor LIKE '%{$obj['setor']}%' AND
         maloteDocumentos.rotaEndereco LIKE '%{$obj['rotaEndereco']}%'
       )
-      AND malotes.ativo = 1 ORDER BY maloteDocumentos.maloteDocumento desc"
-    );
+      AND malotes.ativo = 1 ORDER BY maloteDocumentos.maloteDocumento desc";
+    return DB::select($sql);
   }
 
   public static function procuraMes($obj) {
-
-    return DB::select(
-      "SELECT
+      $sql = "SELECT
         maloteDocumentos.*,
         maloteDocumentos.categoriaDocumento as tipoDocumento,
         malotes.rota,
@@ -116,8 +112,7 @@ class MaloteDocumentoDao extends Dao
       FROM maloteDocumentos
       JOIN malotes ON maloteDocumentos.malote = malotes.malote
       JOIN rotas ON malotes.rota = rotas.rota
-      JOIN rotasEnderecos ON maloteDocumentos.rotaEndereco = rotasEnderecos.rotaEndereco
-      JOIN enderecos ON enderecos.endereco = rotasEnderecos.endereco
+      JOIN enderecos ON maloteDocumentos.rotaEndereco = enderecos.endereco
       JOIN categoriasDocumentos ON categoriasDocumentos.categoriaDocumento = maloteDocumentos.categoriaDocumento
       JOIN setores ON setores.setor = maloteDocumentos.setor
       AND
@@ -125,7 +120,8 @@ class MaloteDocumentoDao extends Dao
         MONTH(malotes.data) = '{$obj['mes']}' AND
         YEAR(malotes.data) = '{$obj['ano']}'
       )
-      AND malotes.ativo = 1 ORDER BY malotes.data, maloteDocumentos.maloteDocumento desc"
-    );
+      AND malotes.ativo = 1 ORDER BY malotes.data, maloteDocumentos.maloteDocumento desc";
+
+    return DB::select($sql);
   }
 }

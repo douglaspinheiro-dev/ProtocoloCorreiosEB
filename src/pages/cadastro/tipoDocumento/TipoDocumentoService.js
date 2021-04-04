@@ -11,7 +11,7 @@ class TipoDocumentoService extends Service {
   }
 
   static grava (tipodocumento) {
-    return this.post(`tipodocumentos/tipodocumento`, tipodocumento)
+    return this.post('tipodocumentos/tipodocumento', tipodocumento)
   }
 
   static altera (tipoDocumento) {

@@ -19,12 +19,13 @@ class BuscaProtocoloEntradaService extends Service {
       params: dados
     })
   }
+
   static seleciona (obj) {
     return this.get(`busca-protocoloentradas/protocolo/${obj.protocolo}/ano/${obj.ano}`)
   }
 
   static getOptions () {
-    return this.get(`busca-protocoloentradas/options`)
+    return this.get('busca-protocoloentradas/options')
   }
 }
 export default BuscaProtocoloEntradaService

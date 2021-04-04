@@ -38,7 +38,7 @@ class BuscaMaloteService extends Service {
   }
 
   static getOptions () {
-    return this.get(`busca-malotes/options`)
+    return this.get('busca-malotes/options')
   }
 }
 export default BuscaMaloteService

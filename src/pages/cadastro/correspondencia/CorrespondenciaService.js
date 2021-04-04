@@ -11,7 +11,7 @@ class CorrespondenciaService extends Service {
   }
 
   static grava (correspondencia) {
-    return this.post(`correspondencias/correspondencia`, correspondencia)
+    return this.post('correspondencias/correspondencia', correspondencia)
   }
 
   static altera (correspondencia) {
@@ -25,8 +25,9 @@ class CorrespondenciaService extends Service {
   static seleciona (id) {
     return this.get(`correspondencias/correspondencia/${id}`)
   }
+
   static getOptions () {
-    return this.get(`correspondencias/options`)
+    return this.get('correspondencias/options')
   }
 }
 export default CorrespondenciaService

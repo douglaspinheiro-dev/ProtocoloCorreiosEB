@@ -2,7 +2,7 @@
 export default [
   { path: '/', component: () => import('pages/login') },
   { path: '/consulta', component: () => import('pages/cadastro/correspondencia/consultaCorrespondencia') },
-  // { path: '/protocoloentradas/extensao', name: 'protocoloEntradaExtensao', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntradaExtensao.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true } },
+  { path: '/protocoloentradas/extensao', name: 'protocoloEntradaExtensao', component: () => import('pages/cadastro/protocoloEntrada/ProtocoloEntradaExtensao.vue'), meta: { rota: 'protocoloEntrada', requerAutenticacao: true } },
 
   {
     path: '/root',

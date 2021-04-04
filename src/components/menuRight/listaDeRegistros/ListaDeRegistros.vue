@@ -56,7 +56,7 @@ export default {
   methods: {
     onLoad  (index, done) {
       console.log('vou atualizar a lista ede registros')
-      let busca = this.busca
+      const busca = this.busca
 
       setTimeout(() => {
         this.$store.commit('listaDeRegistros/setBusca', busca)

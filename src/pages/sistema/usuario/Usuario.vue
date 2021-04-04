@@ -113,8 +113,8 @@ import Usuario from './Usuario'
 import usuarioService from './UsuarioService'
 import confereRegistro from 'src/services/confereRegistro'
 import permissoes from 'src/services/permissoes/ValidaPermissoes'
-import notify from 'src/tools/Notify'
 import formSelect from 'src/components/form/select/QSelect'
+import tools from 'src/tools'
 
 export default {
   name: 'Cadastro-de-Usuarios',
@@ -147,7 +147,7 @@ export default {
       login: {
         required,
         isUnique (value) {
-          let login = value
+          const login = value
           // se for vazio, passo a bola pro validador required
           if (login === '') {
             this.errorLogin = 'Preencha o login do usuário'
@@ -159,7 +159,7 @@ export default {
             opcao = 'alterar'
             id = this.usuario.usuario
           }
-          let retorno = confereRegistro('usuarios', 'login', opcao, id, 'usuario', login)
+          const retorno = confereRegistro('usuarios', 'login', opcao, id, 'usuario', login)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.resposta === true) {
@@ -198,29 +198,15 @@ export default {
     },
     alterarSenhaOutroUsuario () {
       this.$v.modal.$touch()
-      if (this.$v.modal.$error) {
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Alguns campos precisam ser corrigidos.'
-        }).then(() => { }).catch(() => { })
-      } else {
-        this.$q.loading.show({
-          message: 'Processando sua requisição',
-          messageColor: 'white',
-          spinnerSize: 250, // in pixels
-          spinnerColor: 'white'
+      if (this.$v.modal.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
+      usuarioService.alteraSenhaOutroUsuario(this.usuario.usuario, this.modal.senhaNova, this.usuario.usuarioCriador)
+        .then(result => {
+          tools.Loadings.hide()
+          this.ModalTrocaSenha = false
+          tools.Notify.positive('Senha Alterada com sucesso.')
         })
-        usuarioService.alteraSenhaOutroUsuario(this.usuario.usuario, this.modal.senhaNova, this.usuario.usuarioCriador)
-          .then(result => {
-            this.$q.loading.hide()
-            this.ModalTrocaSenha = false
-            this.$q.notify({
-              type: 'positive',
-              message: 'Senha Alterada com sucesso.',
-              timeout: 5000
-            })
-          })
-      }
     },
     cancelarModal () {
       this.modal.senhaNova = ''
@@ -232,58 +218,40 @@ export default {
       this.usuario = new Usuario()
       this.possoAlterarUsuario = false
       this.possoExcluirUsuario = false
-      this.$router.push({name: 'usuario'})
+      this.$router.push({ name: 'usuario' })
     },
     carrega (id) {
       console.log('vou carregar o usuario')
-      this.$q.loading.show({
-        message: 'Localizando o registro',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      tools.Loadings.processando()
 
       usuarioService
         .seleciona(id)
         .then(result => {
           console.log(result)
-          this.$q.loading.hide()
+          tools.Loadings.hide()
           console.log('peguei o usuario com sucesso')
           this.usuario = Object.assign({}, this.usuario, result.data)
           this.confereAlterarExcluir()
         })
     },
     salvarAlterar () {
-      this.$q.loading.show({
-        message: 'Processando sua requisição',
-        messageColor: 'white',
-        spinnerSize: 250, // in pixels
-        spinnerColor: 'white'
-      })
+      this.$v.usuario.$touch()
+      if (this.$v.usuario.$invalid) return tools.Dialogs.formInvalido()
+      tools.Loadings.processando()
+
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$v.usuario.$touch()
-        if (this.$v.usuario.$error) {
-          this.$q.loading.hide()
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Alguns campos precisam ser corrigidos.'
-          }).then(() => { }).catch(() => { })
-          return
-        }
-
         if (this.usuario.usuario && this.possoAlterarUsuario) {
           console.log('estou alterando o form')
           usuarioService.altera(this.usuario)
             .then(result => {
               console.log('usuario alterado com sucesso')
-              this.$root.$emit('alteraUnicoRegistro', this.usuario)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Usuário alterado com sucesso.',
-                timeout: 5000
+              this.$store.commit('listaDeRegistros/alteraUnicoRegistro', {
+                registro: this.usuario,
+                id: 'usuario'
               })
-              this.$q.loading.hide()
+              tools.Loadings.hide()
+              tools.Notify.positive('Senha Alterada com sucesso.')
             })
         } else if (!this.usuario.usuario && this.possoGravarUsuario) {
           usuarioService.grava(this.usuario)
@@ -292,22 +260,15 @@ export default {
               this.usuario.usuario = result.data.usuario.usuario
               this.usuario.usuarioCriador = result.data.usuario.usuarioCriador
               this.$router.push('/usuarios/usuario/' + result.data.usuario.usuario)
-              this.$q.notify({
-                type: 'positive',
-                message: 'Usuário criado com sucesso.',
-                timeout: 5000
-              })
-              this.$q.notify({
-                type: 'warning',
-                message: 'Foi criado uma senha automática: 12345.',
-                timeout: 10000
-              })
-              this.$root.$emit('adicionaRegistroNaLista', this.usuario)
+              tools.Notify.positive('Usuário criado com sucesso.')
+              tools.Notify.warning('Foi criado uma senha automática: 12345. Será necessário a troca da senha no primeiro login deste usuário.')
+              this.$store.commit('listaDeRegistros/adicionaRegistroNaLista', this.usuario)
+
               this.confereAlterarExcluir()
-              // this.$q.loading.hide() nao precisa, pois ele carrega o registro em seguida
+              // tools.Loadings.hide() nao precisa, pois ele carrega o registro em seguida
             })
         } else {
-          notify.semPermissao()
+          tools.Notify.semPermissao()
         }
       }, 2000)
     },
@@ -318,37 +279,29 @@ export default {
           message: 'Ao confirmar esta operação, não poderá desfazer.',
           ok: 'Sim, excluir',
           cancel: 'Cancelar'
-        }).then(() => {
-          this.$q.loading.show({
-            message: 'Processando sua requisição',
-            messageColor: 'white',
-            spinnerSize: 250, // in pixels
-            spinnerColor: 'white'
-          })
+        }).onOk(() => {
+          tools.Loadings.processando()
 
           usuarioService.apaga(this.usuario.usuario)
             .then(result => {
-              this.$q.loading.hide()
+              tools.Loadings.hide()
               console.log('usuario removido com sucesso')
-              this.$q.notify({
-                type: 'negative',
-                message: 'Usuário removido com sucesso.',
-                timeout: 5000
+              tools.Notify.negative('Usuário removido com sucesso.')
+
+              this.$store.commit('listaDeRegistros/removeRegistro', {
+                registro: this.usuario.usuario,
+                id: 'usuario'
               })
-              this.$root.$emit('removeRegistro', this.usuario.usuario)
-              // this.$store.commit('menuRight/removeRegistro', this.id)
               this.reset()
             })
-        }).catch(() => {
-          // Picked "Cancel" or dismissed
         })
       } else {
-        notify.semPermissao()
+        tools.Notify.semPermissao()
       }
     },
     setOptionsGrupoUsuario (grupoUsuario) {
       if (grupoUsuario.length > 0) {
-        let optionsGrupoUsuario = []
+        const optionsGrupoUsuario = []
         grupoUsuario.map(grupo => optionsGrupoUsuario.push(
           {
             label: grupo.descricao,

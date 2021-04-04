@@ -68,7 +68,8 @@ class MaloteDao extends Dao
       lacre = '{$dados['lacre']}',
       numeroBolsa = '{$dados['numeroBolsa']}',
       data = '{$dados['data']}',
-      usuarioAlterador = {$dados['usuarioAlterador']}
+      usuarioAlterador = {$dados['usuarioAlterador']},
+      rota = {$dados['rota']}
     where malote = '{$dados['malote']}'");
   }
 
