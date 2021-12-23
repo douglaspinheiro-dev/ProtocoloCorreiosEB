@@ -447,7 +447,8 @@ export default {
     },
     salvarAlterar () {
       this.$v.correspondencia.$touch()
-      if (this.$v.tabelacorrespondenciaAcessoEmpresa.$invalid) return tools.Dialogs.formInvalido()
+      // if (this.$v.tabelacorrespondenciaAcessoEmpresa.$invalid) return tools.Dialogs.formInvalido()
+      // revisar mais tarde,, dispensa natal
 
       tools.Loadings.processando()
       clearTimeout(this.timer)
