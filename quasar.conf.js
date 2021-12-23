@@ -77,9 +77,9 @@ module.exports = function (ctx) {
                     { source: './api/bootstrap', destination: './api/build/bootstrap' },
                     { source: './api/config', destination: './api/build/config' },
                     { source: './api/database', destination: './api/build/database' },
-                    { source: './api/database', destination: './api/build/database' },
                     { source: './api/public', destination: './api/build/public' },
                     { source: './dist/spa', destination: './api/build/public/web' },
+                    { source: './dist/spa', destination: './api/build/web' },
                     { source: './api/resources', destination: './api/build/resources' },
                     { source: './api/routes', destination: './api/build/routes' },
                     { source: './api/storage', destination: './api/build/storage' },
@@ -133,7 +133,7 @@ module.exports = function (ctx) {
           API: JSON.stringify('http://localhost:80/api')
         }
         : { // and on build (production):
-          API: JSON.stringify('http://10.1.9.21/api')
+          API: JSON.stringify('http://10.4.231.15/api')
           // API: JSON.stringify('https://www.correio1rm.com.br/api')
           // API: JSON.stringify('https://api.correio1rm.com.br')
         }

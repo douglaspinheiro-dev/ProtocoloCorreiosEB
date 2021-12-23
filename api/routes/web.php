@@ -16,10 +16,8 @@ $router->get('/api', function () use ($router) {
 });
 
 $router->get('/', function () use ($router) {
-    return redirect()->to('./web/index.html');
-
-    // return $router->app->version();
-
+    // return redirect()->to('./web/index.html');
+    return $router->app->version();
 });
 
 $router->get('/sysprot', function () use ($router) {
